@@ -12,7 +12,7 @@ define(['dialog','ajax','application'], function(dialog, ajax, application) {
                     url: 'ui/project',
                     data: {
                         name: $('#project-name').val(),
-                        description: $('#project-description').val()
+                        fullName: $('#project-fullName').val()
                     },
                     successFn: function (project) {
                         config.closeFn();
