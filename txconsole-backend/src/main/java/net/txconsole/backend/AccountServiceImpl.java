@@ -4,9 +4,9 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import net.txconsole.backend.dao.AccountDao;
-import net.txconsole.backend.dao.PipelineAuthorizationDao;
+import net.txconsole.backend.dao.ProjectAuthorizationDao;
 import net.txconsole.backend.dao.model.TAccount;
-import net.txconsole.backend.dao.model.TPipelineAuthorization;
+import net.txconsole.backend.dao.model.TProjectAuthorization;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.SecurityRoles;
 import net.txconsole.core.validation.AccountValidation;
@@ -17,7 +17,6 @@ import net.txconsole.service.security.PipelineFunction;
 import net.sf.jstring.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,10 +59,10 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
             return new AccountSummary(t.getId(), t.getName(), t.getFullName());
         }
     };
-    private final PipelineAuthorizationDao pipelineAuthorizationDao;
+    private final ProjectAuthorizationDao pipelineAuthorizationDao;
 
     @Autowired
-    public AccountServiceImpl(ValidatorService validatorService, Strings strings, AccountDao accountDao, PipelineAuthorizationDao pipelineAuthorizationDao) {
+    public AccountServiceImpl(ValidatorService validatorService, Strings strings, AccountDao accountDao, ProjectAuthorizationDao pipelineAuthorizationDao) {
         super(validatorService);
         this.strings = strings;
         this.accountDao = accountDao;
@@ -243,15 +242,15 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
 
     protected Account getACL(Account account) {
         // Functions for all pipelines
-        List<TPipelineAuthorization> authList = pipelineAuthorizationDao.findByAccount(account.getId());
-        for (TPipelineAuthorization auth : authList) {
+        List<TProjectAuthorization> authList = pipelineAuthorizationDao.findByAccount(account.getId());
+        for (TProjectAuthorization auth : authList) {
             switch (auth.getRole()) {
                 case MANAGER:
-                    account = account.withACL("PIPELINE", auth.getPipeline(), PipelineFunction.UPDATE.name());
+                    account = account.withACL("PIPELINE", auth.getProject(), PipelineFunction.UPDATE.name());
                 case EXECUTOR:
-                    account = account.withACL("PIPELINE", auth.getPipeline(), PipelineFunction.EXECUTE.name());
+                    account = account.withACL("PIPELINE", auth.getProject(), PipelineFunction.EXECUTE.name());
                 case PROMOTER:
-                    account = account.withACL("PIPELINE", auth.getPipeline(), PipelineFunction.PROMOTE.name());
+                    account = account.withACL("PIPELINE", auth.getProject(), PipelineFunction.PROMOTE.name());
             }
         }
         // OK
