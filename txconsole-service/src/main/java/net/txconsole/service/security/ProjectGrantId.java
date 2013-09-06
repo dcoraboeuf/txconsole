@@ -6,6 +6,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface PipelineGrantId {
+public @interface ProjectGrantId {
 
 }

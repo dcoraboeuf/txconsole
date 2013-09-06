@@ -2,9 +2,8 @@ package net.txconsole.backend.config;
 
 public interface Caches {
 
-    String PIPELINE_LIST = "PipelineList";
-    String PIPELINE_ID = "PipelineID";
-    String PIPELINE_NAME = "PipelineName";
+    String PROJECT_LIST = "ProjectList";
+    String PROJECT_ID = "ProjectID";
     String ACCOUNT = "Account";
     String CONFIGURATION_KEY = "ConfigurationKey";
     String CONFIGURATION = "Configuration";

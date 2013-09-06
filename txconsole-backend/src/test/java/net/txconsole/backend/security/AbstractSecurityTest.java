@@ -2,7 +2,7 @@ package net.txconsole.backend.security;
 
 import net.txconsole.core.model.Account;
 import net.txconsole.core.security.SecurityRoles;
-import net.txconsole.service.security.PipelineFunction;
+import net.txconsole.service.security.ProjectFunction;
 import net.txconsole.test.AbstractIntegrationTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -103,8 +103,8 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
                     "user@test.com", SecurityRoles.USER, "builtin", Locale.ENGLISH));
         }
 
-        public UserCall withPipelineGrant(int id, PipelineFunction fn) {
-            account.withACL("PIPELINE", id, fn.name());
+        public UserCall withProjectGrant(int id, ProjectFunction fn) {
+            account.withACL("PROJECT", id, fn.name());
             return this;
         }
     }

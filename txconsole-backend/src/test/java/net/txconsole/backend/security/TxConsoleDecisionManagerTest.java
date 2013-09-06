@@ -1,9 +1,9 @@
 package net.txconsole.backend.security;
 
 import net.txconsole.core.security.SecurityUtils;
-import net.txconsole.service.security.PipelineFunction;
-import net.txconsole.service.security.PipelineGrantIdAlreadyDefinedException;
-import net.txconsole.service.security.PipelineGrantIdMissingException;
+import net.txconsole.service.security.ProjectFunction;
+import net.txconsole.service.security.ProjectGrantIdAlreadyDefinedException;
+import net.txconsole.service.security.ProjectGrantIdMissingException;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,12 +38,11 @@ public class TxConsoleDecisionManagerTest {
 	}
 
 	@Test
-	public void checkPipelineGrant() {
-		Authentication authentication = mock(Authentication.class);
-		PipelineFunction fn = PipelineFunction.UPDATE;
-		when(securityUtils.isGranted("PIPELINE", 1, fn.name())).thenReturn(true);
-		assertTrue(manager.checkPipelineGrant(1, fn));
-		verify(securityUtils, times(1)).isGranted("PIPELINE", 1, fn.name());
+	public void checkProjectGrant() {
+		ProjectFunction fn = ProjectFunction.UPDATE;
+		when(securityUtils.isGranted("PROJECT", 1, fn.name())).thenReturn(true);
+		assertTrue(manager.checkProjectGrant(1, fn));
+		verify(securityUtils, times(1)).isGranted("PROJECT", 1, fn.name());
 	}
 
     @Test(expected = AccessDeniedException.class)
@@ -61,9 +60,9 @@ public class TxConsoleDecisionManagerTest {
         manager.decide(authentication, invocation, null);
     }
 
-    @Test(expected = PipelineGrantIdMissingException.class)
+    @Test(expected = ProjectGrantIdMissingException.class)
     public void decide_id_missing() throws SecurityException, NoSuchMethodException {
-        Method method = SampleAPI.class.getMethod("pipeline_call_missing_param", Integer.TYPE);
+        Method method = SampleAPI.class.getMethod("project_call_missing_param", Integer.TYPE);
 
         SampleImpl target = new SampleImpl();
 
@@ -77,9 +76,9 @@ public class TxConsoleDecisionManagerTest {
         manager.decide(authentication, invocation, null);
     }
 
-    @Test(expected = PipelineGrantIdAlreadyDefinedException.class)
+    @Test(expected = ProjectGrantIdAlreadyDefinedException.class)
     public void decide_too_much() throws SecurityException, NoSuchMethodException {
-        Method method = SampleAPI.class.getMethod("pipeline_call_too_much", int.class, int.class);
+        Method method = SampleAPI.class.getMethod("project_call_too_much", int.class, int.class);
 
         SampleImpl target = new SampleImpl();
 
@@ -95,7 +94,7 @@ public class TxConsoleDecisionManagerTest {
 
     @Test
     public void decide_ok() throws SecurityException, NoSuchMethodException {
-        Method method = SampleAPI.class.getMethod("pipeline_call_ok", int.class, String.class);
+        Method method = SampleAPI.class.getMethod("project_call_ok", int.class, String.class);
 
         SampleImpl target = new SampleImpl();
 
@@ -105,7 +104,7 @@ public class TxConsoleDecisionManagerTest {
         when(invocation.getArguments()).thenReturn(new Object[] { 1, "A" });
 
         Authentication authentication = mock(Authentication.class);
-        when(securityUtils.isGranted("PIPELINE", 1, PipelineFunction.UPDATE.name())).thenReturn(true);
+        when(securityUtils.isGranted("PROJECT", 1, ProjectFunction.UPDATE.name())).thenReturn(true);
 
         manager.decide(authentication, invocation, null);
     }

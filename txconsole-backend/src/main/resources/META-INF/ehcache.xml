@@ -31,21 +31,14 @@
            statistics="true"
            overflowToDisk="false" />
     <!-- DAO -->
-    <cache name="PipelineList"
+    <cache name="ProjectList"
            maxElementsInMemory="1"
            eternal="false"
            timeToIdleSeconds="3600"
            timeToLiveSeconds="3600"
            statistics="true"
            overflowToDisk="false" />
-    <cache name="PipelineID"
-           maxElementsInMemory="10"
-           eternal="false"
-           timeToIdleSeconds="3600"
-           timeToLiveSeconds="3600"
-           statistics="true"
-           overflowToDisk="false" />
-    <cache name="PipelineName"
+    <cache name="ProjectID"
            maxElementsInMemory="10"
            eternal="false"
            timeToIdleSeconds="3600"

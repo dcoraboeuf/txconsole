@@ -13,7 +13,7 @@ import net.txconsole.core.validation.AccountValidation;
 import net.txconsole.core.validation.Validations;
 import net.txconsole.service.AccountService;
 import net.txconsole.service.security.AdminGrant;
-import net.txconsole.service.security.PipelineFunction;
+import net.txconsole.service.security.ProjectFunction;
 import net.sf.jstring.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,14 +59,14 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
             return new AccountSummary(t.getId(), t.getName(), t.getFullName());
         }
     };
-    private final ProjectAuthorizationDao pipelineAuthorizationDao;
+    private final ProjectAuthorizationDao projectAuthorizationDao;
 
     @Autowired
-    public AccountServiceImpl(ValidatorService validatorService, Strings strings, AccountDao accountDao, ProjectAuthorizationDao pipelineAuthorizationDao) {
+    public AccountServiceImpl(ValidatorService validatorService, Strings strings, AccountDao accountDao, ProjectAuthorizationDao projectAuthorizationDao) {
         super(validatorService);
         this.strings = strings;
         this.accountDao = accountDao;
-        this.pipelineAuthorizationDao = pipelineAuthorizationDao;
+        this.projectAuthorizationDao = projectAuthorizationDao;
     }
 
     @Override
@@ -241,16 +241,16 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
     }
 
     protected Account getACL(Account account) {
-        // Functions for all pipelines
-        List<TProjectAuthorization> authList = pipelineAuthorizationDao.findByAccount(account.getId());
+        // Functions for all projects
+        List<TProjectAuthorization> authList = projectAuthorizationDao.findByAccount(account.getId());
         for (TProjectAuthorization auth : authList) {
             switch (auth.getRole()) {
-                case MANAGER:
-                    account = account.withACL("PIPELINE", auth.getProject(), PipelineFunction.UPDATE.name());
-                case EXECUTOR:
-                    account = account.withACL("PIPELINE", auth.getProject(), PipelineFunction.EXECUTE.name());
-                case PROMOTER:
-                    account = account.withACL("PIPELINE", auth.getProject(), PipelineFunction.PROMOTE.name());
+                case OWNER:
+                    account = account.withACL("PROJECT", auth.getProject(), ProjectFunction.UPDATE.name());
+                case TRANSLATOR:
+                case REVIEWER:
+                case CONTRIBUTOR:
+                default:
             }
         }
         // OK

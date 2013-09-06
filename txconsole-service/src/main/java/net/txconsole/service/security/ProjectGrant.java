@@ -6,8 +6,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface PipelineGrant {
+public @interface ProjectGrant {
 
-    public PipelineFunction value();
+    public ProjectFunction value();
 
 }

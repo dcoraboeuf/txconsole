@@ -1,7 +1,7 @@
 package net.txconsole.backend.security;
 
-import net.txconsole.core.model.PipelineCreationForm;
-import net.txconsole.core.model.PipelineSummary;
+import net.txconsole.core.model.ProjectCreationForm;
+import net.txconsole.core.model.ProjectSummary;
 import net.txconsole.service.StructureService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,52 +19,52 @@ public class StructureServiceIntegrationSecurityTest extends AbstractSecurityTes
 	private StructureService structureService;
 
 	@Test
-	public void pipeline_list_anonymous_ok() throws Exception {
+	public void project_list_anonymous_ok() throws Exception {
 		asAnonymous().call(new Callable<Void>() {
 
 			@Override
 			public Void call() throws Exception {
-				structureService.getPipelines();
+				structureService.getProjects();
 				return null;
 			}
 		});
 	}
 
 	@Test(expected = AuthenticationCredentialsNotFoundException.class)
-	public void pipeline_create_anonymous_denied() throws Exception {
+	public void project_create_anonymous_denied() throws Exception {
 		asAnonymous().call(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				structureService.createPipeline(new PipelineCreationForm("pipeline_anonymous",
-						"Cannot create a pipeline"));
+				structureService.createProject(new ProjectCreationForm("project_anonymous",
+                        "Cannot create a project"));
 				return null;
 			}
 		});
 	}
 
 	@Test(expected = AccessDeniedException.class)
-	public void pipeline_create_user_denied() throws Exception {
+	public void project_create_user_denied() throws Exception {
 		asUser().call(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				structureService.createPipeline(new PipelineCreationForm("pipeline_user", "Cannot create a pipeline"));
+				structureService.createProject(new ProjectCreationForm("project_user", "Cannot create a project"));
 				return null;
 			}
 		});
 	}
 
 	@Test
-	public void pipeline_create_admin_ok() throws Exception {
-		PipelineSummary pipeline = createPipeline("pipeline_admin");
-		assertNotNull(pipeline);
-		assertEquals("pipeline_admin", pipeline.getName());
+	public void project_create_admin_ok() throws Exception {
+		ProjectSummary project = createProject("project_admin");
+		assertNotNull(project);
+		assertEquals("project_admin", project.getName());
 	}
 
-	private PipelineSummary createPipeline(final String name) throws Exception {
-		return asAdmin().call(new Callable<PipelineSummary>() {
+	private ProjectSummary createProject(final String name) throws Exception {
+		return asAdmin().call(new Callable<ProjectSummary>() {
 			@Override
-			public PipelineSummary call() throws Exception {
-				return structureService.createPipeline(new PipelineCreationForm(name, "OK"));
+			public ProjectSummary call() throws Exception {
+				return structureService.createProject(new ProjectCreationForm(name, "OK"));
 			}
 		});
 	}

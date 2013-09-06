@@ -2,14 +2,13 @@ package net.txconsole.web.controller;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import net.txconsole.core.model.PipelineCreationForm;
-import net.txconsole.core.model.PipelineSummary;
-import net.txconsole.core.security.SecurityUtils;
+import net.sf.jstring.Strings;
+import net.txconsole.core.model.ProjectCreationForm;
+import net.txconsole.core.model.ProjectSummary;
 import net.txconsole.service.StructureService;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
-import net.sf.jstring.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,21 +23,19 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class UIController extends AbstractUIController {
 
     private final StructureService structureService;
-    private final SecurityUtils securityUtils;
-    private final Function<PipelineSummary, Resource<PipelineSummary>> pipelineSummaryResourceFn = new Function<PipelineSummary, Resource<PipelineSummary>>() {
+    private final Function<ProjectSummary, Resource<ProjectSummary>> projectSummaryResourceFn = new Function<ProjectSummary, Resource<ProjectSummary>>() {
         @Override
-        public Resource<PipelineSummary> apply(PipelineSummary o) {
+        public Resource<ProjectSummary> apply(ProjectSummary o) {
             return new Resource<>(o)
-                    .withLink(linkTo(methodOn(UIController.class).pipelineGet(o.getId())).withSelfRel())
-                    .withLink(linkTo(methodOn(GUIController.class).pipelineGet(o.getName())).withRel(Resource.REL_GUI));
+                    .withLink(linkTo(methodOn(UIController.class).projectGet(o.getId())).withSelfRel())
+                    .withLink(linkTo(methodOn(GUIController.class).projectGet(o.getId())).withRel(Resource.REL_GUI));
         }
     };
 
     @Autowired
-    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, SecurityUtils securityUtils) {
+    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService) {
         super(errorHandler, strings);
         this.structureService = structureService;
-        this.securityUtils = securityUtils;
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -48,30 +45,30 @@ public class UIController extends AbstractUIController {
         return new Resource<>("home")
                 .withLink(linkTo(methodOn(UIController.class).home()).withSelfRel())
                 .withLink(linkTo(methodOn(GUIController.class).home()).withRel(Resource.REL_GUI))
-                .withLink(linkTo(methodOn(UIController.class).pipelineList()).withRel("pipelineList"));
+                .withLink(linkTo(methodOn(UIController.class).projectList()).withRel("projectList"));
     }
 
-    @RequestMapping(value = "/pipeline", method = RequestMethod.GET)
+    @RequestMapping(value = "/project", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Resource<PipelineSummary>> pipelineList() {
+    List<Resource<ProjectSummary>> projectList() {
         return Lists.transform(
-                structureService.getPipelines(),
-                pipelineSummaryResourceFn
+                structureService.getProjects(),
+                projectSummaryResourceFn
         );
     }
 
-    @RequestMapping(value = "/pipeline", method = RequestMethod.POST)
+    @RequestMapping(value = "/project", method = RequestMethod.POST)
     public
     @ResponseBody
-    Resource<PipelineSummary> pipelineCreate(@RequestBody PipelineCreationForm form) {
-        return pipelineSummaryResourceFn.apply(structureService.createPipeline(form));
+    Resource<ProjectSummary> projectCreate(@RequestBody ProjectCreationForm form) {
+        return projectSummaryResourceFn.apply(structureService.createProject(form));
     }
 
-    @RequestMapping(value = "/pipeline/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/project/{id}", method = RequestMethod.GET)
     public
     @ResponseBody
-    Resource<PipelineSummary> pipelineGet(@PathVariable int id) {
-        return pipelineSummaryResourceFn.apply(structureService.getPipeline(id));
+    Resource<ProjectSummary> projectGet(@PathVariable int id) {
+        return projectSummaryResourceFn.apply(structureService.getProject(id));
     }
 }

@@ -244,8 +244,8 @@ account.role.ROLE_USER
     en -> User
     fr -> Utilisateur
 account.role.ROLE_ADMIN.help
-    en -> Administrators can: manage other accounts, manage all entities (pipelines, branches...).
-    fr -> Les administrateurs peuvent gérer les autres comptes, gérer toutes les entités (pipelines, branches, ...).
+    en -> Administrators can: manage other accounts, manage all entities (projects, branches...).
+    fr -> Les administrateurs peuvent gérer les autres comptes, gérer toutes les entités (projets, branches, ...).
 account.role.ROLE_USER.help
     en -> Users can perform actions that have been granted to them by administrators.
     fr -> Les utilisateurs ne peuvent effectuer que les actions qui leur ont été permises par des administrateurs.
@@ -403,12 +403,12 @@ home
     en -> Home
     fr -> Accueil
 
-[pipeline]
+[project]
 
-pipeline.list
-    en -> Pipelines
-    fr -> Pipelines
+project.list
+    en -> Projects
+    fr -> Projets
 
-pipeline.create
-    en -> New pipeline
-    fr -> Nouveau pipeline
+project.create
+    en -> New project
+    fr -> Nouveau projet

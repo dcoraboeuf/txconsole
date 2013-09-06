@@ -8,7 +8,7 @@ http://www.springframework.org/schema/security
 http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
     <global-method-security access-decision-manager-ref="txConsoleDecisionManager">
-        <protect-pointcut expression="execution(@net.txconsole.service.security.PipelineGrant * net.txconsole.backend.*.*(..))" access="pipeline" />
+        <protect-pointcut expression="execution(@net.txconsole.service.security.ProjectGrant * net.txconsole.backend.*.*(..))" access="project" />
         <protect-pointcut expression="execution(@net.txconsole.service.security.AdminGrant * net.txconsole.backend.*.*(..))" access="admin" />
     </global-method-security>
 

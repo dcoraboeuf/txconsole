@@ -34,7 +34,7 @@ public class TxConsoleDecisionManager implements AccessDecisionManager {
         // Method to authenticate
         MethodInvocation invocation = (MethodInvocation) object;
         // Checks the grants
-        if (adminGranted(invocation) || pipelineGranted(invocation)) {
+        if (adminGranted(invocation) || projectGranted(invocation)) {
             logger.debug("[grant] Granted after authorization.");
         }
         // No control - anomaly
@@ -53,11 +53,11 @@ public class TxConsoleDecisionManager implements AccessDecisionManager {
         }
     }
 
-    protected boolean pipelineGranted(MethodInvocation invocation) {
-        PipelineGrant grant = getAnnotation(invocation, PipelineGrant.class);
+    protected boolean projectGranted(MethodInvocation invocation) {
+        ProjectGrant grant = getAnnotation(invocation, ProjectGrant.class);
         if (grant != null) {
-            int pipeline = getPipelineId(invocation);
-            return checkPipelineGrant(pipeline, grant.value());
+            int project = getProjectId(invocation);
+            return checkProjectGrant(project, grant.value());
         } else {
             return false;
         }
@@ -67,8 +67,8 @@ public class TxConsoleDecisionManager implements AccessDecisionManager {
         return securityUtils.isAdmin();
     }
 
-    protected boolean checkPipelineGrant(int pipeline, PipelineFunction fn) {
-        return securityUtils.isGranted("PIPELINE", pipeline, fn.name());
+    protected boolean checkProjectGrant(int project, ProjectFunction fn) {
+        return securityUtils.isGranted("PROJECT", project, fn.name());
     }
 
     @Override
@@ -81,12 +81,12 @@ public class TxConsoleDecisionManager implements AccessDecisionManager {
         return (MethodInvocation.class.isAssignableFrom(clazz));
     }
 
-    protected int getPipelineId(MethodInvocation invocation) {
-        Integer pipeline = getParamDesignedByAnnotation(invocation, PipelineGrantId.class, int.class);
-        if (pipeline == null) {
-            throw new PipelineGrantIdMissingException(invocation.getMethod().getName());
+    protected int getProjectId(MethodInvocation invocation) {
+        Integer project = getParamDesignedByAnnotation(invocation, ProjectGrantId.class, int.class);
+        if (project == null) {
+            throw new ProjectGrantIdMissingException(invocation.getMethod().getName());
         }
-        return pipeline;
+        return project;
     }
 
     private <T> T getParamDesignedByAnnotation(MethodInvocation invocation, Class<?> annotationClass, Class<T> paramClass) {
@@ -102,7 +102,7 @@ public class TxConsoleDecisionManager implements AccessDecisionManager {
                     for (Annotation paramAnnotation : paramAnnotations) {
                         if (annotationClass.isInstance(paramAnnotation)) {
                             if (parameterValue != null) {
-                                throw new PipelineGrantIdAlreadyDefinedException(method.getName(), annotationClass);
+                                throw new ProjectGrantIdAlreadyDefinedException(method.getName(), annotationClass);
                             }
                             parameterValue = (T) arguments[i];
                         }

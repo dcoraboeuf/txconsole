@@ -1,12 +1,11 @@
 package net.txconsole.web.controller;
 
-import net.txconsole.core.model.PipelineCreationForm;
-import net.txconsole.core.model.PipelineSummary;
-import net.txconsole.core.security.SecurityUtils;
+import net.sf.jstring.Strings;
+import net.txconsole.core.model.ProjectCreationForm;
+import net.txconsole.core.model.ProjectSummary;
 import net.txconsole.service.StructureService;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.ErrorHandler;
-import net.sf.jstring.Strings;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -26,15 +25,13 @@ public class UIControllerTest {
     private ErrorHandler errorHandler;
     private Strings strings;
     private StructureService structureService;
-    private SecurityUtils securityUtils;
 
     @Before
     public void before() {
         errorHandler = mock(ErrorHandler.class);
         strings = mock(Strings.class);
         structureService = mock(StructureService.class);
-        securityUtils = mock(SecurityUtils.class);
-        controller = new UIController(errorHandler, strings, structureService, securityUtils);
+        controller = new UIController(errorHandler, strings, structureService);
         // Current request
         MockHttpServletRequest request = new MockHttpServletRequest();
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
@@ -47,69 +44,69 @@ public class UIControllerTest {
         assertEquals("home", r.getData());
         assertEquals("http://localhost/ui", r.getLink("self").getHref());
         assertEquals("http://localhost/", r.getLink("gui").getHref());
-        assertEquals("http://localhost/ui/pipeline", r.getLink("pipelineList").getHref());
+        assertEquals("http://localhost/ui/project", r.getLink("projectList").getHref());
     }
 
     @Test
-    public void pipelineList() {
-        when(structureService.getPipelines()).thenReturn(
+    public void projectList() {
+        when(structureService.getProjects()).thenReturn(
                 Arrays.asList(
-                        new PipelineSummary(1, "P1", "Pipeline 1"),
-                        new PipelineSummary(2, "P2", "Pipeline 2")
+                        new ProjectSummary(1, "P1", "Project 1"),
+                        new ProjectSummary(2, "P2", "Project 2")
                 )
         );
-        List<Resource<PipelineSummary>> list = controller.pipelineList();
+        List<Resource<ProjectSummary>> list = controller.projectList();
         assertEquals(2, list.size());
         {
-            Resource<PipelineSummary> p = list.get(0);
+            Resource<ProjectSummary> p = list.get(0);
             assertEquals("P1", p.getData().getName());
-            assertEquals("http://localhost/ui/pipeline/1", p.getLink("self").getHref());
-            assertEquals("http://localhost/pipeline/P1", p.getLink("gui").getHref());
+            assertEquals("http://localhost/ui/project/1", p.getLink("self").getHref());
+            assertEquals("http://localhost/project/P1", p.getLink("gui").getHref());
         }
         {
-            Resource<PipelineSummary> p = list.get(1);
+            Resource<ProjectSummary> p = list.get(1);
             assertEquals("P2", p.getData().getName());
-            assertEquals("http://localhost/ui/pipeline/2", p.getLink("self").getHref());
-            assertEquals("http://localhost/pipeline/P2", p.getLink("gui").getHref());
+            assertEquals("http://localhost/ui/project/2", p.getLink("self").getHref());
+            assertEquals("http://localhost/project/P2", p.getLink("gui").getHref());
         }
     }
 
     @Test
-    public void pipelineGet() {
-        when(structureService.getPipeline(1)).thenReturn(
-                new PipelineSummary(1, "P1", "Pipeline 1")
+    public void projectGet() {
+        when(structureService.getProject(1)).thenReturn(
+                new ProjectSummary(1, "P1", "Project 1")
         );
-        Resource<PipelineSummary> p = controller.pipelineGet(1);
+        Resource<ProjectSummary> p = controller.projectGet(1);
         assertEquals("P1", p.getData().getName());
-        assertEquals("http://localhost/ui/pipeline/1", p.getLink("self").getHref());
-        assertEquals("http://localhost/pipeline/P1", p.getLink("gui").getHref());
+        assertEquals("http://localhost/ui/project/1", p.getLink("self").getHref());
+        assertEquals("http://localhost/project/P1", p.getLink("gui").getHref());
     }
 
     @Test
-    public void pipelineCreate() {
-        when(structureService.createPipeline(
-                new PipelineCreationForm(
+    public void projectCreate() {
+        when(structureService.createProject(
+                new ProjectCreationForm(
                         "P3",
-                        "Pipeline 3"
+                        "Project 3"
                 )
         )).thenReturn(
-                new PipelineSummary(
+                new ProjectSummary(
                         100,
                         "P3",
-                        "Pipeline 3"
+                        "Project 3"
                 )
         );
-        Resource<PipelineSummary> p = controller.pipelineCreate(
-                new PipelineCreationForm(
+        Resource<ProjectSummary> p = controller.projectCreate(
+                new ProjectCreationForm(
                         "P3",
-                        "Pipeline 3"
+                        "Project 3"
                 )
         );
         assertEquals(100, p.getData().getId());
         assertEquals("P3", p.getData().getName());
-        assertEquals("Pipeline 3", p.getData().getDescription());
-        assertEquals("http://localhost/ui/pipeline/100", p.getLink("self").getHref());
-        assertEquals("http://localhost/pipeline/P3", p.getLink("gui").getHref());
+        assertEquals("Project 3", p.getData().getFullName());
+        assertEquals("http://localhost/ui/project/100", p.getLink("self").getHref());
+        assertEquals("http://localhost/project/100", p.getLink("gui").getHref());
     }
 
 }

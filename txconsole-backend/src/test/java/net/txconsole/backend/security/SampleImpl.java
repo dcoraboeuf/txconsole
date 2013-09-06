@@ -1,8 +1,8 @@
 package net.txconsole.backend.security;
 
-import net.txconsole.service.security.PipelineFunction;
-import net.txconsole.service.security.PipelineGrant;
-import net.txconsole.service.security.PipelineGrantId;
+import net.txconsole.service.security.ProjectFunction;
+import net.txconsole.service.security.ProjectGrant;
+import net.txconsole.service.security.ProjectGrantId;
 
 public class SampleImpl implements SampleAPI {
 
@@ -11,17 +11,17 @@ public class SampleImpl implements SampleAPI {
 	}
 
 	@Override
-	@PipelineGrant(PipelineFunction.UPDATE)
-	public void pipeline_call_missing_param(int pipeline) {
+	@ProjectGrant(ProjectFunction.UPDATE)
+	public void project_call_missing_param(int project) {
 	}
 
 	@Override
-	@PipelineGrant(PipelineFunction.UPDATE)
-	public void pipeline_call_too_much(@PipelineGrantId int pipeline, @PipelineGrantId int additional) {
+	@ProjectGrant(ProjectFunction.UPDATE)
+	public void project_call_too_much(@ProjectGrantId int project, @ProjectGrantId int additional) {
 	}
 
 	@Override
-	@PipelineGrant(PipelineFunction.UPDATE)
-	public void pipeline_call_ok(@PipelineGrantId int pipeline, String name) {
+	@ProjectGrant(ProjectFunction.UPDATE)
+	public void project_call_ok(@ProjectGrantId int project, String name) {
 	}
 }

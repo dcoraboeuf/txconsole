@@ -2,15 +2,13 @@ package net.txconsole.backend;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import net.txconsole.backend.dao.PipelineDao;
-import net.txconsole.backend.dao.model.TPipeline;
-import net.txconsole.core.model.PipelineCreationForm;
-import net.txconsole.core.model.PipelineSummary;
-import net.txconsole.core.security.SecurityRoles;
+import net.txconsole.backend.dao.ProjectDao;
+import net.txconsole.backend.dao.model.TProject;
+import net.txconsole.core.model.ProjectCreationForm;
+import net.txconsole.core.model.ProjectSummary;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.security.AdminGrant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,49 +17,43 @@ import java.util.List;
 @Service
 public class StructureServiceImpl implements StructureService {
 
-    private final PipelineDao pipelineDao;
-    private final Function<TPipeline, PipelineSummary> pipelineSummaryFunction = new Function<TPipeline, PipelineSummary>() {
+    private final ProjectDao projectDao;
+    private final Function<TProject, ProjectSummary> projectSummaryFunction = new Function<TProject, ProjectSummary>() {
         @Override
-        public PipelineSummary apply(TPipeline t) {
-            return new PipelineSummary(
+        public ProjectSummary apply(TProject t) {
+            return new ProjectSummary(
                     t.getId(),
                     t.getName(),
-                    t.getDescription()
+                    t.getFullName()
             );
         }
     };
 
     @Autowired
-    public StructureServiceImpl(PipelineDao pipelineDao) {
-        this.pipelineDao = pipelineDao;
+    public StructureServiceImpl(ProjectDao projectDao) {
+        this.projectDao = projectDao;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<PipelineSummary> getPipelines() {
+    public List<ProjectSummary> getProjects() {
         return Lists.transform(
-                pipelineDao.findAll(),
-                pipelineSummaryFunction
+                projectDao.findAll(),
+                projectSummaryFunction
         );
     }
 
     @Override
     @Transactional(readOnly = true)
-    public PipelineSummary getPipeline(int id) {
-        return pipelineSummaryFunction.apply(pipelineDao.getById(id));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public PipelineSummary getPipelineByName(String name) {
-        return pipelineSummaryFunction.apply(pipelineDao.getByName(name));
+    public ProjectSummary getProject(int id) {
+        return projectSummaryFunction.apply(projectDao.getById(id));
     }
 
     @Override
     @Transactional
     @AdminGrant
-    public PipelineSummary createPipeline(PipelineCreationForm form) {
-        int id = pipelineDao.create(form.getName(), form.getDescription());
-        return getPipeline(id);
+    public ProjectSummary createProject(ProjectCreationForm form) {
+        int id = projectDao.create(form.getName(), form.getFullName());
+        return getProject(id);
     }
 }

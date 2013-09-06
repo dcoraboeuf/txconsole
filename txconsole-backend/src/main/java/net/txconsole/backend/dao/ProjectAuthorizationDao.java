@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ProjectAuthorizationDao {
 
-    List<TProjectAuthorization> findByPipeline(int pipeline);
+    List<TProjectAuthorization> findByProject(int project);
 
     List<TProjectAuthorization> findByAccount(int account);
 }

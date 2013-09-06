@@ -1,7 +1,7 @@
-pipeline.name
+project.name
     en -> Name
     fr -> Nom
 
-pipeline.description
-    en -> Description
-    fr -> Description
+project.fullName
+    en -> Full name
+    fr -> Nom complet

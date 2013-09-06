@@ -27,11 +27,11 @@ public class GUIController extends AbstractGUIController {
     }
 
     /**
-     * Pipeline page
+     * Project page
      */
-    @RequestMapping(value = "/pipeline/{name:[a-zA-Z0-9_\\.]+}", method = RequestMethod.GET)
-    public ModelAndView pipelineGet(@PathVariable String name) {
-        return new ModelAndView("pipeline", "pipeline", structureService.getPipelineByName(name));
+    @RequestMapping(value = "/project/{id}", method = RequestMethod.GET)
+    public ModelAndView projectGet(@PathVariable int id) {
+        return new ModelAndView("project", "project", structureService.getProject(id));
     }
 
 }

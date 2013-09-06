@@ -4,10 +4,10 @@ public interface SampleAPI {
 
     void no_constraint();
 
-	void pipeline_call_missing_param(int pipeline);
+	void project_call_missing_param(int project);
 
-	void pipeline_call_too_much(int pipeline, int additional);
+	void project_call_too_much(int project, int additional);
 
-	void pipeline_call_ok(int pipeline, String name);
+	void project_call_ok(int project, String name);
 
 }

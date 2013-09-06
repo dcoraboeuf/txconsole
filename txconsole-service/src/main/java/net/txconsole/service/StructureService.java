@@ -1,17 +1,15 @@
 package net.txconsole.service;
 
-import net.txconsole.core.model.PipelineCreationForm;
-import net.txconsole.core.model.PipelineSummary;
+import net.txconsole.core.model.ProjectCreationForm;
+import net.txconsole.core.model.ProjectSummary;
 
 import java.util.List;
 
 public interface StructureService {
 
-    List<PipelineSummary> getPipelines();
+    List<ProjectSummary> getProjects();
 
-    PipelineSummary getPipeline(int id);
+    ProjectSummary getProject(int id);
 
-    PipelineSummary createPipeline(PipelineCreationForm form);
-
-    PipelineSummary getPipelineByName(String name);
+    ProjectSummary createProject(ProjectCreationForm form);
 }

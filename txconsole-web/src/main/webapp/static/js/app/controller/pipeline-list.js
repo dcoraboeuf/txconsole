@@ -1,6 +1,6 @@
 define(['render'], function (render) {
     return {
-        url: 'ui/pipeline',
-        render: render.asTableTemplate('pipeline-list')
+        url: 'ui/project',
+        render: render.asTableTemplate('project-list')
     }
 })

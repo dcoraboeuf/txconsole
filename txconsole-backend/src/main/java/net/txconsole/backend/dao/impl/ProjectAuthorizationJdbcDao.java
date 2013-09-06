@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 public class ProjectAuthorizationJdbcDao extends AbstractJdbcDao implements ProjectAuthorizationDao {
 
-    private final RowMapper<TProjectAuthorization> pipelineAuthorizationRowMapper = new RowMapper<TProjectAuthorization>() {
+    private final RowMapper<TProjectAuthorization> projectAuthorizationRowMapper = new RowMapper<TProjectAuthorization>() {
 
         @Override
         public TProjectAuthorization mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -37,11 +37,11 @@ public class ProjectAuthorizationJdbcDao extends AbstractJdbcDao implements Proj
 
     @Override
     @Transactional(readOnly = true)
-    public List<TProjectAuthorization> findByPipeline(int pipeline) {
+    public List<TProjectAuthorization> findByProject(int project) {
         return getNamedParameterJdbcTemplate().query(
                 SQL.PROJECT_AUTHORIZATION_BY_PROJECT,
-                params("project", pipeline),
-                pipelineAuthorizationRowMapper
+                params("project", project),
+                projectAuthorizationRowMapper
         );
     }
 
@@ -51,7 +51,7 @@ public class ProjectAuthorizationJdbcDao extends AbstractJdbcDao implements Proj
         return getNamedParameterJdbcTemplate().query(
                 SQL.PROJECT_AUTHORIZATION_BY_ACCOUNT,
                 params("account", account),
-                pipelineAuthorizationRowMapper
+                projectAuthorizationRowMapper
         );
     }
 }

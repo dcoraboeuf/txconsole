@@ -1,22 +1,22 @@
 define(['dialog', 'jquery', 'ajax'], function(dialog, $, ajax) {
 
     /**
-     * Creating a pipeline
+     * Creating a project
      */
-    function createPipeline() {
+    function createProject() {
         dialog.show({
-            title: 'pipeline.create'.loc(),
-            templateId: 'pipeline-create',
+            title: 'project.create'.loc(),
+            templateId: 'project-create',
             submitFn: function (config) {
                 ajax.post({
-                    url: 'ui/pipeline',
+                    url: 'ui/project',
                     data: {
-                        name: $('#pipeline-name').val(),
-                        description: $('#pipeline-description').val()
+                        name: $('#project-name').val(),
+                        description: $('#project-description').val()
                     },
-                    successFn: function (pipeline) {
+                    successFn: function (project) {
                         config.closeFn();
-                        'gui/pipeline/{0}'.format(pipeline.data.name.html()).goto();
+                        'gui/project/{0}'.format(project.data.name.html()).goto();
                     },
                     errorFn: ajax.simpleAjaxErrorFn(config.errorFn)
                 });
@@ -26,6 +26,6 @@ define(['dialog', 'jquery', 'ajax'], function(dialog, $, ajax) {
 
     //
 
-    $('#pipeline-create').click(createPipeline);
+    $('#project-create').click(createProject);
 
 });

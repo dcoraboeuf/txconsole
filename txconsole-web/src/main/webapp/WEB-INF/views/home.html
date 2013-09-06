@@ -4,14 +4,14 @@
 
     <div class="row-fluid">
         <div class="span4">
-            <@section title=loc('pipeline.list')>
+            <@section title=loc('project.list')>
                 <div
-                    id="pipeline-list"
+                    id="project-list"
                     class="dynamic"
-                    dynamic-controller="pipeline-list"
+                    dynamic-controller="project-list"
                     ></div>
                 <#if secAdmin()>
-                    <button id="pipeline-create" type="button" class="btn"><@lh key="pipeline.create" /></button>
+                    <button id="project-create" type="button" class="btn"><@lh key="project.create" /></button>
                 </#if>
             </@section>
         </div>
