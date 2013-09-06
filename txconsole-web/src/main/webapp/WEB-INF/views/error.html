@@ -1,0 +1,16 @@
+<#include "/lib/layout.html">
+<@layout_std page="error" noscript=true>
+	<p>
+		<@lh key="error.message" />
+	</p>
+	<p>
+		<@lh key="general.error.contact" />
+	</p>
+	<p class="alert alert-error">
+		<span id="error-page-message">${error.message?html}</span>
+		<br/><b>${error.uuid?html}</b>
+	</p>
+	<p>
+		<a href="" class="btn"><@lh key="error.back" /></a>
+	</p>
+</@layout_std>

@@ -8,12 +8,12 @@
 
 	<packaging>pom</packaging>
 
-	<name>Translation Console Parent</name>
+	<name>TxConsole Parent</name>
 
 	<scm>
-		<connection>scm:git:git@github.com:dcoraboeuf/translation-console.git</connection>
-		<url>scm:git:git@github.com:dcoraboeuf/translation-console.git</url>
-		<developerConnection>scm:git:git@github.com:dcoraboeuf/translation-console.git</developerConnection>
+		<connection>scm:git:git@github.com:dcoraboeuf/txconsole.git</connection>
+		<url>scm:git:git@github.com:dcoraboeuf/txconsole.git</url>
+		<developerConnection>scm:git:git@github.com:dcoraboeuf/txconsole.git</developerConnection>
 	</scm>
 
 	<developers>
@@ -31,37 +31,27 @@
 		</license>
 	</licenses>
 
-	<url>https://github.com/dcoraboeuf/translation-console</url>
+	<url>https://github.com/dcoraboeuf/txconsole</url>
 
 	<properties>
 		<!-- Versions -->
 		<springVersion>3.2.0.RELEASE</springVersion>
 		<springSecurityVersion>3.1.1.RELEASE</springSecurityVersion>
 		<slf4jVersion>1.7.5</slf4jVersion>
-		<lombokVersion>0.11.4</lombokVersion>
+		<lombokVersion>0.12.0</lombokVersion>
         <httpClientVersion>4.2.1</httpClientVersion>
 		<!-- General -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<modules>
-		<!--
-		<module>translation-console-core</module>
-		<module>translation-console-backend</module>
-		<module>translation-console-web</module>
-		<module>translation-console-service</module>
-        <module>translation-console-testutils</module>
-        <module>translation-console-jenkins</module>
-        <module>translation-console-client</module>
-        <module>translation-console-extension-api</module>
-        <module>translation-console-extension</module>
-        <module>translation-console-dao</module>
-        <module>translation-console-tx</module>
-        <module>translation-console-web-support</module>
-        <module>translation-console-acceptance</module>
-		-->
-        <module>translation-console-core</module>
-        <module>translation-console-backend</module>
+        <module>txconsole-web-support</module>
+        <module>txconsole-core</module>
+        <module>txconsole-web</module>
+        <module>txconsole-backend</module>
+        <module>txconsole-service</module>
+        <module>txconsole-dao</module>
+        <module>txconsole-testutils</module>
     </modules>
 
 	<dependencyManagement>
@@ -289,11 +279,6 @@
 				<artifactId>ant</artifactId>
 				<version>1.8.3</version>
 			</dependency>
-            <dependency>
-                <groupId>org.jsoup</groupId>
-                <artifactId>jsoup</artifactId>
-                <version>1.7.2</version>
-            </dependency>
 			<!-- J2EE -->
 			<dependency>
 				<groupId>javax.servlet</groupId>

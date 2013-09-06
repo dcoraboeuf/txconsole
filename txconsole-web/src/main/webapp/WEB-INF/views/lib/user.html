@@ -1,0 +1,29 @@
+<#include "/lib/i18n.html" />
+
+<#macro user>
+    <#if secLogged()>
+        <li class="dropdown">
+            <a id="header-user" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <#if secAdmin() >
+                    <i class="icon-lock icon-white"></i>
+                    <#else>
+                        <i class="icon-user icon-white"></i>
+                </#if>
+                ${ secDisplayName()?html }
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <#if secAdmin() >
+                    <li><a id="header-accounts" href="account"><@lh key="accounts" /></a></li>
+                    <li><a id="header-settings" href="settings"><@lh key="settings" /></a></li>
+                </#if>
+                <!-- Profile page -->
+                <li><a id="header-profile" href="profile"><@lh key="profile" /></a></li>
+                <!-- Signing out -->
+                <li><a id="header-signout" href="logout"><@lh key="logout" /></a></li>
+            </ul>
+        </li>
+    <#else/>
+        <li><p id="header-signin" class="navbar-text action"><@lh key="login" /></p></li>
+    </#if>
+</#macro>

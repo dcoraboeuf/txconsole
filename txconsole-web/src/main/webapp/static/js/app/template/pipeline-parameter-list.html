@@ -1,0 +1,15 @@
+<tr>
+    <td>
+        {{^data.overriddable}}
+            <i class="icon-lock"></i>
+        {{/data.overriddable}}
+        <b>{{data.name}}</b>
+        <br/>
+        <span class="description">
+            {{data.description}}
+            {{#if data.defaultValue}}
+                <i class="icon-arrow-right"></i> {{data.defaultValue}}
+            {{/if}}
+        </span>
+    </td>
+</tr>

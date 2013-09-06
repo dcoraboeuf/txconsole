@@ -1,0 +1,61 @@
+/* ===== Bootstrap custom ===== */
+
+/* General width for the container */
+.container {
+    width: 85%;
+}
+
+.navbar-text {
+    padding: 0px !important;
+    margin-left: 1em;
+}
+
+/* ===== Application ===== */
+
+/* Pointer */
+.action {
+    cursor: pointer;
+}
+
+/* Hidden */
+.hidden {
+    display: none;
+}
+
+/* Alert (none) */
+.alert-none {
+    display: none;
+}
+
+/* Description test */
+.description {
+    font-style: italic;
+    color: #AAAAAA;
+}
+
+/* Page title */
+
+.title {
+    font-weight: bold;
+    font-size: 150%;
+}
+
+/*  Action visible only when container is hovered */
+
+.action.action-optional {
+    opacity: 0.25;
+    float: right;
+}
+
+.action.action-optional.action-inline {
+    float: none;
+}
+
+*:hover > .action.action-optional {
+    opacity: 1.0;
+}
+
+.action.action-optional a {
+    text-decoration: none;
+    color: black;
+}
