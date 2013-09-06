@@ -6,7 +6,7 @@ public interface SQL {
 
     String PROJECT_ALL = "SELECT * FROM PROJECT ORDER BY NAME";
     String PROJECT_BY_ID = "SELECT * FROM PROJECT WHERE ID = :id";
-    String PROJECT_CREATE = "INSERT INTO PROJECT (NAME, DESCRIPTION) VALUES (:name, :description)";
+    String PROJECT_CREATE = "INSERT INTO PROJECT (NAME, FULLNAME) VALUES (:name, :fullName)";
 
     // Configuration
     String CONFIGURATION_GET = "SELECT VALUE FROM CONFIGURATION WHERE NAME = :name";

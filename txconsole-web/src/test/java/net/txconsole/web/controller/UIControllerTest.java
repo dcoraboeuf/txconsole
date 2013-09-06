@@ -61,13 +61,13 @@ public class UIControllerTest {
             Resource<ProjectSummary> p = list.get(0);
             assertEquals("P1", p.getData().getName());
             assertEquals("http://localhost/ui/project/1", p.getLink("self").getHref());
-            assertEquals("http://localhost/project/P1", p.getLink("gui").getHref());
+            assertEquals("http://localhost/project/1", p.getLink("gui").getHref());
         }
         {
             Resource<ProjectSummary> p = list.get(1);
             assertEquals("P2", p.getData().getName());
             assertEquals("http://localhost/ui/project/2", p.getLink("self").getHref());
-            assertEquals("http://localhost/project/P2", p.getLink("gui").getHref());
+            assertEquals("http://localhost/project/2", p.getLink("gui").getHref());
         }
     }
 
@@ -79,7 +79,7 @@ public class UIControllerTest {
         Resource<ProjectSummary> p = controller.projectGet(1);
         assertEquals("P1", p.getData().getName());
         assertEquals("http://localhost/ui/project/1", p.getLink("self").getHref());
-        assertEquals("http://localhost/project/P1", p.getLink("gui").getHref());
+        assertEquals("http://localhost/project/1", p.getLink("gui").getHref());
     }
 
     @Test
