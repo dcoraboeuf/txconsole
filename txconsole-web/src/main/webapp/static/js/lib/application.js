@@ -34,8 +34,33 @@ define(['ajax','common'], function (ajax, common) {
         }
     }
 
+    function gui (resource) {
+        goLink(resource, 'gui')
+    }
+
+    function goLink (resource, rel) {
+        var href = link(resource, rel);
+        if (href) {
+            location.href = href;
+        } else {
+            common.log('application')('Cannot find link for {0}', rel);
+        }
+    }
+
+    function link (resource, rel) {
+        for (var i in resource.links) {
+            var link = resource.links[i];
+            if (link.rel == rel) {
+                return link.href;
+            }
+        }
+    }
+
     return {
-        deleteEntity: deleteEntity
+        deleteEntity: deleteEntity,
+        gui: gui,
+        goLink: goLink,
+        link: link
     }
 
 });
