@@ -60,6 +60,8 @@
         <module>translation-console-web-support</module>
         <module>translation-console-acceptance</module>
 		-->
+        <module>translation-console-core</module>
+        <module>translation-console-backend</module>
     </modules>
 
 	<dependencyManagement>
