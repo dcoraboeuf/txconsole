@@ -1,4 +1,4 @@
-package net.txconsole.dao;
+package net.txconsole.backend.dao.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;

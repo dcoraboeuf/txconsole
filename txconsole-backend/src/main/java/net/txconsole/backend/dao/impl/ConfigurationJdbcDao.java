@@ -2,7 +2,6 @@ package net.txconsole.backend.dao.impl;
 
 import net.txconsole.backend.config.Caches;
 import net.txconsole.backend.dao.ConfigurationDao;
-import net.txconsole.dao.AbstractJdbcDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

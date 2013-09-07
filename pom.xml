@@ -50,7 +50,6 @@
         <module>txconsole-web</module>
         <module>txconsole-backend</module>
         <module>txconsole-service</module>
-        <module>txconsole-dao</module>
         <module>txconsole-testutils</module>
     </modules>
 

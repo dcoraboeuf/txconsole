@@ -5,8 +5,6 @@ import net.txconsole.backend.dao.AccountDao;
 import net.txconsole.backend.dao.model.TAccount;
 import net.txconsole.backend.exceptions.AccountAlreadyExistException;
 import net.txconsole.core.model.Ack;
-import net.txconsole.dao.AbstractJdbcDao;
-import net.txconsole.dao.SQLUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;

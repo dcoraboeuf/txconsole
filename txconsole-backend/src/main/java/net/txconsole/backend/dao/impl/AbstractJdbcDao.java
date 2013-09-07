@@ -1,4 +1,4 @@
-package net.txconsole.dao;
+package net.txconsole.backend.dao.impl;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;

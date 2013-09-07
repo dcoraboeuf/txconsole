@@ -3,8 +3,6 @@ package net.txconsole.backend.dao.impl;
 import net.txconsole.backend.dao.ProjectAuthorizationDao;
 import net.txconsole.backend.dao.model.TProjectAuthorization;
 import net.txconsole.core.model.ProjectRole;
-import net.txconsole.dao.AbstractJdbcDao;
-import net.txconsole.dao.SQLUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
