@@ -1,15 +1,21 @@
 package net.txconsole.service.support;
 
+import net.txconsole.core.model.TranslationMap;
+
 /**
  * Provides access to a {@link net.txconsole.core.model.TranslationMap},
  * in writing or in reading.
  */
-public interface TranslationSource<C> {
+public interface TranslationSource<C> extends Configurable<C> {
 
     /**
-     *
-     * @return
+     * Reads the translation map using the current configuration.
      */
-    Class<C> getConfigClass();
+    TranslationMap read();
+
+    /**
+     * Writes the translation map using the current configuration.
+     */
+    void write(TranslationMap map);
 
 }
