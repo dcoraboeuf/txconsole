@@ -119,9 +119,23 @@ should be enough to deal with this kind of architecture.
 
 ### Extensibility through scripting
 
-An easy way to allow for extensibility is to allow configurators to enter some basic scripts to perform some actions (like typing some
+An easy way to allow for extensibility is to allow configurators (administrators or owners) to enter some basic scripts to perform some actions (like typing some
 Groovy in order to detect problems).
-The execution of such scripts must be sandboxed using mechanisms like [Java-Sandbox](http://blog.datenwerke.net/2013/06/sandboxing-groovy-with-java-sandbox.html).
+The execution of such scripts must be sandboxed using mechanisms like [Java-Sandbox](http://blog.datenwerke.net/2013/06/sandboxing-groovy-with-java-sandbox.html) or the Groovy Shell (from the Groovy library).
+
+### Working copies
+
+Most of file sources will require a working copy in order to have access to the raw files: Subversion, Git...
+
+The file source must be able to access the working copy in a controlled way:
+
+ * no need to synchronize (or clone) each time
+ * ... but synchronized access in order to allow conflicts
+
+This can be performed by:
+
+ * having a scheduled service updating (or creating, or cleaning) the working copies
+* having a service that ensures a synchronous access to those working copies
 
 ### API
 
