@@ -121,16 +121,14 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
-        <!-- TODO Extensions -->
-        <!-- Testing -->
-        <!--
+        <!-- Extensions -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>TODO txconsole-testutils</artifactId>
+            <artifactId>txconsole-extension-svn</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
+            <scope>runtime</scope>
         </dependency>
-        -->
+        <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

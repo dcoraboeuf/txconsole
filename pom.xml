@@ -51,6 +51,7 @@
         <module>txconsole-backend</module>
         <module>txconsole-service</module>
         <module>txconsole-testutils</module>
+        <module>txconsole-extension</module>
     </modules>
 
 	<dependencyManagement>
