@@ -74,6 +74,10 @@ define(['config', 'render', 'jquery'], function(config, render, $) {
             // Customization
             if (form) {
                 dialog.form = form;
+                // Dialog get function
+                dialog.get = function (el) {
+                    return dialog.form.find(el)
+                };
                 // Error section
                 var errorEl = $('<div></div>')
                     .addClass('error').addClass('hidden').addClass('alert').addClass('alert-error')
