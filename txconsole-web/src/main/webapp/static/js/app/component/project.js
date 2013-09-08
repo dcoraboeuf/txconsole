@@ -9,6 +9,8 @@ define(['dialog','ajax','application'], function(dialog, ajax, application) {
             templateId: 'project-create',
             initFn: function (dialog) {
                 // Loading of the sources
+                // TODO Extracts this code to the 'application' library (or dedicated one maybe)
+                // ... for the management of Descriptible or Configurable objects
                 ajax.get({
                     url: 'ui/ref/txsource',
                     successFn: function (sources) {
