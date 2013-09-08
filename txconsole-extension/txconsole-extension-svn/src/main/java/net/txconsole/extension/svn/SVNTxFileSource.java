@@ -15,7 +15,7 @@ public class SVNTxFileSource extends AbstractSCMTxFileSource<SVNTxFileSourceConf
     }
 
     @Override
-    public FileSource getSource() {
+    public FileSource getSource(SVNTxFileSourceConfig config) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

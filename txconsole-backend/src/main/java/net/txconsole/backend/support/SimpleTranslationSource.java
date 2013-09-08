@@ -7,7 +7,7 @@ import net.txconsole.service.support.TranslationSource;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SimpleTranslationSource extends AbstractConfigurable<SimpleTranslationSourceConfig> implements TranslationSource<SimpleTranslationSourceConfig> {
+public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTranslationSourceConfig<S, F>> implements TranslationSource<SimpleTranslationSourceConfig<S, F>> {
 
     public SimpleTranslationSource() {
         super(
@@ -18,20 +18,26 @@ public class SimpleTranslationSource extends AbstractConfigurable<SimpleTranslat
     }
 
     @Override
-    public TranslationMap read() {
+    public TranslationMap read(SimpleTranslationSourceConfig<S, F> config) {
         // TODO Sync (transaction callback)
         // Gets the file source
-        FileSource s = getConfig().getSource().getSource();
+        FileSource s = config.getTxFileSourceConfigured().getConfigurable().getSource(config.getTxFileSourceConfigured().getConfiguration());
         // Reads the map
-        return getConfig().getFormat().readFrom(s);
+        return config.getTxFileFormatConfigured().getConfigurable().readFrom(
+                config.getTxFileFormatConfigured().getConfiguration(),
+                s);
     }
 
     @Override
-    public void write(TranslationMap map) {
+    public void write(SimpleTranslationSourceConfig<S, F> config, TranslationMap map) {
         // TODO Sync (transaction callback)
         // Gets the file source
-        FileSource s = getConfig().getSource().getSource();
+        FileSource s = config.getTxFileSourceConfigured().getConfigurable().getSource(config.getTxFileSourceConfigured().getConfiguration());
         // Writes the map
-        getConfig().getFormat().writeTo(map, s);
+        config.getTxFileFormatConfigured().getConfigurable().writeTo(
+                config.getTxFileFormatConfigured().getConfiguration(),
+                map,
+                s
+        );
     }
 }

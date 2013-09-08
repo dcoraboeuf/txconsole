@@ -10,7 +10,7 @@ public interface TxFileSource<C> extends Configurable<C> {
     /**
      * Method to get access to the files
      */
-    FileSource getSource();
+    FileSource getSource(C config);
 
     // TODO Method to check the sync
     // TODO Method to sync down

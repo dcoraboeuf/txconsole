@@ -11,11 +11,11 @@ public interface TranslationSource<C> extends Configurable<C> {
     /**
      * Reads the translation map using the current configuration.
      */
-    TranslationMap read();
+    TranslationMap read(C config);
 
     /**
      * Writes the translation map using the current configuration.
      */
-    void write(TranslationMap map);
+    void write(C config, TranslationMap map);
 
 }
