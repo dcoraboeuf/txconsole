@@ -9,16 +9,9 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>txconsole-extension-svn</artifactId>
+    <artifactId>txconsole-extension-scm</artifactId>
 
-    <name>TxConsole SVN extension</name>
+    <name>TxConsole Extension SCM</name>
 
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>txconsole-extension-scm</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
 
 </project>

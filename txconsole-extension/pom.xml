@@ -6,6 +6,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>txconsole-extension-svn</module>
+        <module>txconsole-extension-scm</module>
     </modules>
     <parent>
         <artifactId>txconsole-parent</artifactId>
