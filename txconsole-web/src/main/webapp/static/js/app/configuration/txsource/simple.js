@@ -1,8 +1,14 @@
-define(['jquery'], function ($) {
+define(['jquery','render'], function ($, render) {
 
     function display (configContainer) {
-        // TODO TxFileSource & TxFileFormat
-        $('<span></span>').text('Test').appendTo(configContainer)
+        render.renderInto(
+            configContainer,
+            'configuration/txsource/simple',
+            {},
+            function () {
+
+            }
+        )
     }
 
     return {
