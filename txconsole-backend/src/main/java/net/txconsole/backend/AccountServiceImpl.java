@@ -3,6 +3,7 @@ package net.txconsole.backend;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
+import net.sf.jstring.Strings;
 import net.txconsole.backend.dao.AccountDao;
 import net.txconsole.backend.dao.ProjectAuthorizationDao;
 import net.txconsole.backend.dao.model.TAccount;
@@ -14,7 +15,6 @@ import net.txconsole.core.validation.Validations;
 import net.txconsole.service.AccountService;
 import net.txconsole.service.security.AdminGrant;
 import net.txconsole.service.security.ProjectFunction;
-import net.sf.jstring.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -241,16 +241,18 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
     }
 
     protected Account getACL(Account account) {
-        // Functions for all projects
-        List<TProjectAuthorization> authList = projectAuthorizationDao.findByAccount(account.getId());
-        for (TProjectAuthorization auth : authList) {
-            switch (auth.getRole()) {
-                case OWNER:
-                    account = account.withACL("PROJECT", auth.getProject(), ProjectFunction.UPDATE.name());
-                case TRANSLATOR:
-                case REVIEWER:
-                case CONTRIBUTOR:
-                default:
+        if (account != null) {
+            // Functions for all projects
+            List<TProjectAuthorization> authList = projectAuthorizationDao.findByAccount(account.getId());
+            for (TProjectAuthorization auth : authList) {
+                switch (auth.getRole()) {
+                    case OWNER:
+                        account = account.withACL("PROJECT", auth.getProject(), ProjectFunction.UPDATE.name());
+                    case TRANSLATOR:
+                    case REVIEWER:
+                    case CONTRIBUTOR:
+                    default:
+                }
             }
         }
         // OK

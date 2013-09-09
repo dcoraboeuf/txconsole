@@ -1,4 +1,4 @@
-define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable'], function (dialog, ajax, application, jcombo, jconfigurable) {
+define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'common'], function (dialog, ajax, application, jcombo, jconfigurable, common) {
 
     /**
      * Creating a project
@@ -39,7 +39,27 @@ define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable'], function (d
         });
     }
 
+    function deleteProject (id) {
+        ajax.get({
+            url: 'ui/project/{0}'.format(id),
+            successFn: function (resource) {
+                common.confirmAndCall(
+                    'project.delete.prompt'.loc(resource.data.name),
+                    function () {
+                        ajax.del({
+                            url: 'ui/project/{0}'.format(id),
+                            successFn: function (home) {
+                                application.gui(home)
+                            }
+                        })
+                    }
+                )
+            }
+        })
+    }
+
     return {
-        createProject: createProject
+        createProject: createProject,
+        deleteProject: deleteProject
     }
 });

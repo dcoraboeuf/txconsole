@@ -4,9 +4,11 @@ import net.txconsole.backend.config.Caches;
 import net.txconsole.backend.dao.ProjectDao;
 import net.txconsole.backend.dao.model.TProject;
 import net.txconsole.backend.exceptions.ProjectAlreadyExistException;
+import net.txconsole.core.model.Ack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -69,5 +71,21 @@ public class ProjectJdbcDao extends AbstractJdbcDao implements ProjectDao {
         } catch (DuplicateKeyException ex) {
             throw new ProjectAlreadyExistException(name);
         }
+    }
+
+    @Override
+    @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(Caches.PROJECT_ID),
+                    @CacheEvict(value = Caches.PROJECT_LIST, key = "'0'")
+            })
+    public Ack delete(int id) {
+        return Ack.one(
+                getNamedParameterJdbcTemplate().update(
+                        SQL.PROJECT_DELETE,
+                        params("id", id)
+                )
+        );
     }
 }

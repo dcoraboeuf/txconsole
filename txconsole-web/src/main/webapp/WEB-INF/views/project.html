@@ -3,13 +3,16 @@
 <@layout_std
     page="project"
     title=project.name?html
-    noscript=true
     breadcrumbs={
         loc("home"): ""
     }>
 
-    <@title value=project.name description=project.fullName>
+    <input type="hidden" id="project" value="${project.id?c}" />
 
+    <@title value=project.name description=project.fullName>
+        <#if secAdmin()>
+            <@title_command id="project-delete" title=loc('general.delete') class="icon-trash" />
+        </#if>
     </@title>
 
 </@layout_std>

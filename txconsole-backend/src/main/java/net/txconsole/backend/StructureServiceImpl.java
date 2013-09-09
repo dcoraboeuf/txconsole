@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.txconsole.backend.dao.ProjectDao;
 import net.txconsole.backend.dao.model.TProject;
+import net.txconsole.core.model.Ack;
 import net.txconsole.core.model.ProjectCreationForm;
 import net.txconsole.core.model.ProjectSummary;
 import net.txconsole.service.StructureService;
@@ -55,5 +56,12 @@ public class StructureServiceImpl implements StructureService {
     public ProjectSummary createProject(ProjectCreationForm form) {
         int id = projectDao.create(form.getName(), form.getFullName());
         return getProject(id);
+    }
+
+    @Override
+    @Transactional
+    @AdminGrant
+    public Ack deleteProject(int id) {
+        return projectDao.delete(id);
     }
 }

@@ -71,4 +71,12 @@ public class UIController extends AbstractUIController {
     Resource<ProjectSummary> projectGet(@PathVariable int id) {
         return projectSummaryResourceFn.apply(structureService.getProject(id));
     }
+
+    @RequestMapping(value = "/project/{id}", method = RequestMethod.DELETE)
+    public
+    @ResponseBody
+    Resource<String> projectDelete(@PathVariable int id) {
+        structureService.deleteProject(id);
+        return home();
+    }
 }

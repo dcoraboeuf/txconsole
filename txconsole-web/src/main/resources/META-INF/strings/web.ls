@@ -412,3 +412,7 @@ project.list
 project.create
     en -> New project
     fr -> Nouveau projet
+
+project.delete.prompt
+    en -> Are you sure to delete the project "{0}"?
+    fr -> Etes-vous sûr de vouloir supprimer le projet "{0}" ?
