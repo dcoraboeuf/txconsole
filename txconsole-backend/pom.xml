@@ -98,6 +98,19 @@
             <artifactId>slf4j-log4j12</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Extensions for test -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>txconsole-extension-svn</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>txconsole-extension-format-properties</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

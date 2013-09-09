@@ -1,6 +1,11 @@
 package net.txconsole.service.support;
 
-public class AbstractConfigurable<C> extends AbstractDescriptible implements Configurable<C> {
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
+
+public abstract class AbstractConfigurable<C> extends AbstractDescriptible implements Configurable<C> {
 
     private final Class<? super C> configClass;
 

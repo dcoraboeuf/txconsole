@@ -1,0 +1,16 @@
+{
+    "txFileSourceConfigured": {
+        "id": "extension-txfilesource-svn",
+        "node": {
+            "url": "http://test/project/translations",
+            "user": "translator",
+            "password": "xxx"
+        }
+    },
+    "txFileFormatConfigured": {
+        "id": "extension-txfileformat-properties",
+        "node": {
+            "pathPattern": "*.properties"
+        }
+    }
+}

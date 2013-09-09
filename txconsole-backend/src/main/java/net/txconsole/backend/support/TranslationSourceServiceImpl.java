@@ -5,7 +5,6 @@ import net.txconsole.backend.exceptions.TranslationSourceConfigIOException;
 import net.txconsole.backend.exceptions.TranslationSourceIDException;
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.service.support.*;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,20 +15,22 @@ import java.util.Map;
 @Service
 public class TranslationSourceServiceImpl implements TranslationSourceService {
 
-    private final ObjectMapper objectMapper;
-    private final Map<String, TranslationSource<?>> sources;
-    private final Collection<TxFileSource<?>> txFileSources;
-    private final Collection<TxFileFormat<?>> txFileFormats;
+    private Map<String, TranslationSource<?>> sources;
+    private Collection<TxFileSource<?>> txFileSources;
+    private Collection<TxFileFormat<?>> txFileFormats;
 
     @Autowired
-    public TranslationSourceServiceImpl(
-            ObjectMapper objectMapper,
-            Collection<TranslationSource<?>> sources,
-            Collection<TxFileSource<?>> txFileSources,
-            Collection<TxFileFormat<?>> txFileFormats) {
-        this.objectMapper = objectMapper;
+    public void setSources(Collection<TranslationSource<?>> sources) {
         this.sources = Maps.uniqueIndex(sources, Descriptible.idFn);
+    }
+
+    @Autowired
+    public void setTxFileSources(Collection<TxFileSource<?>> txFileSources) {
         this.txFileSources = txFileSources;
+    }
+
+    @Autowired
+    public void setTxFileFormats(Collection<TxFileFormat<?>> txFileFormats) {
         this.txFileFormats = txFileFormats;
     }
 
@@ -56,14 +57,24 @@ public class TranslationSourceServiceImpl implements TranslationSourceService {
         if (translationSource == null) {
             throw new TranslationSourceIDException(config.getId());
         }
-        // FIXME Reads the configuration
+        // Reads the configuration
         C configuration;
         try {
-            configuration = (C) objectMapper.readValue(config.getNode(), translationSource.getConfigClass());
+            configuration = translationSource.readConfiguration(config.getNode());
         } catch (IOException e) {
             throw new TranslationSourceConfigIOException(config.getId(), e);
         }
         // OK
         return new Configured<>(configuration, translationSource);
+    }
+
+    @Override
+    public <S> Configured<S, TxFileSource<S>> getConfiguredTxFileSource(JsonConfiguration config) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public <F> Configured<F, TxFileFormat<F>> getConfiguredTxFileFormat(JsonConfiguration config) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -25,4 +25,8 @@ public interface TranslationSourceService {
      * Gets an actual configuration using an input configuration
      */
     <C> Configured<C, TranslationSource<C>> getConfiguredTranslationSource(JsonConfiguration config);
+
+    <S> Configured<S, TxFileSource<S>> getConfiguredTxFileSource(JsonConfiguration config);
+
+    <F> Configured<F, TxFileFormat<F>> getConfiguredTxFileFormat(JsonConfiguration config);
 }
