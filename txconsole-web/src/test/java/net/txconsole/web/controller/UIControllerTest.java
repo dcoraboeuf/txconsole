@@ -88,7 +88,6 @@ public class UIControllerTest {
                 new ProjectCreationForm(
                         "P3",
                         "Project 3",
-                        // FIXME
                         null
                 )
         )).thenReturn(
@@ -102,7 +101,6 @@ public class UIControllerTest {
                 new ProjectCreationForm(
                         "P3",
                         "Project 3",
-                        // FIXME
                         null
                 )
         );
