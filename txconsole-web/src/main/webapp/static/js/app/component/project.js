@@ -1,4 +1,4 @@
-define(['dialog', 'ajax', 'application'], function (dialog, ajax, application) {
+define(['dialog', 'ajax', 'application', 'jcombo'], function (dialog, ajax, application, jcombo) {
 
     /**
      * Creating a project
@@ -8,45 +8,8 @@ define(['dialog', 'ajax', 'application'], function (dialog, ajax, application) {
             title: 'project.create'.loc(),
             templateId: 'project-create',
             initFn: function (dialog) {
-                // TODO Extracts this code to the 'application' library (or dedicated one maybe)
-                // ... for the management of Descriptible or Configurable objects
-                // DOM
-                var container = dialog.get('#project-txsource');
-                var select = $('<select></select>').attr('required', 'required').appendTo(container);
-                var descriptionEl = $('<div></div>')
-                    .addClass('hidden')
-                    .addClass('description')
-                    .appendTo(container);
-                ajax.get({
-                    url: 'ui/ref/txsource',
-                    successFn: function (sources) {
-                        // Empty default element
-                        select.empty();
-                        select.append($('<option></option>').text('-'));
-                        // Index
-                        var sourceIndex = {};
-                        // All elements
-                        $.each(sources, function (index, source) {
-                            $('<option></option>')
-                                .attr('value', source.id)
-                                .text(source.name)
-                                .appendTo(select);
-                            sourceIndex[source.id] = source;
-                        });
-                        // On change
-                        select.change(function () {
-                            // TODO Callback handler
-                            // Description
-                            var id = select.val();
-                            if (id != '') {
-                                descriptionEl.text(sourceIndex[id].description);
-                                descriptionEl.show();
-                            } else {
-                                descriptionEl.text('');
-                                descriptionEl.hide();
-                            }
-                        });
-                    }
+                jcombo.init(dialog.get('#project-txsource'), {
+                    url: 'ui/ref/txsource'
                 })
             },
             submitFn: function (config) {
@@ -69,4 +32,4 @@ define(['dialog', 'ajax', 'application'], function (dialog, ajax, application) {
     return {
         createProject: createProject
     }
-})
+});
