@@ -17,7 +17,7 @@ define(['jquery', 'ajax'], function ($, ajax) {
             successFn: function (sources) {
                 // Empty default element
                 select.empty();
-                select.append($('<option></option>').text('-'));
+                select.append($('<option></option>').attr('value', '').text('-'));
                 // Index
                 var sourceIndex = {};
                 // All elements

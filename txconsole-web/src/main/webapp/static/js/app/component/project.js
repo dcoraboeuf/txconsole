@@ -1,4 +1,4 @@
-define(['dialog', 'ajax', 'application', 'jcombo'], function (dialog, ajax, application, jcombo) {
+define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable'], function (dialog, ajax, application, jcombo, jconfigurable) {
 
     /**
      * Creating a project
@@ -9,7 +9,10 @@ define(['dialog', 'ajax', 'application', 'jcombo'], function (dialog, ajax, appl
             templateId: 'project-create',
             initFn: function (dialog) {
                 jcombo.init(dialog.get('#project-txsource'), {
-                    url: 'ui/ref/txsource'
+                    url: 'ui/ref/txsource',
+                    extension: jconfigurable.jcomboExtension({
+                        path: 'txsource'
+                    })
                 })
             },
             submitFn: function (config) {
