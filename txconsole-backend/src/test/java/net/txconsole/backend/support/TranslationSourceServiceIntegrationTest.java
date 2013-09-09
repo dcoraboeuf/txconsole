@@ -1,9 +1,11 @@
 package net.txconsole.backend.support;
 
 import net.txconsole.core.model.JsonConfiguration;
-import net.txconsole.service.support.Configured;
-import net.txconsole.service.support.TranslationSource;
-import net.txconsole.service.support.TranslationSourceService;
+import net.txconsole.extension.format.properties.PropertiesTxFileFormat;
+import net.txconsole.extension.format.properties.PropertiesTxFileFormatConfig;
+import net.txconsole.extension.svn.SVNTxFileSource;
+import net.txconsole.extension.svn.SVNTxFileSourceConfig;
+import net.txconsole.service.support.*;
 import net.txconsole.test.AbstractIntegrationTest;
 import net.txconsole.test.Helper;
 import org.codehaus.jackson.JsonNode;
@@ -13,12 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class TranslationSourceServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private TranslationSourceService translationSourceService;
+    @Autowired
+    private SVNTxFileSource svnTxFileSource;
+    @Autowired
+    private PropertiesTxFileFormat propertiesTxFileFormat;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -32,6 +38,25 @@ public class TranslationSourceServiceIntegrationTest extends AbstractIntegration
                 )
         );
         assertNotNull(translationSource);
+        assertTrue(translationSource.getConfigurable() instanceof SimpleTranslationSource);
+        assertEquals(
+                new SimpleTranslationSourceConfig<>(
+                        new Configured<SVNTxFileSourceConfig, TxFileSource<SVNTxFileSourceConfig>>(
+                                new SVNTxFileSourceConfig(
+                                        "http://test/project/translations",
+                                        "translator",
+                                        "xxx"
+                                ),
+                                svnTxFileSource
+                        ),
+                        new Configured<PropertiesTxFileFormatConfig, TxFileFormat<PropertiesTxFileFormatConfig>>(
+                                new PropertiesTxFileFormatConfig(
+                                        "*.properties"
+                                ),
+                                propertiesTxFileFormat
+                        )
+                ),
+                translationSource.getConfiguration());
     }
 
 }

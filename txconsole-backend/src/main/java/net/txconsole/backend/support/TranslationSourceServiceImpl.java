@@ -1,8 +1,8 @@
 package net.txconsole.backend.support;
 
 import com.google.common.collect.Maps;
-import net.txconsole.backend.exceptions.TranslationSourceConfigIOException;
-import net.txconsole.backend.exceptions.TranslationSourceIDException;
+import net.txconsole.backend.exceptions.ConfigIDException;
+import net.txconsole.backend.exceptions.ConfigIOException;
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.service.support.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,8 @@ import java.util.Map;
 public class TranslationSourceServiceImpl implements TranslationSourceService {
 
     private Map<String, TranslationSource<?>> sources;
-    private Collection<TxFileSource<?>> txFileSources;
-    private Collection<TxFileFormat<?>> txFileFormats;
+    private Map<String, TxFileSource<?>> txFileSources;
+    private Map<String, TxFileFormat<?>> txFileFormats;
 
     @Autowired
     public void setSources(Collection<TranslationSource<?>> sources) {
@@ -26,12 +26,12 @@ public class TranslationSourceServiceImpl implements TranslationSourceService {
 
     @Autowired
     public void setTxFileSources(Collection<TxFileSource<?>> txFileSources) {
-        this.txFileSources = txFileSources;
+        this.txFileSources = Maps.uniqueIndex(txFileSources, Descriptible.idFn);
     }
 
     @Autowired
     public void setTxFileFormats(Collection<TxFileFormat<?>> txFileFormats) {
-        this.txFileFormats = txFileFormats;
+        this.txFileFormats = Maps.uniqueIndex(txFileFormats, Descriptible.idFn);
     }
 
     @Override
@@ -41,40 +41,47 @@ public class TranslationSourceServiceImpl implements TranslationSourceService {
 
     @Override
     public Collection<TxFileSource<?>> getTxFileSourceList() {
-        return txFileSources;
+        return txFileSources.values();
     }
 
     @Override
     public Collection<TxFileFormat<?>> getTxFileFormatList() {
-        return txFileFormats;
+        return txFileFormats.values();
     }
 
-    @Override
-    public <C> Configured<C, TranslationSource<C>> getConfiguredTranslationSource(JsonConfiguration config) {
+    protected <C, T extends Configurable<C>> Configured<C, T> getConfigured(String configType, Map<String, ? extends Configurable<?>> configMap, JsonConfiguration config) {
         // Gets the source class
         @SuppressWarnings("unchecked")
-        TranslationSource<C> translationSource = (TranslationSource<C>) sources.get(config.getId());
-        if (translationSource == null) {
-            throw new TranslationSourceIDException(config.getId());
+        T configurable = (T) configMap.get(config.getId());
+        if (configurable == null) {
+            throw new ConfigIDException(configType, config.getId());
         }
         // Reads the configuration
         C configuration;
         try {
-            configuration = translationSource.readConfiguration(config.getNode());
+            configuration = configurable.readConfiguration(config.getNode());
         } catch (IOException e) {
-            throw new TranslationSourceConfigIOException(config.getId(), e);
+            throw new ConfigIOException(configType, config.getId(), e);
         }
         // OK
-        return new Configured<>(configuration, translationSource);
+        return new Configured<>(configuration, configurable);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public <C> Configured<C, TranslationSource<C>> getConfiguredTranslationSource(JsonConfiguration config) {
+        return getConfigured("txsource", sources, config);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public <S> Configured<S, TxFileSource<S>> getConfiguredTxFileSource(JsonConfiguration config) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getConfigured("txfilesource", txFileSources, config);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <F> Configured<F, TxFileFormat<F>> getConfiguredTxFileFormat(JsonConfiguration config) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getConfigured("txfileformat", txFileFormats, config);
     }
 }

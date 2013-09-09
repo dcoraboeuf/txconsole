@@ -10,10 +10,10 @@ net.txconsole.backend.exceptions.ProjectAlreadyExistException
     en -> [E-003] Project "{0}" already exists.
     fr -> [E-003] Le projet "{0}" existe déjà.
 
-net.txconsole.backend.exceptions.TranslationSourceIDException
-    en -> [E-004] Translation source with ID "{0}" does not exist.
-    fr -> [E-004] La source de traductions d'ID "{0}" n'existe pas.
+net.txconsole.backend.exceptions.ConfigIDException
+    en -> [E-004] Service "{0}" with ID "{1}" does not exist.
+    fr -> [E-004] Le service "{0}" d'ID "{1}" n'existe pas.
 
-net.txconsole.backend.exceptions.TranslationSourceConfigIOException
-    en -> [E-005] Cannot read/write configuration for translation source "{0}".
-    fr -> [E-005] Impossible de lire/écrire la configuration pour la source de traductions "{0}".
+net.txconsole.backend.exceptions.ConfigIOException
+    en -> [E-005] Cannot read/write configuration for the "{0}" service of ID "{1}".
+    fr -> [E-005] Impossible de lire/écrire la configuration pour le service "{0}" d'ID "{1}".

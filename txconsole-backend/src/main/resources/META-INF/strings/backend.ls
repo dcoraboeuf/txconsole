@@ -1,5 +1,9 @@
 [txsource]
 
+txsource
+    en -> Translation source
+    fr -> Source de traduction
+
 txsource.simple
     en -> Source & format
     fr -> Source et format
@@ -15,3 +19,15 @@ txsource.simple.txfilesource
 txsource.simple.txfileformat
     en -> File format
     fr -> Format des fichiers
+
+[txfileformat]
+
+txfileformat
+    en -> File format
+    fr -> Format de fichier
+
+[txfilesource]
+
+txfilesource
+    en -> File source
+    fr -> Source de fichiers
