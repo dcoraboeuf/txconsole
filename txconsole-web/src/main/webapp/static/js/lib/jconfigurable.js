@@ -1,19 +1,18 @@
 define(['jquery', 'require'], function ($, require) {
 
     function jcomboExtension(extensionConfig) {
-        var configContainer;
         return {
-            init: function (container, jcomboConfig) {
+            init: function (field) {
                 // Adds the container for the configuration form
-                configContainer = $('<div></div>')
+                field.configContainer = $('<div></div>')
                     .addClass('hidden')
-                    .appendTo(container);
+                    .appendTo(field.container);
             },
-            onChange: function (container, id, jcomboConfig) {
+            onChange: function (field, id) {
                 // No selection?
                 if (id == '') {
-                    configContainer.hide();
-                    configContainer.empty();
+                    field.configContainer.hide();
+                    field.configContainer.empty();
                 } else {
                     // Gets the full path to the configuration controller
                     var path;
@@ -25,9 +24,9 @@ define(['jquery', 'require'], function ($, require) {
                     // Loads the configuration controller asynchronously
                     require([path], function (controller) {
                         // On load, init the configuration box
-                        configContainer.empty();
-                        controller.display(configContainer);
-                        configContainer.show();
+                        field.configContainer.empty();
+                        controller.display(field.configContainer);
+                        field.configContainer.show();
                     });
                 }
             }

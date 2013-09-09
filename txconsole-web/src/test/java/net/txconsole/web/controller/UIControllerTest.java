@@ -87,7 +87,9 @@ public class UIControllerTest {
         when(structureService.createProject(
                 new ProjectCreationForm(
                         "P3",
-                        "Project 3"
+                        "Project 3",
+                        // FIXME
+                        null
                 )
         )).thenReturn(
                 new ProjectSummary(
@@ -99,7 +101,9 @@ public class UIControllerTest {
         Resource<ProjectSummary> p = controller.projectCreate(
                 new ProjectCreationForm(
                         "P3",
-                        "Project 3"
+                        "Project 3",
+                        // FIXME
+                        null
                 )
         );
         assertEquals(100, p.getData().getId());

@@ -7,9 +7,16 @@ define(['jquery', 'ajax'], function ($, ajax) {
             .addClass('hidden')
             .addClass('description')
             .appendTo(container);
+        // Handle on the field
+        var field = {
+            container: container,
+            config: config,
+            select: select,
+            descriptionEl: descriptionEl
+        };
         // Additional elements?
         if (config.extension && config.extension.init) {
-            config.extension.init(container, config);
+            config.extension.init(field);
         }
         // Filling the <select> element
         ajax.get({
@@ -41,11 +48,13 @@ define(['jquery', 'ajax'], function ($, ajax) {
                     }
                     // Additional selection?
                     if (config.extension && config.extension.onChange) {
-                        config.extension.onChange(container, id, config)
+                        config.extension.onChange(field, id)
                     }
                 });
             }
-        })
+        });
+        // OK, returns the handle for future reference
+        return field;
     }
 
     return {
