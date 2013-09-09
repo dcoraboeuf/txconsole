@@ -53,6 +53,23 @@ define(['jquery', 'ajax'], function ($, ajax) {
                 });
             }
         });
+        // val() function - returns the selection and its configuration
+        field.val = function () {
+            var id = field.select.val();
+            if (id != '') {
+                var value = {
+                    id: id
+                };
+                // Extension
+                if (config.extension && config.extension.val) {
+                    config.extension.val(value, field);
+                }
+                // OK
+                return value;
+            } else {
+                // No selection, nothing to return
+            }
+        }
         // OK, returns the handle for future reference
         return field;
     }

@@ -1,4 +1,4 @@
-define(['config', 'render', 'jquery'], function(config, render, $) {
+define(['config', 'render', 'jquery', 'common'], function(config, render, $, common) {
 
     function createButton(dialog, button) {
         var item = $('<button/>');
@@ -9,7 +9,11 @@ define(['config', 'render', 'jquery'], function(config, render, $) {
             dialog.form.unbind('submit');
             dialog.form.submit(function () {
                 if (dialog.submitFn) {
-                    dialog.submitFn(dialog);
+                    try {
+                        dialog.submitFn(dialog);
+                    } catch (e) {
+                        dialog.errorFn('Error on submit: {0}'.format(e));
+                    }
                 }
                 return false;
             });
