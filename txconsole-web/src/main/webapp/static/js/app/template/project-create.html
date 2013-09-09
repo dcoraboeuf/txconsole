@@ -2,13 +2,20 @@
     <div class="control-group">
         <label class="control-label" for="project-name">{{loc 'project.name'}}</label>
         <div class="controls">
-            <input type="text" id="project-name" value="" size="40" maxlength="80" required="required" />
+            <input type="text" id="project-name" size="40" maxlength="80" required="required" />
         </div>
     </div>
     <div class="control-group">
         <label class="control-label" for="project-fullName">{{loc 'project.fullName'}}</label>
         <div class="controls">
             <textarea id="project-fullName" columns="40" maxlength="1000" rows="4"></textarea>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="project-languages">{{loc 'project.languages'}}</label>
+        <div class="controls">
+            <input type="text" id="project-languages" size="40" maxlength="400" required="required" />
+            <span class="help-block">{{loc 'project.languages.help'}}</span>
         </div>
     </div>
     <div class="control-group">

@@ -58,10 +58,11 @@ public class StructureServiceImpl implements StructureService {
     @AdminGrant
     public ProjectSummary createProject(ProjectCreationForm form) {
         // TODO Checks the project name
+        // TODO Checks the languages
         // Checks the configuration
         translationSourceService.getConfiguredTranslationSource(form.getTxSourceConfig());
         // Creation
-        int id = projectDao.create(form.getName(), form.getFullName(), form.getTxSourceConfig());
+        int id = projectDao.create(form.getName(), form.getFullName(), form.getLanguages(), form.getTxSourceConfig());
         // OK
         return getProject(id);
     }

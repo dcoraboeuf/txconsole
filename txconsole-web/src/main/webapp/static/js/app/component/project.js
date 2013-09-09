@@ -27,6 +27,7 @@ define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'common'], f
                     data: {
                         name: $('#project-name').val(),
                         fullName: $('#project-fullName').val(),
+                        languages: $('#project-languages').val().split(','),
                         txSourceConfig: txSourceConfig
                     },
                     successFn: function (project) {
