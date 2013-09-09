@@ -4,4 +4,7 @@ import lombok.Data;
 
 @Data
 public class PropertiesTxFileFormatConfig {
+
+    private final String pathPattern;
+
 }
