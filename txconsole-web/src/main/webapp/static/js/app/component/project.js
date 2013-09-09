@@ -6,6 +6,7 @@ define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable'], function (d
     function createProject() {
         dialog.show({
             title: 'project.create'.loc(),
+            width: 800,
             templateId: 'project-create',
             initFn: function (dialog) {
                 jcombo.init(dialog.get('#project-txsource'), {

@@ -16,7 +16,12 @@ define(['jquery', 'require'], function ($, require) {
                     configContainer.empty();
                 } else {
                     // Gets the full path to the configuration controller
-                    var path = 'configuration/{0}/{1}'.format(extensionConfig.path, id);
+                    var path;
+                    if (id.indexOf('extension-') == 0) {
+                        path = 'extension/configuration/{0}/{1}'.format(extensionConfig.path, id);
+                    } else {
+                        path = 'configuration/{0}/{1}'.format(extensionConfig.path, id);
+                    }
                     // Loads the configuration controller asynchronously
                     require([path], function (controller) {
                         // On load, init the configuration box

@@ -11,7 +11,7 @@ public class PropertiesTxFileFormat extends AbstractConfigurable<PropertiesTxFil
 
     public PropertiesTxFileFormat() {
         super(
-                "txfileformat-properties",
+                "extension-txfileformat-properties",
                 "extension.format.properties",
                 "extension.format.properties.description",
                 PropertiesTxFileFormatConfig.class);

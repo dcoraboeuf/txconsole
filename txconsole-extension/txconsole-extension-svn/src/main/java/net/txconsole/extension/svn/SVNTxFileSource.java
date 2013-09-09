@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class SVNTxFileSource extends AbstractSCMTxFileSource<SVNTxFileSourceConfig> implements TxFileSource<SVNTxFileSourceConfig> {
 
     public SVNTxFileSource() {
-        super("txfilesource-svn", "extension.svn.txfilesource", "extension.svn.txfilesource.description", SVNTxFileSourceConfig.class);
+        super("extension-txfilesource-svn", "extension.svn.txfilesource", "extension.svn.txfilesource.description", SVNTxFileSourceConfig.class);
     }
 
     @Override
