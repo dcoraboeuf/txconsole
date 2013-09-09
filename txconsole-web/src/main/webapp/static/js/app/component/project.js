@@ -20,6 +20,7 @@ define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable'], function (d
             submitFn: function (config) {
                 // Tx Source configuration
                 var txSourceConfig = txSourceJCombo.val();
+                console.log(txSourceConfig);
                 // Sending the project creation
                 ajax.post({
                     url: 'ui/project',

@@ -1,14 +1,15 @@
-define(['render'], function (render) {
-
-    function display (configContainer) {
-        render.renderInto(
-            configContainer,
-            'extension/configuration/txfilesource/extension-txfilesource-svn'
-        )
-    }
+define(['render','common'], function (render, common) {
 
     return {
-        display: display
+        display: function (field) {
+            render.renderInto(
+                field.configContainer,
+                'extension/configuration/txfilesource/extension-txfilesource-svn'
+            )
+        },
+        val: function (value, field) {
+            value.node = common.values(field.configContainer);
+        }
     }
 
 });

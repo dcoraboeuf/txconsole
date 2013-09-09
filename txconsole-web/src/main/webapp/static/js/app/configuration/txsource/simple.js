@@ -1,18 +1,18 @@
 define(['jquery','render','jcombo','jconfigurable'], function ($, render, jcombo, jconfigurable) {
 
-    function display (configContainer) {
+    function display (field) {
         render.renderInto(
-            configContainer,
+            field.configContainer,
             'configuration/txsource/simple',
             {},
             function () {
-                jcombo.init(configContainer.find('#txsource-simple-txfilesource'), {
+                field.txFileSource = jcombo.init(field.configContainer.find('#txsource-simple-txfilesource'), {
                     url: 'ui/ref/txfilesource',
                     extension: jconfigurable.jcomboExtension({
                         path: 'txfilesource'
                     })
                 });
-                jcombo.init(configContainer.find('#txsource-simple-txfileformat'), {
+                field.txFileFormat = jcombo.init(field.configContainer.find('#txsource-simple-txfileformat'), {
                     url: 'ui/ref/txfileformat',
                     extension: jconfigurable.jcomboExtension({
                         path: 'txfileformat'
@@ -22,8 +22,15 @@ define(['jquery','render','jcombo','jconfigurable'], function ($, render, jcombo
         )
     }
 
+    function val (value, field) {
+        value.node = {};
+        value.node.txFileSourceConfigured = field.txFileSource.val();
+        value.node.txFileFormatConfigured = field.txFileFormat.val();
+    }
+
     return {
-        display: display
+        display: display,
+        val: val
     }
 
 });

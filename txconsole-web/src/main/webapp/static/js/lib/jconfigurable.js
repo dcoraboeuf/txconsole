@@ -26,14 +26,14 @@ define(['jquery', 'require', 'common'], function ($, require, common) {
                         field.configController = controller;
                         // On load, init the configuration box
                         field.configContainer.empty();
-                        controller.display(field.configContainer);
+                        controller.display(field);
                         field.configContainer.show();
                     });
                 }
             },
             val: function (value, field) {
                 if (field.configController.val) {
-                    field.configController.val(value, field.configContainer);
+                    field.configController.val(value, field);
                 } else {
                     throw 'Cannot find any val() function for configuration controller {0}'.format(field.container.attr('id'));
                 }

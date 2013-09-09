@@ -1,14 +1,16 @@
-define(['render'], function (render) {
+define(['render', 'common'], function (render, common) {
 
-    function display (configContainer) {
-        render.renderInto(
-            configContainer,
-            'extension/configuration/txfileformat/extension-txfilesource-properties'
-        )
-    }
 
     return {
-        display: display
+        display: function (field) {
+            render.renderInto(
+                field.configContainer,
+                'extension/configuration/txfileformat/extension-txfilesource-properties'
+            )
+        },
+        val: function (value, field) {
+            value.node = common.values(field.configContainer);
+        }
     }
 
 });
