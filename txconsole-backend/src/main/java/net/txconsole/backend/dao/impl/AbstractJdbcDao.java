@@ -1,8 +1,8 @@
 package net.txconsole.backend.dao.impl;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,9 +10,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 public abstract class AbstractJdbcDao extends NamedParameterJdbcDaoSupport {
@@ -23,8 +23,10 @@ public abstract class AbstractJdbcDao extends NamedParameterJdbcDaoSupport {
             return "'" + o + "'";
         }
     };
+    private final ObjectMapper objectMapper;
 
-    public AbstractJdbcDao(DataSource dataSource) {
+    public AbstractJdbcDao(DataSource dataSource, ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
         setDataSource(dataSource);
     }
 
@@ -72,11 +74,12 @@ public abstract class AbstractJdbcDao extends NamedParameterJdbcDaoSupport {
         }
     }
 
-    protected String getStatusesForSQLInClause(Collection<?> statuses) {
-        return StringUtils.join(
-                Collections2.transform(statuses, quoteFn),
-                ","
-        );
+    protected String jsonToDB(JsonNode node) {
+        try {
+            return objectMapper.writeValueAsString(node);
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot write JSON as string", e);
+        }
     }
 
     protected int dbCreate(String sql, MapSqlParameterSource params) {

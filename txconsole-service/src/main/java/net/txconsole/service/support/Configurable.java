@@ -9,5 +9,4 @@ public interface Configurable<C> extends Descriptible {
      * Returns the type of the configuration class
      */
     Class<? super C> getConfigClass();
-
 }

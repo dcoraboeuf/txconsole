@@ -2,6 +2,7 @@ package net.txconsole.backend.dao.impl;
 
 import net.txconsole.backend.config.Caches;
 import net.txconsole.backend.dao.ConfigurationDao;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,8 +17,8 @@ import javax.sql.DataSource;
 public class ConfigurationJdbcDao extends AbstractJdbcDao implements ConfigurationDao {
 
     @Autowired
-    public ConfigurationJdbcDao(DataSource dataSource) {
-        super(dataSource);
+    public ConfigurationJdbcDao(DataSource dataSource, ObjectMapper objectMapper) {
+        super(dataSource, objectMapper);
     }
 
     @Override

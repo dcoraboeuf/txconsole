@@ -1,9 +1,18 @@
 package net.txconsole.service.support;
 
+import com.google.common.base.Function;
+
 /**
  * Defines an object that can be described.
  */
 public interface Descriptible {
+
+    Function<? super Descriptible, String> idFn = new Function<Descriptible, String>() {
+        @Override
+        public String apply(Descriptible d) {
+            return d.getId();
+        }
+    };
 
     /**
      * Returns a unique ID for this object type

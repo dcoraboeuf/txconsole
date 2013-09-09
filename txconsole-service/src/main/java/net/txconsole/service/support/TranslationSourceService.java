@@ -1,5 +1,7 @@
 package net.txconsole.service.support;
 
+import net.txconsole.core.model.JsonConfiguration;
+
 import java.util.Collection;
 
 public interface TranslationSourceService {
@@ -19,4 +21,8 @@ public interface TranslationSourceService {
      */
     Collection<TxFileFormat<?>> getTxFileFormatList();
 
+    /**
+     * Gets an actual configuration using an input configuration
+     */
+    <C> Configured<C, TranslationSource<C>> getConfiguredTranslationSource(JsonConfiguration config);
 }

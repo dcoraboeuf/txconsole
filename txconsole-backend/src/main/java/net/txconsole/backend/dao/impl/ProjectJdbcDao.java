@@ -5,6 +5,9 @@ import net.txconsole.backend.dao.ProjectDao;
 import net.txconsole.backend.dao.model.TProject;
 import net.txconsole.backend.exceptions.ProjectAlreadyExistException;
 import net.txconsole.core.model.Ack;
+import net.txconsole.core.model.JsonConfiguration;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -34,8 +37,8 @@ public class ProjectJdbcDao extends AbstractJdbcDao implements ProjectDao {
     };
 
     @Autowired
-    public ProjectJdbcDao(DataSource dataSource) {
-        super(dataSource);
+    public ProjectJdbcDao(DataSource dataSource, ObjectMapper objectMapper) {
+        super(dataSource, objectMapper);
     }
 
     @Override
@@ -62,11 +65,14 @@ public class ProjectJdbcDao extends AbstractJdbcDao implements ProjectDao {
     @Override
     @Transactional
     @CacheEvict(value = Caches.PROJECT_LIST, key = "'0'")
-    public int create(String name, String description) {
+    public int create(String name, String fullName, JsonConfiguration configuration) {
         try {
             return dbCreate(
                     SQL.PROJECT_CREATE,
-                    params("name", name).addValue("fullName", description)
+                    params("name", name)
+                            .addValue("fullName", fullName)
+                    .addValue("txsource_id", configuration.getId())
+                    .addValue("txsource_config", jsonToDB(configuration.getNode()))
             );
         } catch (DuplicateKeyException ex) {
             throw new ProjectAlreadyExistException(name);

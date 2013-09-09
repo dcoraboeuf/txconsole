@@ -2,6 +2,7 @@ package net.txconsole.web.support;
 
 import net.sf.jstring.Strings;
 import net.sf.jstring.support.CoreException;
+import net.txconsole.core.InputException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class DefaultErrorHandler implements ErrorHandler {
         boolean stackTrace;
         if (ex instanceof CoreException) {
             loggedMessage = ((CoreException) ex).getLocalizedMessage(strings, Locale.ENGLISH);
-            stackTrace = false;
+            stackTrace = !(ex instanceof InputException);
             displayMessage = ((CoreException) ex).getLocalizedMessage(strings, locale);
         } else {
             loggedMessage = ex.getMessage();

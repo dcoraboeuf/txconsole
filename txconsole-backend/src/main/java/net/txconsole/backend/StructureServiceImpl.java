@@ -9,6 +9,7 @@ import net.txconsole.core.model.ProjectCreationForm;
 import net.txconsole.core.model.ProjectSummary;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.security.AdminGrant;
+import net.txconsole.service.support.TranslationSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.util.List;
 @Service
 public class StructureServiceImpl implements StructureService {
 
+    private final TranslationSourceService translationSourceService;
     private final ProjectDao projectDao;
     private final Function<TProject, ProjectSummary> projectSummaryFunction = new Function<TProject, ProjectSummary>() {
         @Override
@@ -31,7 +33,8 @@ public class StructureServiceImpl implements StructureService {
     };
 
     @Autowired
-    public StructureServiceImpl(ProjectDao projectDao) {
+    public StructureServiceImpl(TranslationSourceService translationSourceService, ProjectDao projectDao) {
+        this.translationSourceService = translationSourceService;
         this.projectDao = projectDao;
     }
 
@@ -54,7 +57,12 @@ public class StructureServiceImpl implements StructureService {
     @Transactional
     @AdminGrant
     public ProjectSummary createProject(ProjectCreationForm form) {
-        int id = projectDao.create(form.getName(), form.getFullName());
+        // TODO Checks the project name
+        // Checks the configuration
+        translationSourceService.getConfiguredTranslationSource(form.getTxSourceConfig());
+        // Creation
+        int id = projectDao.create(form.getName(), form.getFullName(), form.getTxSourceConfig());
+        // OK
         return getProject(id);
     }
 

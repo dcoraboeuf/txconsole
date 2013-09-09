@@ -6,6 +6,7 @@ import net.txconsole.backend.dao.model.TAccount;
 import net.txconsole.backend.exceptions.AccountAlreadyExistException;
 import net.txconsole.core.model.Ack;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -40,8 +41,8 @@ public class AccountJdbcDao extends AbstractJdbcDao implements AccountDao {
     };
 
     @Autowired
-    public AccountJdbcDao(DataSource dataSource) {
-        super(dataSource);
+    public AccountJdbcDao(DataSource dataSource, ObjectMapper objectMapper) {
+        super(dataSource, objectMapper);
     }
 
     @Override

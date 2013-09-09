@@ -3,6 +3,7 @@ package net.txconsole.backend.dao.impl;
 import net.txconsole.backend.dao.ProjectAuthorizationDao;
 import net.txconsole.backend.dao.model.TProjectAuthorization;
 import net.txconsole.core.model.ProjectRole;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -29,8 +30,8 @@ public class ProjectAuthorizationJdbcDao extends AbstractJdbcDao implements Proj
     };
 
     @Autowired
-    public ProjectAuthorizationJdbcDao(DataSource dataSource) {
-        super(dataSource);
+    public ProjectAuthorizationJdbcDao(DataSource dataSource, ObjectMapper objectMapper) {
+        super(dataSource, objectMapper);
     }
 
     @Override
