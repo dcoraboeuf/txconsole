@@ -4,9 +4,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.txconsole.backend.dao.ProjectDao;
 import net.txconsole.backend.dao.model.TProject;
-import net.txconsole.core.model.Ack;
-import net.txconsole.core.model.ProjectCreationForm;
-import net.txconsole.core.model.ProjectSummary;
+import net.txconsole.core.model.*;
+import net.txconsole.service.EventService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.security.AdminGrant;
 import net.txconsole.service.support.TranslationSourceService;
@@ -19,6 +18,7 @@ import java.util.List;
 @Service
 public class StructureServiceImpl implements StructureService {
 
+    private final EventService eventService;
     private final TranslationSourceService translationSourceService;
     private final ProjectDao projectDao;
     private final Function<TProject, ProjectSummary> projectSummaryFunction = new Function<TProject, ProjectSummary>() {
@@ -33,7 +33,8 @@ public class StructureServiceImpl implements StructureService {
     };
 
     @Autowired
-    public StructureServiceImpl(TranslationSourceService translationSourceService, ProjectDao projectDao) {
+    public StructureServiceImpl(EventService eventService, TranslationSourceService translationSourceService, ProjectDao projectDao) {
+        this.eventService = eventService;
         this.translationSourceService = translationSourceService;
         this.projectDao = projectDao;
     }
@@ -63,8 +64,11 @@ public class StructureServiceImpl implements StructureService {
         translationSourceService.getConfiguredTranslationSource(form.getTxSourceConfig());
         // Creation
         int id = projectDao.create(form.getName(), form.getFullName(), form.getLanguages(), form.getTxSourceConfig());
+        ProjectSummary project = getProject(id);
+        // Event
+        eventService.event(EventForm.projectCreated(project));
         // OK
-        return getProject(id);
+        return project;
     }
 
     @Override
