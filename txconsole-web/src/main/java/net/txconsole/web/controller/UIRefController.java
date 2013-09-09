@@ -39,4 +39,30 @@ public class UIRefController extends AbstractUIController {
                 Description.fromDescriptible(strings, locale)
         );
     }
+
+    /**
+     * Gets the list of all possible tx file sources
+     */
+    @RequestMapping(value = "/txfilesource", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Collection<Description> getTxFileSourceList(Locale locale) {
+        return Collections2.transform(
+                translationSourceService.getTxFileSourceList(),
+                Description.fromDescriptible(strings, locale)
+        );
+    }
+
+    /**
+     * Gets the list of all possible tx file formats
+     */
+    @RequestMapping(value = "/txfileformat", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Collection<Description> getTxFileFormatList(Locale locale) {
+        return Collections2.transform(
+                translationSourceService.getTxFileFormatList(),
+                Description.fromDescriptible(strings, locale)
+        );
+    }
 }

@@ -9,4 +9,14 @@ public interface TranslationSourceService {
      */
     Collection<TranslationSource<?>> getTranslationSourceList();
 
+    /**
+     * Gets the list of translation file sources
+     */
+    Collection<TxFileSource<?>> getTxFileSourceList();
+
+    /**
+     * Gets the list of translation file format
+     */
+    Collection<TxFileFormat<?>> getTxFileFormatList();
+
 }
