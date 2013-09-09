@@ -7,6 +7,11 @@ define(['jquery', 'ajax'], function ($, ajax) {
             .addClass('hidden')
             .addClass('description')
             .appendTo(container);
+        // Additional elements?
+        if (config.extension && config.extension.init) {
+            config.extension.init(container, config);
+        }
+        // Filling the <select> element
         ajax.get({
             url: config.url,
             successFn: function (sources) {
@@ -25,7 +30,6 @@ define(['jquery', 'ajax'], function ($, ajax) {
                 });
                 // On change
                 select.change(function () {
-                    // TODO Callback handler
                     // Description
                     var id = select.val();
                     if (id != '') {
@@ -34,6 +38,10 @@ define(['jquery', 'ajax'], function ($, ajax) {
                     } else {
                         descriptionEl.text('');
                         descriptionEl.hide();
+                    }
+                    // Additional selection?
+                    if (config.extension && config.extension.onChange) {
+                        config.extension.onChange(container, id, config)
                     }
                 });
             }
