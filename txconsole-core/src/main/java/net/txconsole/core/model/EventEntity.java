@@ -4,6 +4,8 @@ public enum EventEntity {
 
     ACCOUNT,
 
-    PROJECT
+    PROJECT,
+
+    BRANCH
 
 }

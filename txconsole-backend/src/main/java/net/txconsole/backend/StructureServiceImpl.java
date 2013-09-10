@@ -166,8 +166,12 @@ public class StructureServiceImpl implements StructureService {
         for (ParameterValueForm parameterValueForm : form.getParameters()) {
             branchDao.setParameter(branch, parameterValueForm.getName(), parameterValueForm.getValue());
         }
+        // Loads the summaries (for the event generation)
+        BranchSummary branchSummary = getBranch(branch);
+        ProjectSummary projectSummary = getProject(project);
+        eventService.event(EventForm.branchCreated(branchSummary, projectSummary));
         // OK
-        return getBranch(branch);
+        return branchSummary;
     }
 
     @Override

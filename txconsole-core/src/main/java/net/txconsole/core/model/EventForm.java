@@ -3,6 +3,7 @@ package net.txconsole.core.model;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.txconsole.core.support.MapBuilder;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,6 +36,18 @@ public class EventForm {
         return new EventForm(
                 EventCode.PROJECT_DELETED,
                 Collections.<EventEntity, Integer>emptyMap(),
+                project.getName()
+        );
+    }
+
+    public static EventForm branchCreated(BranchSummary branch, ProjectSummary project) {
+        return new EventForm(
+                EventCode.BRANCH_CREATED,
+                MapBuilder
+                        .of(EventEntity.BRANCH, branch.getId())
+                        .with(EventEntity.PROJECT, project.getId())
+                        .get(),
+                branch.getName(),
                 project.getName()
         );
     }
