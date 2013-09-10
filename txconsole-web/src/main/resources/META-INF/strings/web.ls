@@ -436,3 +436,17 @@ branch.create
 request.create
     en -> Create a translation request
     fr -> Créer une demande de traductions
+
+request.create.version.help
+    en -> ...
+        Define the version to start from when computing the differences
+        of the translations between this version and the most recent
+        state. This version is normally computed from all past requests
+        but can be blank if no previous request exists.
+        ...
+    fr -> ...
+        Définit la version de départ pour calculer la liste des traductions
+        entre cette version et la plus récente. Cette version est normalement
+        calculée en fonction de la liste de toutes les demandes passées mais
+        peut être vide quand aucune demande n'a encore été faite.
+        ...
