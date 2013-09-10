@@ -1,6 +1,7 @@
 package net.txconsole.backend.security;
 
 import net.txconsole.core.model.Account;
+import net.txconsole.core.model.Signature;
 import net.txconsole.core.security.SecurityRoles;
 import net.txconsole.core.security.SecurityUtils;
 import org.springframework.security.access.AccessDeniedException;
@@ -107,6 +108,19 @@ public class SecurityUtilsImpl implements SecurityUtils {
     public void checkGrant(String category, int id, String action) {
         if (!isGranted(category, id, action)) {
             throw new AccessDeniedException("Access is not granted");
+        }
+    }
+
+    @Override
+    public Signature getCurrentSignature() {
+        Account account = getCurrentAccount();
+        if (account != null) {
+            return new Signature(
+                    account.getId(),
+                    account.getName()
+            );
+        } else {
+            return Signature.anonymous();
         }
     }
 }

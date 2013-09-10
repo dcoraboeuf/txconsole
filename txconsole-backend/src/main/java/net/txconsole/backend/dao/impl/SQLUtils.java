@@ -32,10 +32,6 @@ public final class SQLUtils {
 		return LocalTime.parse(str);
 	}
 
-	public static DateTime now() {
-		return DateTime.now(DateTimeZone.UTC);
-	}
-
 	public static Timestamp toTimestamp(DateTime dateTime) {
 		return new Timestamp(dateTime.getMillis());
 	}

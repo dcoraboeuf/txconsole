@@ -15,10 +15,10 @@ public class EventForm {
 
     private final EventCode code;
     private final Collection<String> parameters;
-    private final Map<String, Integer> entities;
+    private final Map<EventEntity, Integer> entities;
 
     private EventForm(EventCode code,
-                      Map<String, Integer> entities,
+                      Map<EventEntity, Integer> entities,
                       String... parameters) {
         this(code, Arrays.asList(parameters), entities);
     }
@@ -26,7 +26,15 @@ public class EventForm {
     public static EventForm projectCreated(ProjectSummary project) {
         return new EventForm(
                 EventCode.PROJECT_CREATED,
-                Collections.singletonMap("PROJECT", project.getId()),
+                Collections.singletonMap(EventEntity.PROJECT, project.getId()),
+                project.getName()
+        );
+    }
+
+    public static EventForm projectDeleted(ProjectSummary project) {
+        return new EventForm(
+                EventCode.PROJECT_DELETED,
+                Collections.<EventEntity, Integer>emptyMap(),
                 project.getName()
         );
     }

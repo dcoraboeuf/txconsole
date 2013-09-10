@@ -75,6 +75,8 @@ public class StructureServiceImpl implements StructureService {
     @Transactional
     @AdminGrant
     public Ack deleteProject(int id) {
+        ProjectSummary project = getProject(id);
+        eventService.event(EventForm.projectDeleted(project));
         return projectDao.delete(id);
     }
 }

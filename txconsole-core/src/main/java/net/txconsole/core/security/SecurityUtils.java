@@ -1,6 +1,7 @@
 package net.txconsole.core.security;
 
 import net.txconsole.core.model.Account;
+import net.txconsole.core.model.Signature;
 
 import java.util.concurrent.Callable;
 
@@ -25,4 +26,6 @@ public interface SecurityUtils {
     boolean isGranted(String category, int id, String action);
 
     void checkGrant(String category, int id, String action);
+
+    Signature getCurrentSignature();
 }
