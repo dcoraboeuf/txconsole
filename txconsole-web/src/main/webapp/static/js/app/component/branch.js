@@ -1,4 +1,4 @@
-define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'common'], function (dialog, ajax, application, jcombo, jconfigurable, common) {
+define(['dialog', 'ajax', 'application'], function (dialog, ajax, application) {
 
     /**
      * Creating a branch for a project
@@ -19,6 +19,31 @@ define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'common'], f
                     data: {
                         project: project,
                         parameters: projectParameters
+                    },
+                    submitFn: function (dialog) {
+                        var data = {
+                            name: $('#branch-name').val(),
+                            parameters: []
+                        };
+                        // Parameter values
+                        dialog.get('.branch-parameter').each(function (index, input) {
+                            var name = $(input).attr('data-parameter');
+                            var value = $(input).val();
+                            data.parameters.push({
+                                name: name,
+                                value: value
+                            });
+                        });
+                        // Creation
+                        ajax.post({
+                            url: 'ui/project/{0}/branch'.format(projectId),
+                            data: data,
+                            successFn: function (branch) {
+                                dialog.closeFn();
+                                application.gui(branch);
+                            },
+                            errorFn: ajax.simpleAjaxErrorFn(dialog.errorFn)
+                        });
                     }
                 })
             });
