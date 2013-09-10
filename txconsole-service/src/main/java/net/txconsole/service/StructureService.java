@@ -19,4 +19,6 @@ public interface StructureService {
     BranchSummary getBranch(int id);
 
     BranchSummary createBranch(int project, BranchCreationForm form);
+
+    List<BranchSummary> getProjectBranches(int id);
 }

@@ -137,6 +137,15 @@ public class StructureServiceImpl implements StructureService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<BranchSummary> getProjectBranches(int id) {
+        return Lists.transform(
+                branchDao.findByProject(id),
+                branchSummaryFunction
+        );
+    }
+
+    @Override
     @Transactional
     @ProjectGrant(ProjectFunction.UPDATE)
     public BranchSummary createBranch(@ProjectGrantId int project, BranchCreationForm form) {

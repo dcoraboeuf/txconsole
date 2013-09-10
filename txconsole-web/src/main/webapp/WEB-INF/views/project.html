@@ -18,7 +18,12 @@
     <div class="row-fluid">
         <div class="span4">
             <@section title=loc('branch.list')>
-                <div>TODO Branch list</div>
+                <div
+                    id="branch-list"
+                    class="dynamic"
+                    dynamic-controller="branch-list"
+                    dynamic-project-id="${project.data.id?c}"
+                    ></div>
                 <#if project.actions?seq_contains('UPDATE')>
                     <button id="branch-create" type="button" class="btn"><@lh key="branch.create" /></button>
                 </#if>

@@ -38,7 +38,9 @@ public class UIController extends AbstractUIController implements UI {
             return new Resource<>(o)
                     .withLink(linkTo(methodOn(UIController.class).getProject(o.getId())).withSelfRel())
                     .withLink(linkTo(methodOn(GUIController.class).getProject(o.getId())).withRel(Resource.REL_GUI))
-                    // TODO List of branches for the project
+                            // List of branches
+                    .withLink(linkTo(methodOn(UIController.class).getProjectBranches(o.getId())).withRel("branches"))
+                            // ACL
                     .withUpdate(securityUtils.isGranted(SecurityCategory.PROJECT, o.getId(), ProjectFunction.UPDATE))
                     .withDelete(securityUtils.isGranted(SecurityCategory.PROJECT, o.getId(), ProjectFunction.DELETE));
         }
@@ -52,6 +54,9 @@ public class UIController extends AbstractUIController implements UI {
             return new Resource<>(o)
                     .withLink(linkTo(methodOn(UIController.class).getBranch(o.getId())).withSelfRel())
                     .withLink(linkTo(methodOn(GUIController.class).getBranch(o.getId())).withRel(Resource.REL_GUI))
+                            // Project link
+                    .withLink(linkTo(methodOn(UIController.class).getProject(o.getProjectId())).withRel("project"))
+                            // ACL
                     .withUpdateAndDelete(securityUtils.isGranted(SecurityCategory.PROJECT, o.getProjectId(), ProjectFunction.UPDATE));
         }
     };
@@ -127,6 +132,19 @@ public class UIController extends AbstractUIController implements UI {
     @ResponseBody
     Resource<BranchSummary> createBranch(@PathVariable int id, @RequestBody BranchCreationForm form) {
         return branchSummaryResourceFn.apply(structureService.createBranch(id, form));
+    }
+
+    /**
+     * List of branches for a project
+     */
+    @RequestMapping(value = "/project/{id}/branch", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<Resource<BranchSummary>> getProjectBranches(@PathVariable int id) {
+        return Lists.transform(
+                structureService.getProjectBranches(id),
+                branchSummaryResourceFn
+        );
     }
 
     /**

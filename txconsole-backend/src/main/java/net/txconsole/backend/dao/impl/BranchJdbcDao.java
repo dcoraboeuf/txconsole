@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Component
 public class BranchJdbcDao extends AbstractJdbcDao implements BranchDao {
@@ -67,6 +68,16 @@ public class BranchJdbcDao extends AbstractJdbcDao implements BranchDao {
         getNamedParameterJdbcTemplate().update(
                 SQL.BRANCH_PARAMETER_INSERT,
                 params.addValue("value", value)
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TBranch> findByProject(int project) {
+        return getNamedParameterJdbcTemplate().query(
+                SQL.BRANCH_BY_PROJECT,
+                params("project", project),
+                branchRowMapper
         );
     }
 }

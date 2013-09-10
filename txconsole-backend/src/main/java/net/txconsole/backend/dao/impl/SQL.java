@@ -35,6 +35,7 @@ public interface SQL {
     // Branches
     String BRANCH_BY_ID = "SELECT * FROM BRANCH WHERE ID = :id";
     String BRANCH_CREATE = "INSERT INTO BRANCH (PROJECT, NAME) VALUES (:project, :name)";
+    String BRANCH_BY_PROJECT = "SELECT * FROM BRANCH WHERE PROJECT = :project ORDER BY NAME";
     // Branch parameters
     String BRANCH_PARAMETER_REMOVE = "DELETE FROM BRANCH_PARAMETER WHERE BRANCH = :branch AND PARAMETER = :name";
     String BRANCH_PARAMETER_INSERT = "INSERT INTO BRANCH_PARAMETER (BRANCH, PARAMETER, VALUE) VALUES (:branch, :name, :value)";
