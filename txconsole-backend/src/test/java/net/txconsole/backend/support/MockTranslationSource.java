@@ -4,6 +4,7 @@ import net.txconsole.core.RunProfile;
 import net.txconsole.core.model.TranslationMap;
 import net.txconsole.service.support.AbstractConfigurable;
 import net.txconsole.service.support.TranslationSource;
+import net.txconsole.service.support.VersionFormat;
 import org.codehaus.jackson.JsonNode;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -21,8 +22,16 @@ public class MockTranslationSource
     }
 
     @Override
-    public TranslationMap read(MockTranslationSourceConfig config) {
+    public TranslationMap read(MockTranslationSourceConfig config, String version) {
         return null;
+    }
+
+    @Override
+    public VersionFormat getVersionSemantics(MockTranslationSourceConfig config) {
+        return new VersionFormat(
+                "",
+                ".*"
+        );
     }
 
     @Override

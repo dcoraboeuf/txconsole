@@ -7,12 +7,13 @@ The idea is to have a web application that allows the registered users to access
 
 ## Requirements
 
-One project is defined with a translation source, that basically defines how to get a map of translations (key → list of labels per language).
+One project is defined with a translation source, that basically defines how to get a map of translations (key → list of labels per language)
+for a given version.
 Branches (or releases) can be defined at project level - they just provide another way to get the translations. A key can be associated with a description.
 
 One authorized user can create translation requests. The input of such a request is built from:
 
- * the list of remaining translations ("holes" in the translation map)
+ * the list of changes (additions, deletions, updates) between two versions of a translation map
  * any additional key
 
 The output of a translation request is:
@@ -41,7 +42,7 @@ and the group would be the section.
 
 A translation source is typically the association a file provider and a file format:
 
- * the file provider gives access to the files (Subversion, Git, folder...)
+ * the file provider gives access to the files (Subversion, Git, folder...) for a given version (revision, tag...).
  * the file format is the protocol needed for accessing the files and transform them back and forth into translation maps:
   - jstring implementation
   - property files
@@ -125,17 +126,11 @@ The execution of such scripts must be sandboxed using mechanisms like [Java-Sand
 
 ### Working copies
 
-Most of file sources will require a working copy in order to have access to the raw files: Subversion, Git...
+Most of file sources will require a working copy in order to have access to the raw files: Subversion, Git... Specifically,
+translation sources will need to access specific versions (revision, tag...) of this working copy.
 
-The file source must be able to access the working copy in a controlled way:
-
- * no need to synchronize (or clone) each time
- * ... but synchronized access in order to allow conflicts
-
-This can be performed by:
-
- * having a scheduled service updating (or creating, or cleaning) the working copies
-* having a service that ensures a synchronous access to those working copies
+The file sources will need a "working directory service" that can provide them with working directories, so they can
+perform their checkouts and clone operations.
 
 ### API
 

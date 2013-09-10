@@ -3,11 +3,11 @@ package net.txconsole.extension.svn;
 import net.txconsole.extension.scm.AbstractSCMTxFileSource;
 import net.txconsole.service.support.FileSource;
 import net.txconsole.service.support.TxFileSource;
+import net.txconsole.service.support.VersionFormat;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-// TODO Defines the strings catalogue
 @Component
 public class SVNTxFileSource extends AbstractSCMTxFileSource<SVNTxFileSourceConfig> implements TxFileSource<SVNTxFileSourceConfig> {
 
@@ -18,7 +18,15 @@ public class SVNTxFileSource extends AbstractSCMTxFileSource<SVNTxFileSourceConf
     }
 
     @Override
-    public FileSource getSource(SVNTxFileSourceConfig config) {
+    public VersionFormat getVersionSemantics() {
+        return new VersionFormat(
+                "extension.svn.txfilesource.version",
+                "\\d+"
+        );
+    }
+
+    @Override
+    public FileSource getSource(SVNTxFileSourceConfig config, String version) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
