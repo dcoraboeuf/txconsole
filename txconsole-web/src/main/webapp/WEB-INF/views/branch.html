@@ -14,12 +14,12 @@
 
     <@title value=branch.data.name close="project/${project.data.id?c}">
         <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
-        <#if project.actions?seq_contains('REQUEST_CREATE')>
+        <@acl resource=branch action='PROJECT#REQUEST_CREATE'>
             <@title_command id="request-create" title=loc('request.create') class="icon-file" />
-        </#if>
-        <#if project.actions?seq_contains('UPDATE')>
+        </@acl>
+        <@acl resource=branch action='PROJECT#UPDATE'>
             <@title_command id="branch-delete" title=loc('general.delete') class="icon-trash" />
-        </#if>
+        </@acl>
     </@title>
 
 </@layout_std>

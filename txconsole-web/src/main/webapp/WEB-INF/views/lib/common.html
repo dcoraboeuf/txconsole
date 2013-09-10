@@ -159,5 +159,7 @@
 </#macro>
 
 <#macro acl resource action>
-    ${resource}
+    <#if resource.actions?seq_contains(action)>
+        <#nested/>
+    </#if>
 </#macro>

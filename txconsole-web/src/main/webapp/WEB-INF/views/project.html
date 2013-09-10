@@ -10,9 +10,9 @@
     <input type="hidden" id="project" value="${project.data.id?c}" />
 
     <@title value=project.data.name description=project.data.fullName>
-        <#if secAdmin()>
+        <@acl resource=project action='PROJECT#DELETE'>
             <@title_command id="project-delete" title=loc('general.delete') class="icon-trash" />
-        </#if>
+        </@acl>
     </@title>
 
     <div class="row-fluid">
@@ -24,9 +24,9 @@
                     dynamic-controller="branch-list"
                     dynamic-project-id="${project.data.id?c}"
                     ></div>
-                <#if project.actions?seq_contains('UPDATE')>
+                <@acl resource=project action='PROJECT#UPDATE'>
                     <button id="branch-create" type="button" class="btn"><@lh key="branch.create" /></button>
-                </#if>
+                </@acl>
             </@section>
         </div>
     </div>
