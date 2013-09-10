@@ -1,8 +1,10 @@
 package net.txconsole.web.controller;
 
 import net.sf.jstring.Strings;
+import net.txconsole.core.model.BranchSummary;
 import net.txconsole.core.model.ProjectCreationForm;
 import net.txconsole.core.model.ProjectSummary;
+import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.StructureService;
 import net.txconsole.web.resource.Resource;
@@ -16,7 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -114,6 +116,31 @@ public class UIControllerTest {
         assertEquals("Project 3", p.getData().getFullName());
         assertEquals("http://localhost/ui/project/100", p.getLink("self").getHref());
         assertEquals("http://localhost/project/100", p.getLink("gui").getHref());
+    }
+
+    @Test
+    public void branchACL() {
+        // Branch summary
+        when(structureService.getBranch(10)).thenReturn(
+                new BranchSummary(
+                        10,
+                        1,
+                        "B1"
+                )
+        );
+        // Grants
+        when(securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, 1)).thenReturn(true);
+        // Call
+        Resource<BranchSummary> resource = controller.getBranch(10);
+        // Basic checks
+        assertNotNull(resource);
+        assertEquals(10, resource.getData().getId());
+        assertEquals(1, resource.getData().getProjectId());
+        assertEquals("B1", resource.getData().getName());
+        // Grants
+        assertTrue(resource.getActions().contains(ProjectFunction.REQUEST_CREATE));
+        assertFalse(resource.getActions().contains(ProjectFunction.UPDATE));
+        assertFalse(resource.getActions().contains(ProjectFunction.DELETE));
     }
 
 }

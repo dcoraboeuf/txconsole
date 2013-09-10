@@ -1,9 +1,8 @@
 package net.txconsole.backend.security;
 
 import net.txconsole.core.model.Account;
-import net.txconsole.core.security.SecurityCategory;
+import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityRoles;
-import net.txconsole.service.security.ProjectFunction;
 import net.txconsole.test.AbstractIntegrationTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -105,7 +104,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
         }
 
         public UserCall withProjectGrant(int id, ProjectFunction fn) {
-            account.withACL(SecurityCategory.PROJECT, id, fn);
+            account.withACL(fn, id);
             return this;
         }
     }

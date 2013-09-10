@@ -9,13 +9,12 @@ import net.txconsole.backend.dao.ProjectAuthorizationDao;
 import net.txconsole.backend.dao.model.TAccount;
 import net.txconsole.backend.dao.model.TProjectAuthorization;
 import net.txconsole.core.model.*;
-import net.txconsole.core.security.SecurityCategory;
+import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityRoles;
 import net.txconsole.core.validation.AccountValidation;
 import net.txconsole.core.validation.Validations;
 import net.txconsole.service.AccountService;
 import net.txconsole.service.security.AdminGrant;
-import net.txconsole.service.security.ProjectFunction;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -248,13 +247,15 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
             for (TProjectAuthorization auth : authList) {
                 switch (auth.getRole()) {
                     case OWNER:
-                        account = account.withACL(SecurityCategory.PROJECT, auth.getProject(), ProjectFunction.UPDATE);
+                        account = account.withACL(ProjectFunction.UPDATE, auth.getProject());
+                        account = account.withACL(ProjectFunction.REQUEST_CREATE, auth.getProject());
                         // ... applies everything below
                     case TRANSLATOR:
-                        account = account.withACL(SecurityCategory.PROJECT, auth.getProject(), ProjectFunction.REQUEST_CREATE);
                         // ... applies everything below
                     case REVIEWER:
+                        // ... applies everything below
                     case CONTRIBUTOR:
+                        // ... applies everything below
                     default:
                 }
             }

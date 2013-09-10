@@ -1,6 +1,6 @@
 package net.txconsole.backend.security;
 
-import net.txconsole.core.security.SecurityCategory;
+import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.security.*;
 import org.aopalliance.intercept.MethodInvocation;
@@ -69,7 +69,7 @@ public class TxConsoleDecisionManager implements AccessDecisionManager {
     }
 
     protected boolean checkProjectGrant(int project, ProjectFunction fn) {
-        return securityUtils.isGranted(SecurityCategory.PROJECT, project, fn);
+        return securityUtils.isGranted(fn, project);
     }
 
     @Override

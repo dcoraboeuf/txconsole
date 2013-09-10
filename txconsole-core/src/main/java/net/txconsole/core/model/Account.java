@@ -1,7 +1,7 @@
 package net.txconsole.core.model;
 
 import lombok.Data;
-import net.txconsole.core.security.SecurityCategory;
+import net.txconsole.core.security.SecurityFunction;
 import net.txconsole.core.security.SecurityRoles;
 
 import java.util.HashSet;
@@ -30,19 +30,19 @@ public class Account {
         this.locale = locale;
     }
 
-    public boolean isGranted(SecurityCategory category, int id, String action) {
-        return (SecurityRoles.ADMINISTRATOR.equals(roleName)) || (acls != null && acls.contains(new ACL(category, id, action)));
+    public boolean isGranted(SecurityFunction fn, int id) {
+        return (SecurityRoles.ADMINISTRATOR.equals(roleName)) || (acls != null && acls.contains(new ACL(fn, id)));
     }
 
-    public Account withACL(SecurityCategory category, int id, Enum<?> action) {
-        return withACL(category, id, action.name());
+    public Account withACL(SecurityFunction fn, int id) {
+        return withACL(new ACL(fn, id));
     }
 
-    public Account withACL(SecurityCategory category, int id, String action) {
+    protected Account withACL(ACL acl) {
         if (acls == null) {
             acls = new HashSet<>();
         }
-        acls.add(new ACL(category, id, action));
+        acls.add(acl);
         return this;
     }
 }

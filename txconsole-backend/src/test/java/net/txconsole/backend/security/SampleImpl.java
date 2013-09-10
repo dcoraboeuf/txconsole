@@ -1,6 +1,6 @@
 package net.txconsole.backend.security;
 
-import net.txconsole.service.security.ProjectFunction;
+import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.service.security.ProjectGrant;
 import net.txconsole.service.security.ProjectGrantId;
 

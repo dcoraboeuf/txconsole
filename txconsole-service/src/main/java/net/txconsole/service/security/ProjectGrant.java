@@ -1,5 +1,7 @@
 package net.txconsole.service.security;
 
+import net.txconsole.core.security.ProjectFunction;
+
 import java.lang.annotation.*;
 
 @Target(ElementType.METHOD)

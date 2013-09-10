@@ -3,6 +3,7 @@ package net.txconsole.backend.security;
 import net.txconsole.core.model.Account;
 import net.txconsole.core.model.Signature;
 import net.txconsole.core.security.SecurityCategory;
+import net.txconsole.core.security.SecurityFunction;
 import net.txconsole.core.security.SecurityRoles;
 import net.txconsole.core.security.SecurityUtils;
 import org.springframework.security.access.AccessDeniedException;
@@ -100,19 +101,14 @@ public class SecurityUtilsImpl implements SecurityUtils {
     }
 
     @Override
-    public boolean isGranted(SecurityCategory category, int id, Enum<?> action) {
-        return isGranted(category, id, action.name());
-    }
-
-    @Override
-    public boolean isGranted(SecurityCategory category, int id, String action) {
+    public boolean isGranted(SecurityFunction fn, int id) {
         Account account = getCurrentAccount();
-        return account != null && account.isGranted(category, id, action);
+        return account != null && account.isGranted(fn, id);
     }
 
     @Override
-    public void checkGrant(SecurityCategory category, int id, String action) {
-        if (!isGranted(category, id, action)) {
+    public void checkGrant(SecurityFunction fn, int id) {
+        if (!isGranted(fn, id)) {
             throw new AccessDeniedException("Access is not granted");
         }
     }

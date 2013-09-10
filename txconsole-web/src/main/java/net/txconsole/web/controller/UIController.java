@@ -7,10 +7,9 @@ import net.txconsole.core.model.BranchCreationForm;
 import net.txconsole.core.model.BranchSummary;
 import net.txconsole.core.model.ProjectCreationForm;
 import net.txconsole.core.model.ProjectSummary;
-import net.txconsole.core.security.SecurityCategory;
+import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.StructureService;
-import net.txconsole.service.security.ProjectFunction;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
@@ -41,8 +40,9 @@ public class UIController extends AbstractUIController implements UI {
                             // List of branches
                     .withLink(linkTo(methodOn(UIController.class).getProjectBranches(o.getId())).withRel("branches"))
                             // ACL
-                    .withUpdate(securityUtils.isGranted(SecurityCategory.PROJECT, o.getId(), ProjectFunction.UPDATE))
-                    .withDelete(securityUtils.isGranted(SecurityCategory.PROJECT, o.getId(), ProjectFunction.DELETE));
+                    .withAction(ProjectFunction.UPDATE, securityUtils.isGranted(ProjectFunction.UPDATE, o.getId()))
+                    .withAction(ProjectFunction.DELETE, securityUtils.isGranted(ProjectFunction.DELETE, o.getId()))
+                    .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getId()));
         }
     };
     /**
@@ -57,7 +57,9 @@ public class UIController extends AbstractUIController implements UI {
                             // Project link
                     .withLink(linkTo(methodOn(UIController.class).getProject(o.getProjectId())).withRel("project"))
                             // ACL
-                    .withUpdateAndDelete(securityUtils.isGranted(SecurityCategory.PROJECT, o.getProjectId(), ProjectFunction.UPDATE));
+                    .withAction(ProjectFunction.UPDATE, securityUtils.isGranted(ProjectFunction.UPDATE, o.getProjectId()))
+                    .withAction(ProjectFunction.DELETE, securityUtils.isGranted(ProjectFunction.DELETE, o.getProjectId()))
+                    .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getProjectId()));
         }
     };
 

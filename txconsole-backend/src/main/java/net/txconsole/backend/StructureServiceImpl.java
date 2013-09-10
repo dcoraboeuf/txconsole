@@ -14,7 +14,7 @@ import net.txconsole.core.model.*;
 import net.txconsole.service.EventService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.security.AdminGrant;
-import net.txconsole.service.security.ProjectFunction;
+import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.service.security.ProjectGrant;
 import net.txconsole.service.security.ProjectGrantId;
 import net.txconsole.service.support.Configured;
