@@ -37,3 +37,7 @@ branch
 branch.name
     en -> Name
     fr -> Nom
+
+request
+    en -> Translation request
+    fr -> Demande de traductions

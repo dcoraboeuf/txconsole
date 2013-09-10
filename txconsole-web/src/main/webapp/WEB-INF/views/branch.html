@@ -14,8 +14,11 @@
 
     <@title value=branch.data.name close="project/${project.data.id?c}">
         <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
-        <#if secAdmin()>
-            <@title_command id="project-delete" title=loc('general.delete') class="icon-trash" />
+        <#if project.actions?seq_contains('REQUEST_CREATE')>
+            <@title_command id="request-create" title=loc('request.create') class="icon-file" />
+        </#if>
+        <#if project.actions?seq_contains('UPDATE')>
+            <@title_command id="branch-delete" title=loc('general.delete') class="icon-trash" />
         </#if>
     </@title>
 

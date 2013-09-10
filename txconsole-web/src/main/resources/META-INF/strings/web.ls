@@ -430,3 +430,9 @@ branch.list
 branch.create
     en -> New branch
     fr -> Nouvelle branche
+
+[request]
+
+request.create
+    en -> Create a translation request
+    fr -> Créer une demande de traductions
