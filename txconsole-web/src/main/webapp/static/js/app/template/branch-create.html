@@ -1,0 +1,25 @@
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="project-name">{{loc 'project'}}</label>
+        <div class="controls">
+            <input type="text" id="project-name" size="40" maxlength="80" readonly="readonly" value="{{project.data.name}}" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="branch-name">{{loc 'branch.name'}}</label>
+        <div class="controls">
+            <input type="text" id="branch-name" size="40" maxlength="80" required="required" />
+        </div>
+    </div>
+    <h1>
+        <small>{{loc 'project.parameters'}}</small>
+    </h1>
+    {{#parameters}}
+        <div class="control-group">
+            <label class="control-label" for="branch-parameter-{{.}}">{{.}}</label>
+            <div class="controls">
+                <input class="input-xxlarge branch-parameter" type="text" id="branch-parameter-{{.}}" size="40" maxlength="200" required="required" />
+            </div>
+        </div>
+    {{/parameters}}
+</form>

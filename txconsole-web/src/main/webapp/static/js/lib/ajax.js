@@ -13,7 +13,7 @@ define(['common'], function (common) {
      * @param config.*          See #call
      */
     function post (config) {
-        call($.extend(config, { method: 'POST' }));
+        return call($.extend(config, { method: 'POST' }));
     }
 
     /**
@@ -21,7 +21,7 @@ define(['common'], function (common) {
      * @param config.*          See #call
      */
     function get (config) {
-        call($.extend(config, { method: 'GET' }));
+        return call($.extend(config, { method: 'GET' }));
     }
 
     /**
@@ -29,7 +29,7 @@ define(['common'], function (common) {
      * @param config.*          See #call
      */
     function del (config) {
-        call($.extend(config, { method: 'DELETE' }));
+        return call($.extend(config, { method: 'DELETE' }));
     }
 
     /**
@@ -49,6 +49,7 @@ define(['common'], function (common) {
             method: 'POST',
             responseType: 'json',
             contentType: 'application/json',
+            successFn: $.noop,
             errorFn: defaultAjaxErrorFn
         }, config);
         // Data to send
@@ -67,7 +68,7 @@ define(['common'], function (common) {
         // Starting to load
         showLoading(c.loading, true);
         // Performing the call
-		$.ajax({
+		return $.ajax({
 			type: c.method,
 			url: c.url,
 			dataType: c.responseType,

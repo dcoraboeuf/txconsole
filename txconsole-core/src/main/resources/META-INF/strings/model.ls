@@ -1,3 +1,7 @@
+project
+    en -> Project
+    fr -> Projet
+
 project.name
     en -> Name
     fr -> Nom
@@ -13,3 +17,23 @@ project.languages
 project.txsource
     en -> Translation source
     fr -> Source des traductions
+
+project.parameters
+    en -> Parameters
+    fr -> Paramètres
+
+project.parameters.name
+    en -> Name
+    fr -> Nom
+
+project.parameters.value
+    en -> Value
+    fr -> Valeur
+
+branch
+    en -> Branch
+    fr -> Branche
+
+branch.name
+    en -> Name
+    fr -> Nom
