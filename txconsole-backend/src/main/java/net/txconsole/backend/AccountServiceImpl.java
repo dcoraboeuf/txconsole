@@ -248,8 +248,11 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
             for (TProjectAuthorization auth : authList) {
                 switch (auth.getRole()) {
                     case OWNER:
-                        account = account.withACL(SecurityCategory.PROJECT, auth.getProject(), ProjectFunction.UPDATE.name());
+                        account = account.withACL(SecurityCategory.PROJECT, auth.getProject(), ProjectFunction.UPDATE);
+                        // ... applies everything below
                     case TRANSLATOR:
+                        account = account.withACL(SecurityCategory.PROJECT, auth.getProject(), ProjectFunction.REQUEST_CREATE);
+                        // ... applies everything below
                     case REVIEWER:
                     case CONTRIBUTOR:
                     default:
