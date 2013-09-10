@@ -1,6 +1,8 @@
 package net.txconsole.service;
 
 import net.txconsole.core.model.*;
+import net.txconsole.service.support.Configured;
+import net.txconsole.service.support.TranslationSource;
 
 import java.util.List;
 
@@ -21,4 +23,6 @@ public interface StructureService {
     BranchSummary createBranch(int project, BranchCreationForm form);
 
     List<BranchSummary> getProjectBranches(int id);
+
+    <C> Configured<C, TranslationSource<C>> getConfiguredTranslationSource(int branchId);
 }

@@ -16,6 +16,8 @@ public interface Configurable<C> extends Descriptible {
 
     C readConfiguration(JsonNode node) throws IOException;
 
+    C readConfiguration(String json) throws IOException;
+
     JsonNode writeConfiguration(C config) throws IOException;
 
     String writeConfigurationAsJsonString(C config) throws IOException;

@@ -1,5 +1,7 @@
 package net.txconsole.service.support;
 
+import net.txconsole.core.model.VersionFormat;
+
 /**
  * Defines a way to access some files.
  *

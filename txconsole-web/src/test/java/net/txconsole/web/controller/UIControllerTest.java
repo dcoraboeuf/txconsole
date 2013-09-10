@@ -6,6 +6,7 @@ import net.txconsole.core.model.ProjectCreationForm;
 import net.txconsole.core.model.ProjectSummary;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
+import net.txconsole.service.RequestService;
 import net.txconsole.service.StructureService;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.ErrorHandler;
@@ -29,14 +30,16 @@ public class UIControllerTest {
     private Strings strings;
     private StructureService structureService;
     private SecurityUtils securityUtils;
+    private RequestService requestService;
 
     @Before
     public void before() {
         errorHandler = mock(ErrorHandler.class);
         strings = mock(Strings.class);
         structureService = mock(StructureService.class);
+        requestService = mock(RequestService.class);
         securityUtils = mock(SecurityUtils.class);
-        controller = new UIController(errorHandler, strings, structureService, securityUtils);
+        controller = new UIController(errorHandler, strings, structureService, requestService, securityUtils);
         // Current request
         MockHttpServletRequest request = new MockHttpServletRequest();
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);

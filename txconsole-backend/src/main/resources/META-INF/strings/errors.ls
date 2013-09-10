@@ -25,3 +25,7 @@ net.txconsole.backend.exceptions.ProjectParametersNotDefinedByBranchException
 net.txconsole.backend.exceptions.ProjectParametersNotDefinedException
     en -> [E-007] The branch defines some parameters not defined at project level: {0}
     fr -> [E-007] La branche définit des paramètres qui ne sont pas définis au niveau du projet : {0}
+
+net.txconsole.backend.exceptions.ProjectParameterNotDefinedException
+    en -> [E-008] The parameter "{0}" has not been defined.
+    fr -> [E-008] Le paramètre "{0}" n'est pas défini.

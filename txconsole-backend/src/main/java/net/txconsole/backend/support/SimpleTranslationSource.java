@@ -2,8 +2,12 @@ package net.txconsole.backend.support;
 
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.core.model.TranslationMap;
+import net.txconsole.core.model.VersionFormat;
 import net.txconsole.core.support.MapBuilder;
-import net.txconsole.service.support.*;
+import net.txconsole.service.support.AbstractConfigurable;
+import net.txconsole.service.support.FileSource;
+import net.txconsole.service.support.TranslationSource;
+import net.txconsole.service.support.TranslationSourceService;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +71,11 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
                         JsonConfiguration.fromJson(node, "txFileFormatConfigured")
                 )
         );
+    }
+
+    @Override
+    public SimpleTranslationSourceConfig<S, F> readConfiguration(String json) throws IOException {
+        return readConfiguration(objectMapper.readTree(json));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.txconsole.service.support;
 
 import net.txconsole.core.model.TranslationMap;
+import net.txconsole.core.model.VersionFormat;
 
 /**
  * Provides access to a {@link net.txconsole.core.model.TranslationMap},

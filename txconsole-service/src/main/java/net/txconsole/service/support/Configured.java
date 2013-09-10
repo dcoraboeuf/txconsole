@@ -18,4 +18,11 @@ public class Configured<C, T extends Configurable<C>> {
     public JsonNode writeConfiguration() throws IOException {
         return configurable.writeConfiguration(configuration);
     }
+
+    public Configured<C, T> withConfiguration(C configuration) {
+        return new Configured<>(
+                configuration,
+                configurable
+        );
+    }
 }

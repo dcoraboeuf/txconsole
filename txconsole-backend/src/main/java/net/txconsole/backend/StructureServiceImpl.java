@@ -8,13 +8,14 @@ import net.txconsole.backend.dao.ProjectDao;
 import net.txconsole.backend.dao.model.TBranch;
 import net.txconsole.backend.dao.model.TProject;
 import net.txconsole.backend.exceptions.ConfigIOException;
+import net.txconsole.backend.exceptions.ProjectParameterNotDefinedException;
 import net.txconsole.backend.exceptions.ProjectParametersNotDefinedByBranchException;
 import net.txconsole.backend.exceptions.ProjectParametersNotDefinedException;
 import net.txconsole.core.model.*;
+import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.service.EventService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.security.AdminGrant;
-import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.service.security.ProjectGrant;
 import net.txconsole.service.security.ProjectGrantId;
 import net.txconsole.service.support.Configured;
@@ -28,12 +29,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 public class StructureServiceImpl implements StructureService {
 
+    public static final Pattern PARAMETER_PATTERN = Pattern.compile("(\\$([A-Z_]+))");
     private final EventService eventService;
     private final TranslationSourceService translationSourceService;
     private final ProjectDao projectDao;
@@ -107,6 +110,48 @@ public class StructureServiceImpl implements StructureService {
 
     @Override
     @Transactional(readOnly = true)
+    public <C> Configured<C, TranslationSource<C>> getConfiguredTranslationSource(int branchId) {
+        // Gets the branch
+        TBranch branch = branchDao.getById(branchId);
+        // Gets the project information
+        TProject t = projectDao.getById(branch.getProject());
+        // Gets the project configuration
+        Configured<C, TranslationSource<C>> configuredTranslationSource = translationSourceService.getConfiguredTranslationSource(t.getTxSourceConfig());
+        // Gets the configuration as JSON
+        String jsonConfiguration;
+        try {
+            jsonConfiguration = configuredTranslationSource.writeConfigurationAsJsonString();
+        } catch (IOException e) {
+            throw new ConfigIOException("txsource", configuredTranslationSource.getConfigurable().getId(), e);
+        }
+        // Gets the branch parameters
+        Map<String, String> branchParameters = branchDao.getBranchParameters(branchId);
+        // Replaces the parameters in the JSON
+        StringBuffer s = new StringBuffer();
+        Matcher m = PARAMETER_PATTERN.matcher(jsonConfiguration);
+        while (m.find()) {
+            String variable = m.group(2);
+            String value = branchParameters.get(variable);
+            if (value == null) {
+                throw new ProjectParameterNotDefinedException(variable);
+            } else {
+                m.appendReplacement(s, value);
+            }
+        }
+        m.appendTail(s);
+        // Gets the new JSON
+        C branchConfiguration;
+        try {
+            branchConfiguration = configuredTranslationSource.getConfigurable().readConfiguration(s.toString());
+        } catch (IOException e) {
+            throw new ConfigIOException("txsource", configuredTranslationSource.getConfigurable().getId(), e);
+        }
+        // OK
+        return configuredTranslationSource.withConfiguration(branchConfiguration);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<String> getProjectParameters(int id) {
         // Gets the project information
         TProject t = projectDao.getById(id);
@@ -121,10 +166,9 @@ public class StructureServiceImpl implements StructureService {
         }
         // Extracts the parameters
         List<String> parameters = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\$([A-Z_]+)");
-        Matcher m = pattern.matcher(jsonConfiguration);
+        Matcher m = PARAMETER_PATTERN.matcher(jsonConfiguration);
         while (m.find()) {
-            parameters.add(m.group(1));
+            parameters.add(m.group(2));
         }
         // OK
         return parameters;

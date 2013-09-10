@@ -21,6 +21,12 @@ public abstract class AbstractSimpleConfigurable<C> extends AbstractConfigurable
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public C readConfiguration(String json) throws IOException {
+        return (C) objectMapper.readValue(json, getConfigClass());
+    }
+
+    @Override
     public JsonNode writeConfiguration(C config) throws IOException {
         return objectMapper.valueToTree(config);
     }

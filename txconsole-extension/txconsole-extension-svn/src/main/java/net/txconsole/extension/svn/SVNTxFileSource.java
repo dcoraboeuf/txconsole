@@ -3,7 +3,7 @@ package net.txconsole.extension.svn;
 import net.txconsole.extension.scm.AbstractSCMTxFileSource;
 import net.txconsole.service.support.FileSource;
 import net.txconsole.service.support.TxFileSource;
-import net.txconsole.service.support.VersionFormat;
+import net.txconsole.core.model.VersionFormat;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

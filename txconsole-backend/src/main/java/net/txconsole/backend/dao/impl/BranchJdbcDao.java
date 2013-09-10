@@ -6,6 +6,7 @@ import net.txconsole.backend.dao.model.TBranch;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class BranchJdbcDao extends AbstractJdbcDao implements BranchDao {
@@ -79,5 +82,25 @@ public class BranchJdbcDao extends AbstractJdbcDao implements BranchDao {
                 params("project", project),
                 branchRowMapper
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<String, String> getBranchParameters(int branch) {
+        final Map<String, String> map = new HashMap<>();
+        getNamedParameterJdbcTemplate().query(
+                SQL.BRANCH_PARAMETER_BY_BRANCH,
+                params("branch", branch),
+                new RowCallbackHandler() {
+                    @Override
+                    public void processRow(ResultSet resultSet) throws SQLException {
+                        map.put(
+                                resultSet.getString("parameter"),
+                                resultSet.getString("value")
+                        );
+                    }
+                }
+        );
+        return map;
     }
 }
