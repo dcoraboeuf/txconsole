@@ -113,7 +113,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
     protected static class AdminCall extends AccountCall {
 
         public AdminCall() {
-            super(new Account(0, "admin", "Administrator",
+            super(new Account(1, "admin", "Administrator",
                     "admin@test.com", SecurityRoles.ADMINISTRATOR, "builtin", Locale.ENGLISH));
         }
     }
