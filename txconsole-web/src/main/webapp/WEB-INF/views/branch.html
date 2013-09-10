@@ -1,0 +1,22 @@
+<#include "/lib/layout.html">
+
+<@layout_std
+    page="branch"
+    title=branch.data.name?html
+    noscript=true
+    breadcrumbs={
+        loc("home"): "",
+        project.data.name?html: "project/${project.data.id?c}"
+    }>
+
+    <input type="hidden" id="project" value="${project.data.id?c}" />
+    <input type="hidden" id="branch" value="${branch.data.id?c}" />
+
+    <@title value=branch.data.name close="project/${project.data.id?c}">
+        <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
+        <#if secAdmin()>
+            <@title_command id="project-delete" title=loc('general.delete') class="icon-trash" />
+        </#if>
+    </@title>
+
+</@layout_std>

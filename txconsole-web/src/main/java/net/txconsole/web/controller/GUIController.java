@@ -1,5 +1,8 @@
 package net.txconsole.web.controller;
 
+import net.txconsole.core.model.BranchSummary;
+import net.txconsole.core.support.MapBuilder;
+import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.AbstractGUIController;
 import net.txconsole.web.support.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +41,14 @@ public class GUIController extends AbstractGUIController {
      */
     @RequestMapping(value = "/branch/{id}", method = RequestMethod.GET)
     public ModelAndView getBranch(@PathVariable int id) {
-        return new ModelAndView("branch", "branch", ui.getBranch(id));
+        Resource<BranchSummary> branch = ui.getBranch(id);
+        return new ModelAndView("branch",
+                MapBuilder
+                        .params()
+                        .with("branch", branch)
+                        .with("project", ui.getProject(branch.getData().getProjectId()))
+                        .get()
+        );
     }
 
 }
