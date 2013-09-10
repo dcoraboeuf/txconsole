@@ -45,6 +45,13 @@
            timeToLiveSeconds="3600"
            statistics="true"
            overflowToDisk="false" />
+    <cache name="BranchID"
+           maxElementsInMemory="10"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           statistics="true"
+           overflowToDisk="false" />
     <cache name="Account"
            maxElementsInMemory="20"
            eternal="false"

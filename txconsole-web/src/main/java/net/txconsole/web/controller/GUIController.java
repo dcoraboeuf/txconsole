@@ -29,8 +29,16 @@ public class GUIController extends AbstractGUIController {
      * Project page
      */
     @RequestMapping(value = "/project/{id}", method = RequestMethod.GET)
-    public ModelAndView projectGet(@PathVariable int id) {
-        return new ModelAndView("project", "project", ui.projectGet(id));
+    public ModelAndView getProject(@PathVariable int id) {
+        return new ModelAndView("project", "project", ui.getProject(id));
+    }
+
+    /**
+     * Branch page
+     */
+    @RequestMapping(value = "/branch/{id}", method = RequestMethod.GET)
+    public ModelAndView getBranch(@PathVariable int id) {
+        return new ModelAndView("branch", "branch", ui.getBranch(id));
     }
 
 }

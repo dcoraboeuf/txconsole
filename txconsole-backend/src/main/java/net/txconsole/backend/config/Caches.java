@@ -4,6 +4,7 @@ public interface Caches {
 
     String PROJECT_LIST = "ProjectList";
     String PROJECT_ID = "ProjectID";
+    String BRANCH_ID = "BranchID";
     String ACCOUNT = "Account";
     String CONFIGURATION_KEY = "ConfigurationKey";
     String CONFIGURATION = "Configuration";

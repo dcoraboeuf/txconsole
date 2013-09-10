@@ -17,3 +17,11 @@ net.txconsole.backend.exceptions.ConfigIDException
 net.txconsole.backend.exceptions.ConfigIOException
     en -> [E-005] Cannot read/write configuration for the "{0}" service of ID "{1}".
     fr -> [E-005] Impossible de lire/écrire la configuration pour le service "{0}" d'ID "{1}".
+
+net.txconsole.backend.exceptions.ProjectParametersNotDefinedByBranchException
+    en -> [E-006] The branch must define values for the following project parameters: {0}
+    fr -> [E-006] La branche doit définir des valeurs pour les paramètres de projet suivants : {0}
+
+net.txconsole.backend.exceptions.ProjectParametersNotDefinedException
+    en -> [E-007] The branch defines some parameters not defined at project level: {0}
+    fr -> [E-007] La branche définit des paramètres qui ne sont pas définis au niveau du projet : {0}

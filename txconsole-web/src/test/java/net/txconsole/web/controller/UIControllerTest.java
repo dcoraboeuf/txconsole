@@ -58,7 +58,7 @@ public class UIControllerTest {
                         new ProjectSummary(2, "P2", "Project 2")
                 )
         );
-        List<Resource<ProjectSummary>> list = controller.projectList();
+        List<Resource<ProjectSummary>> list = controller.getProjectList();
         assertEquals(2, list.size());
         {
             Resource<ProjectSummary> p = list.get(0);
@@ -79,7 +79,7 @@ public class UIControllerTest {
         when(structureService.getProject(1)).thenReturn(
                 new ProjectSummary(1, "P1", "Project 1")
         );
-        Resource<ProjectSummary> p = controller.projectGet(1);
+        Resource<ProjectSummary> p = controller.getProject(1);
         assertEquals("P1", p.getData().getName());
         assertEquals("http://localhost/ui/project/1", p.getLink("self").getHref());
         assertEquals("http://localhost/project/1", p.getLink("gui").getHref());
@@ -101,7 +101,7 @@ public class UIControllerTest {
                         "Project 3"
                 )
         );
-        Resource<ProjectSummary> p = controller.projectCreate(
+        Resource<ProjectSummary> p = controller.createProject(
                 new ProjectCreationForm(
                         "P3",
                         "Project 3",

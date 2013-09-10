@@ -43,4 +43,8 @@ public class Resource<T> extends ResourceSupport {
         return withAction(ResourceAction.DELETE, ok);
     }
 
+    public Resource<T> withUpdateAndDelete(boolean ok) {
+        return withUpdate(ok).withDelete(ok);
+    }
+
 }

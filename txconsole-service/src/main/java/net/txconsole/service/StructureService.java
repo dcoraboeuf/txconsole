@@ -1,8 +1,6 @@
 package net.txconsole.service;
 
-import net.txconsole.core.model.Ack;
-import net.txconsole.core.model.ProjectCreationForm;
-import net.txconsole.core.model.ProjectSummary;
+import net.txconsole.core.model.*;
 
 import java.util.List;
 
@@ -17,4 +15,8 @@ public interface StructureService {
     ProjectSummary createProject(ProjectCreationForm form);
 
     List<String> getProjectParameters(int id);
+
+    BranchSummary getBranch(int id);
+
+    BranchSummary createBranch(int project, BranchCreationForm form);
 }
