@@ -4,16 +4,26 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.txconsole.backend.dao.ProjectDao;
 import net.txconsole.backend.dao.model.TProject;
-import net.txconsole.core.model.*;
+import net.txconsole.backend.exceptions.ConfigIOException;
+import net.txconsole.core.model.Ack;
+import net.txconsole.core.model.EventForm;
+import net.txconsole.core.model.ProjectCreationForm;
+import net.txconsole.core.model.ProjectSummary;
 import net.txconsole.service.EventService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.security.AdminGrant;
+import net.txconsole.service.support.Configured;
+import net.txconsole.service.support.TranslationSource;
 import net.txconsole.service.support.TranslationSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class StructureServiceImpl implements StructureService {
@@ -69,6 +79,31 @@ public class StructureServiceImpl implements StructureService {
         eventService.event(EventForm.projectCreated(project));
         // OK
         return project;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> getProjectParameters(int id) {
+        // Gets the project information
+        TProject t = projectDao.getById(id);
+        // Gets the project configuration
+        Configured<Object, TranslationSource<Object>> configuredTranslationSource = translationSourceService.getConfiguredTranslationSource(t.getTxSourceConfig());
+        // Gets the configuration as JSON
+        String jsonConfiguration;
+        try {
+            jsonConfiguration = configuredTranslationSource.writeConfigurationAsJsonString();
+        } catch (IOException e) {
+            throw new ConfigIOException("txsource", configuredTranslationSource.getConfigurable().getId(), e);
+        }
+        // Extracts the parameters
+        List<String> parameters = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\\$([A-Z_]+)");
+        Matcher m = pattern.matcher(jsonConfiguration);
+        while (m.find()) {
+            parameters.add(m.group(1));
+        }
+        // OK
+        return parameters;
     }
 
     @Override

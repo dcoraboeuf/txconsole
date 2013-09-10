@@ -19,4 +19,14 @@ public abstract class AbstractSimpleConfigurable<C> extends AbstractConfigurable
     public C readConfiguration(JsonNode node) throws IOException {
         return (C) objectMapper.readValue(node, getConfigClass());
     }
+
+    @Override
+    public JsonNode writeConfiguration(C config) throws IOException {
+        return objectMapper.valueToTree(config);
+    }
+
+    @Override
+    public String writeConfigurationAsJsonString(C config) throws IOException {
+        return objectMapper.writeValueAsString(config);
+    }
 }

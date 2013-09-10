@@ -1,6 +1,7 @@
 package net.txconsole.backend.dao.model;
 
 import lombok.Data;
+import net.txconsole.core.model.JsonConfiguration;
 
 import java.util.List;
 import java.util.Locale;
@@ -12,4 +13,5 @@ public class TProject {
     private final String name;
     private final String fullName;
     private final List<String> languages;
+    private final JsonConfiguration txSourceConfig;
 }

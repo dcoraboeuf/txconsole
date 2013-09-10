@@ -2,24 +2,30 @@ package net.txconsole.backend.support;
 
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.core.model.TranslationMap;
+import net.txconsole.core.support.MapBuilder;
 import net.txconsole.service.support.*;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 @Component
 public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTranslationSourceConfig<S, F>> implements TranslationSource<SimpleTranslationSourceConfig<S, F>> {
 
     private final TranslationSourceService translationSourceService;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public SimpleTranslationSource(TranslationSourceService translationSourceService) {
+    public SimpleTranslationSource(TranslationSourceService translationSourceService, ObjectMapper objectMapper) {
         super(
                 "simple",
                 "txsource.simple",
                 "txsource.simple.description",
                 SimpleTranslationSourceConfig.class);
         this.translationSourceService = translationSourceService;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -63,4 +69,18 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
         );
     }
 
+    @Override
+    public JsonNode writeConfiguration(SimpleTranslationSourceConfig<S, F> config) throws IOException {
+        return objectMapper.valueToTree(
+                MapBuilder
+                        .of("txFileSourceConfigured", config.getTxFileSourceConfigured().writeConfiguration())
+                        .with("txFileFormatConfigured", config.getTxFileFormatConfigured().writeConfiguration())
+                        .get()
+        );
+    }
+
+    @Override
+    public String writeConfigurationAsJsonString(SimpleTranslationSourceConfig<S, F> config) throws IOException {
+        return objectMapper.writeValueAsString(writeConfiguration(config));
+    }
 }

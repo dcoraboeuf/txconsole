@@ -72,6 +72,18 @@ public class UIController extends AbstractUIController {
         return projectSummaryResourceFn.apply(structureService.getProject(id));
     }
 
+    /**
+     * Gets the list of parameters for a project.
+     * @param id ID of the project
+     * @return List of parameters
+     */
+    @RequestMapping(value = "/project/{id}/parameter", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<String> projectGetParameters(@PathVariable int id) {
+        return structureService.getProjectParameters(id);
+    }
+
     @RequestMapping(value = "/project/{id}", method = RequestMethod.DELETE)
     public
     @ResponseBody

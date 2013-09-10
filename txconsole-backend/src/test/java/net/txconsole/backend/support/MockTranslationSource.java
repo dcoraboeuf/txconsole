@@ -35,6 +35,16 @@ public class MockTranslationSource
     }
 
     @Override
+    public JsonNode writeConfiguration(MockTranslationSourceConfig config) throws IOException {
+        return null;
+    }
+
+    @Override
+    public String writeConfigurationAsJsonString(MockTranslationSourceConfig config) throws IOException {
+        return null;
+    }
+
+    @Override
     public void write(MockTranslationSourceConfig config, TranslationMap map) {
     }
 

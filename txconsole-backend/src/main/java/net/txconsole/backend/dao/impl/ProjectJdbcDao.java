@@ -7,6 +7,7 @@ import net.txconsole.backend.exceptions.ProjectAlreadyExistException;
 import net.txconsole.core.model.Ack;
 import net.txconsole.core.model.JsonConfiguration;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -33,7 +34,11 @@ public class ProjectJdbcDao extends AbstractJdbcDao implements ProjectDao {
                     rs.getInt("id"),
                     rs.getString("name"),
                     rs.getString("fullName"),
-                    Arrays.asList(StringUtils.split(rs.getString("languages"), ","))
+                    Arrays.asList(StringUtils.split(rs.getString("languages"), ",")),
+                    new JsonConfiguration(
+                            rs.getString("txsource_id"),
+                            jsonFromDB(rs, "txsource_config")
+                    )
             );
         }
     };

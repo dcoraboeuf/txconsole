@@ -1,7 +1,6 @@
 package net.txconsole.service.support;
 
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParseException;
 
 import java.io.IOException;
 
@@ -16,4 +15,8 @@ public interface Configurable<C> extends Descriptible {
     Class<? super C> getConfigClass();
 
     C readConfiguration(JsonNode node) throws IOException;
+
+    JsonNode writeConfiguration(C config) throws IOException;
+
+    String writeConfigurationAsJsonString(C config) throws IOException;
 }

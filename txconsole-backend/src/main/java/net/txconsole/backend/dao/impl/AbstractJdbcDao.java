@@ -1,6 +1,7 @@
 package net.txconsole.backend.dao.impl;
 
 import com.google.common.base.Function;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.dao.DataAccessException;
@@ -79,6 +80,19 @@ public abstract class AbstractJdbcDao extends NamedParameterJdbcDaoSupport {
             return objectMapper.writeValueAsString(node);
         } catch (IOException e) {
             throw new IllegalStateException("Cannot write JSON as string", e);
+        }
+    }
+
+    protected JsonNode jsonFromDB(ResultSet rs, String column) throws SQLException {
+        String value = rs.getString(column);
+        if (StringUtils.isBlank(value)) {
+            return null;
+        } else {
+            try {
+                return objectMapper.readTree(value);
+            } catch (IOException e) {
+                throw new IllegalStateException("Cannot read JSON from string", e);
+            }
         }
     }
 

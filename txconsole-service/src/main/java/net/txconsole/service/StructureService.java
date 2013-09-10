@@ -15,4 +15,6 @@ public interface StructureService {
     Ack deleteProject(int id);
 
     ProjectSummary createProject(ProjectCreationForm form);
+
+    List<String> getProjectParameters(int id);
 }
