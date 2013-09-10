@@ -23,9 +23,11 @@ public interface SecurityUtils {
 
     <T> T asAdmin(Callable<T> call);
 
-    boolean isGranted(String category, int id, String action);
+    boolean isGranted(SecurityCategory category, int id, Enum<?> action);
 
-    void checkGrant(String category, int id, String action);
+    boolean isGranted(SecurityCategory category, int id, String action);
+
+    void checkGrant(SecurityCategory category, int id, String action);
 
     Signature getCurrentSignature();
 }

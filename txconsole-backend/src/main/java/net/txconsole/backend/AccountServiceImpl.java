@@ -9,6 +9,7 @@ import net.txconsole.backend.dao.ProjectAuthorizationDao;
 import net.txconsole.backend.dao.model.TAccount;
 import net.txconsole.backend.dao.model.TProjectAuthorization;
 import net.txconsole.core.model.*;
+import net.txconsole.core.security.SecurityCategory;
 import net.txconsole.core.security.SecurityRoles;
 import net.txconsole.core.validation.AccountValidation;
 import net.txconsole.core.validation.Validations;
@@ -247,7 +248,7 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
             for (TProjectAuthorization auth : authList) {
                 switch (auth.getRole()) {
                     case OWNER:
-                        account = account.withACL("PROJECT", auth.getProject(), ProjectFunction.UPDATE.name());
+                        account = account.withACL(SecurityCategory.PROJECT, auth.getProject(), ProjectFunction.UPDATE.name());
                     case TRANSLATOR:
                     case REVIEWER:
                     case CONTRIBUTOR:

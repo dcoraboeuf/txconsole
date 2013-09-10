@@ -2,17 +2,28 @@
 
 <@layout_std
     page="project"
-    title=project.name?html
+    title=project.data.name?html
     breadcrumbs={
         loc("home"): ""
     }>
 
-    <input type="hidden" id="project" value="${project.id?c}" />
+    <input type="hidden" id="project" value="${project.data.id?c}" />
 
-    <@title value=project.name description=project.fullName>
+    <@title value=project.data.name description=project.data.fullName>
         <#if secAdmin()>
             <@title_command id="project-delete" title=loc('general.delete') class="icon-trash" />
         </#if>
     </@title>
+
+    <div class="row-fluid">
+        <div class="span4">
+            <@section title=loc('branch.list')>
+                <div>TODO Branch list</div>
+                <#if project.actions?seq_contains('UPDATE')>
+                    <button id="branch-create" type="button" class="btn"><@lh key="branch.create" /></button>
+                </#if>
+            </@section>
+        </div>
+    </div>
 
 </@layout_std>

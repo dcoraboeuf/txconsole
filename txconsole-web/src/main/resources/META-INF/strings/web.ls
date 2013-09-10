@@ -420,3 +420,13 @@ project.create
 project.delete.prompt
     en -> Are you sure to delete the project "{0}"?
     fr -> Etes-vous sûr de vouloir supprimer le projet "{0}" ?
+
+[branch]
+
+branch.list
+    en -> Branches
+    fr -> Branches
+
+branch.create
+    en -> New branch
+    fr -> Nouvelle branche

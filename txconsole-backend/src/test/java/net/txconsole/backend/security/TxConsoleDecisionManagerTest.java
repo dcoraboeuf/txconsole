@@ -1,5 +1,6 @@
 package net.txconsole.backend.security;
 
+import net.txconsole.core.security.SecurityCategory;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.security.ProjectFunction;
 import net.txconsole.service.security.ProjectGrantIdAlreadyDefinedException;
@@ -40,9 +41,9 @@ public class TxConsoleDecisionManagerTest {
 	@Test
 	public void checkProjectGrant() {
 		ProjectFunction fn = ProjectFunction.UPDATE;
-		when(securityUtils.isGranted("PROJECT", 1, fn.name())).thenReturn(true);
+		when(securityUtils.isGranted(SecurityCategory.PROJECT, 1, fn)).thenReturn(true);
 		assertTrue(manager.checkProjectGrant(1, fn));
-		verify(securityUtils, times(1)).isGranted("PROJECT", 1, fn.name());
+		verify(securityUtils, times(1)).isGranted(SecurityCategory.PROJECT, 1, fn);
 	}
 
     @Test(expected = AccessDeniedException.class)
@@ -104,7 +105,7 @@ public class TxConsoleDecisionManagerTest {
         when(invocation.getArguments()).thenReturn(new Object[] { 1, "A" });
 
         Authentication authentication = mock(Authentication.class);
-        when(securityUtils.isGranted("PROJECT", 1, ProjectFunction.UPDATE.name())).thenReturn(true);
+        when(securityUtils.isGranted(SecurityCategory.PROJECT, 1, ProjectFunction.UPDATE)).thenReturn(true);
 
         manager.decide(authentication, invocation, null);
     }

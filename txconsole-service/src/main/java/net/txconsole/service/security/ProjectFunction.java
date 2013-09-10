@@ -2,6 +2,8 @@ package net.txconsole.service.security;
 
 public enum ProjectFunction {
 
-    UPDATE
+    UPDATE,
+
+    DELETE
 
 }

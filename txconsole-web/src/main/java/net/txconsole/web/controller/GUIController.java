@@ -1,6 +1,5 @@
 package net.txconsole.web.controller;
 
-import net.txconsole.service.StructureService;
 import net.txconsole.web.support.AbstractGUIController;
 import net.txconsole.web.support.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +12,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class GUIController extends AbstractGUIController {
 
-    private final StructureService structureService;
+    private final UI ui;
 
     @Autowired
-    public GUIController(ErrorHandler errorHandler, StructureService structureService) {
+    public GUIController(ErrorHandler errorHandler, UI ui) {
         super(errorHandler);
-        this.structureService = structureService;
+        this.ui = ui;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -31,7 +30,7 @@ public class GUIController extends AbstractGUIController {
      */
     @RequestMapping(value = "/project/{id}", method = RequestMethod.GET)
     public ModelAndView projectGet(@PathVariable int id) {
-        return new ModelAndView("project", "project", structureService.getProject(id));
+        return new ModelAndView("project", "project", ui.projectGet(id));
     }
 
 }
