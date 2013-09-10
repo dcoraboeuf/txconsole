@@ -182,7 +182,9 @@ public class UIController extends AbstractUIController implements UI {
      */
     @Override
     @RequestMapping(value = "/branch/{branchId}/request", method = RequestMethod.GET)
-    public Resource<RequestConfigurationData> getRequestConfigurationData(@PathVariable int branchId) {
+    public
+    @ResponseBody
+    Resource<RequestConfigurationData> getRequestConfigurationData(@PathVariable int branchId) {
         return requestConfigurationDataResourceFn.apply(
                 requestService.getRequestConfigurationData(branchId)
         );
