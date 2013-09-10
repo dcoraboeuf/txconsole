@@ -21,6 +21,7 @@ import net.txconsole.service.security.ProjectGrantId;
 import net.txconsole.service.support.Configured;
 import net.txconsole.service.support.TranslationSource;
 import net.txconsole.service.support.TranslationSourceService;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,7 @@ public class StructureServiceImpl implements StructureService {
     private final TranslationSourceService translationSourceService;
     private final ProjectDao projectDao;
     private final BranchDao branchDao;
+    private final ObjectMapper objectMapper;
     /**
      * Project summary from the table
      */
@@ -69,11 +71,12 @@ public class StructureServiceImpl implements StructureService {
     };
 
     @Autowired
-    public StructureServiceImpl(EventService eventService, TranslationSourceService translationSourceService, ProjectDao projectDao, BranchDao branchDao) {
+    public StructureServiceImpl(EventService eventService, TranslationSourceService translationSourceService, ProjectDao projectDao, BranchDao branchDao, ObjectMapper objectMapper) {
         this.eventService = eventService;
         this.translationSourceService = translationSourceService;
         this.projectDao = projectDao;
         this.branchDao = branchDao;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -120,7 +123,7 @@ public class StructureServiceImpl implements StructureService {
         // Gets the configuration as JSON
         String jsonConfiguration;
         try {
-            jsonConfiguration = configuredTranslationSource.writeConfigurationAsJsonString();
+            jsonConfiguration = objectMapper.writeValueAsString(configuredTranslationSource.getJsonConfiguration().getNode());
         } catch (IOException e) {
             throw new ConfigIOException("txsource", configuredTranslationSource.getConfigurable().getId(), e);
         }
@@ -160,7 +163,7 @@ public class StructureServiceImpl implements StructureService {
         // Gets the configuration as JSON
         String jsonConfiguration;
         try {
-            jsonConfiguration = configuredTranslationSource.writeConfigurationAsJsonString();
+            jsonConfiguration = objectMapper.writeValueAsString(configuredTranslationSource.getJsonConfiguration().getNode());
         } catch (IOException e) {
             throw new ConfigIOException("txsource", configuredTranslationSource.getConfigurable().getId(), e);
         }

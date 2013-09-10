@@ -82,8 +82,12 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
     public JsonNode writeConfiguration(SimpleTranslationSourceConfig<S, F> config) throws IOException {
         return objectMapper.valueToTree(
                 MapBuilder
-                        .of("txFileSourceConfigured", config.getTxFileSourceConfigured().writeConfiguration())
-                        .with("txFileFormatConfigured", config.getTxFileFormatConfigured().writeConfiguration())
+                        .of(
+                                "txFileSourceConfigured",
+                                config.getTxFileSourceConfigured().getJsonConfiguration())
+                        .with(
+                                "txFileFormatConfigured",
+                                config.getTxFileFormatConfigured().getJsonConfiguration())
                         .get()
         );
     }

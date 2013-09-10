@@ -1,7 +1,8 @@
 package net.txconsole.service.support;
 
 import lombok.Data;
-import org.codehaus.jackson.JsonNode;
+import net.txconsole.core.model.JsonConfiguration;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.IOException;
 
@@ -11,12 +12,11 @@ public class Configured<C, T extends Configurable<C>> {
     private final C configuration;
     private final T configurable;
 
-    public String writeConfigurationAsJsonString() throws IOException {
-        return configurable.writeConfigurationAsJsonString(configuration);
-    }
-
-    public JsonNode writeConfiguration() throws IOException {
-        return configurable.writeConfiguration(configuration);
+    public JsonConfiguration getJsonConfiguration() throws IOException {
+        return new JsonConfiguration(
+                configurable.getId(),
+                configurable.writeConfiguration(configuration)
+        );
     }
 
     public Configured<C, T> withConfiguration(C configuration) {
