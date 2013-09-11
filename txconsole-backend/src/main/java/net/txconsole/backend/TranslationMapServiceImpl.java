@@ -1,12 +1,10 @@
 package net.txconsole.backend;
 
 import net.txconsole.core.model.TranslationMap;
-import net.txconsole.core.model.TranslationMapRequest;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
 import net.txconsole.service.support.Configured;
 import net.txconsole.service.support.TranslationSource;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,20 +19,15 @@ public class TranslationMapServiceImpl implements TranslationMapService {
     }
 
     @Override
-    public TranslationMap request(int branchId, TranslationMapRequest request) {
+    public TranslationMap map(int branchId, String version) {
         // Gets the branch configuration
         Configured<Object, TranslationSource<Object>> txConfigured = structureService.getConfiguredTranslationSource(branchId);
         // Reads the map
         // TODO Cache: branch x version
-        TranslationMap rawMap = txConfigured.getConfigurable().read(txConfigured.getConfiguration(), request.getVersion());
-        // Applies the filter
-        if (StringUtils.isNotBlank(request.getFilter())) {
-            return filterMap(rawMap, request.getFilter());
-        } else {
-            // No filter
-            // TODO Filters on maximum count
-            return rawMap;
-        }
+        // Note: if the version is blank, the actual version for the caching must be computed from the file source
+        TranslationMap rawMap = txConfigured.getConfigurable().read(txConfigured.getConfiguration(), version);
+        // OK
+        return rawMap;
     }
 
     protected TranslationMap filterMap(TranslationMap map, String filter) {

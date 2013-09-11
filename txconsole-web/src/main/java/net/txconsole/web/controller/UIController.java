@@ -199,8 +199,8 @@ public class UIController extends AbstractUIController implements UI {
     @RequestMapping(value = "/map/{branchId}", method = RequestMethod.POST)
     public
     @ResponseBody
-    Resource<TranslationMap> getTranslationMap(@PathVariable int branchId, @RequestBody TranslationMapRequest request) {
-        return new Resource<>(translationMapService.request(branchId, request))
+    Resource<TranslationMapResponse> getTranslationMap(@PathVariable int branchId, @RequestBody TranslationMapRequest request) {
+        return new Resource<>(translationMapService.map(branchId, request.getVersion()).filter(request.getLimit(), request.getFilter()))
                 .withLink(linkTo(methodOn(UIController.class).getBranch(branchId)).withRel("branch"))
                 .withLink(linkTo(methodOn(GUIController.class).getBranch(branchId)).withRel("branch-gui"));
         // TODO ACL for the map edition
