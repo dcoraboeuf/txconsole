@@ -21,12 +21,12 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
     }
 
     @Override
-    public TranslationMap readFrom(PropertiesTxFileFormatConfig config, IOContext source) {
+    public TranslationMap readFrom(PropertiesTxFileFormatConfig config, IOContext context) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void writeTo(PropertiesTxFileFormatConfig config, TranslationMap map, IOContext source) {
+    public void writeTo(PropertiesTxFileFormatConfig config, TranslationMap map, IOContext context) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }

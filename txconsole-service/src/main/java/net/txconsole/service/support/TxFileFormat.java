@@ -11,13 +11,13 @@ import net.txconsole.core.model.TranslationMap;
 public interface TxFileFormat<C> extends Configurable<C> {
 
     /**
-     * Reads the map for the file source
+     * Reads the map for the file context
      */
-    TranslationMap readFrom(C config, IOContext source);
+    TranslationMap readFrom(C config, IOContext context);
 
     /**
-     * Writes the map into the file source
+     * Writes the map into the file context
      */
-    void writeTo(C config, TranslationMap map, IOContext source);
+    void writeTo(C config, TranslationMap map, IOContext context);
 
 }
