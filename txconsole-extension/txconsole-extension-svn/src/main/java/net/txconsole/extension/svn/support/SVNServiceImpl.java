@@ -15,7 +15,7 @@ import java.io.File;
 public class SVNServiceImpl implements SVNService {
 
     @Override
-    public void checkout(File dir, String url, String user, String password, SVNRevision revision) {
+    public long checkout(File dir, String url, String user, String password, SVNRevision revision) {
         SvnOperationFactory factory = new SvnOperationFactory();
         try {
             factory.setAuthenticationManager(new BasicAuthenticationManager(user, password));
@@ -23,6 +23,7 @@ public class SVNServiceImpl implements SVNService {
             co.setSource(SvnTarget.fromURL(SVNURL.parseURIEncoded(url)));
             co.setRevision(revision);
             co.setSingleTarget(SvnTarget.fromFile(dir));
+            return co.run();
         } catch (SVNException e) {
             throw new CoreSVNException(e);
         } finally {

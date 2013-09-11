@@ -6,6 +6,6 @@ import java.io.File;
 
 public interface SVNService {
 
-    void checkout(File dir, String url, String user, String password, SVNRevision revision);
+    long checkout(File dir, String url, String user, String password, SVNRevision revision);
 
 }

@@ -40,14 +40,15 @@ public class SVNTxFileSource extends AbstractSCMTxFileSource<SVNTxFileSourceConf
         // Gets a working directory
         IOContext context = ioContextFactory.createContext("svn");
         // Checkout the files
-        svnService.checkout(
+        long lastRevision = svnService.checkout(
                 context.getDir(),
                 config.getUrl(),
                 config.getUser(),
                 config.getPassword(),
                 revision
         );
-        // TODO Returns a directory context
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // TODO Does something with the last revision (it should be returned somehow in the IOContext...)
+        // Returns a directory context
+        return context;
     }
 }
