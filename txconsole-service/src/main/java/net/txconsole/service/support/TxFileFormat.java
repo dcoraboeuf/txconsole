@@ -13,11 +13,11 @@ public interface TxFileFormat<C> extends Configurable<C> {
     /**
      * Reads the map for the file source
      */
-    TranslationMap readFrom(C config, FileSource source);
+    TranslationMap readFrom(C config, IOContext source);
 
     /**
      * Writes the map into the file source
      */
-    void writeTo(C config, TranslationMap map, FileSource source);
+    void writeTo(C config, TranslationMap map, IOContext source);
 
 }

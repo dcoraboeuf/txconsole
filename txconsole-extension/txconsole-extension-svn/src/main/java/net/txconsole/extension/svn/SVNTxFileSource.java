@@ -1,7 +1,7 @@
 package net.txconsole.extension.svn;
 
 import net.txconsole.extension.scm.AbstractSCMTxFileSource;
-import net.txconsole.service.support.FileSource;
+import net.txconsole.service.support.IOContext;
 import net.txconsole.service.support.TxFileSource;
 import net.txconsole.core.model.VersionFormat;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -26,7 +26,7 @@ public class SVNTxFileSource extends AbstractSCMTxFileSource<SVNTxFileSourceConf
     }
 
     @Override
-    public FileSource getSource(SVNTxFileSourceConfig config, String version) {
+    public IOContext getSource(SVNTxFileSourceConfig config, String version) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

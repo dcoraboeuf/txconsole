@@ -5,7 +5,7 @@ import net.txconsole.core.model.TranslationMap;
 import net.txconsole.core.model.VersionFormat;
 import net.txconsole.core.support.MapBuilder;
 import net.txconsole.service.support.AbstractConfigurable;
-import net.txconsole.service.support.FileSource;
+import net.txconsole.service.support.IOContext;
 import net.txconsole.service.support.TranslationSource;
 import net.txconsole.service.support.TranslationSourceService;
 import org.codehaus.jackson.JsonNode;
@@ -41,7 +41,7 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
     public TranslationMap read(SimpleTranslationSourceConfig<S, F> config, String version) {
         // TODO Sync (transaction callback)
         // Gets the file source
-        FileSource s = config.getTxFileSourceConfigured().getConfigurable().getSource(config.getTxFileSourceConfigured().getConfiguration(), version);
+        IOContext s = config.getTxFileSourceConfigured().getConfigurable().getSource(config.getTxFileSourceConfigured().getConfiguration(), version);
         // Reads the map
         return config.getTxFileFormatConfigured().getConfigurable().readFrom(
                 config.getTxFileFormatConfigured().getConfiguration(),
@@ -52,7 +52,7 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
     public void write(SimpleTranslationSourceConfig<S, F> config, TranslationMap map) {
         // TODO Sync (transaction callback)
         // Gets the file source
-        FileSource s = config.getTxFileSourceConfigured().getConfigurable().getSource(config.getTxFileSourceConfigured().getConfiguration(), null);
+        IOContext s = config.getTxFileSourceConfigured().getConfigurable().getSource(config.getTxFileSourceConfigured().getConfiguration(), null);
         // Writes the map
         config.getTxFileFormatConfigured().getConfigurable().writeTo(
                 config.getTxFileFormatConfigured().getConfiguration(),

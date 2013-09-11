@@ -20,7 +20,7 @@ public interface TxFileSource<C> extends Configurable<C> {
      *                <i>latest</i> version of the file source.
      * @see TranslationSource#read(Object, String)
      */
-    FileSource getSource(C config, String version);
+    IOContext getSource(C config, String version);
 
     /**
      * This method returns the label and the validation pattern to use for the version semantics. For example,
