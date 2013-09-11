@@ -1,8 +1,9 @@
 <form class="form-horizontal">
     <div class="control-group">
-        <label class="control-label" for="txfileformat-properties-pathPattern">{{loc 'extension.format.properties.pathPattern'}}</label>
+        <label class="control-label" for="txfileformat-properties-groups">{{loc 'extension.format.properties.groups'}}</label>
         <div class="controls">
-            <input name="pathPattern" type="text" id="txfileformat-properties-pathPattern" value="" size="40" maxlength="250" required="required" />
+            <textarea id="txfileformat-properties-groups" class="input-xlarge" rows="5" required="required" maxlength="3000"></textarea>
+            <span class="help-block">{{loc 'extension.format.properties.groups.help'}}</span>
         </div>
     </div>
 </form>

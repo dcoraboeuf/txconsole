@@ -6,6 +6,18 @@ extension.format.properties.description
     en -> Set of files using the JDK Properties format.
     fr -> Ensemble de fichiers au format Properties du JDK.
 
-extension.format.properties.pathPattern
-    en -> ANT pattern to the file paths
-    fr -> Motif ANT vers le chemin des fichiers
+extension.format.properties.groups
+    en -> List of groups
+    fr -> Liste de groupes
+
+extension.format.properties.groups.help
+    en -> ...
+        Property files are identified using the <group>_<locale>.properties format. The list
+        of groups and their associated supported locales is defined by group=locale1,locale2...
+        lines. Blank lines or lines started by # are ignored.
+        ...
+    fr -> ...
+        Les fichiers de propriété sont identifiés grâce au format <group>_<locale>.properties. La liste
+        des groupes et de leurs localisations associées est définie par des lignes au format
+        group=locale1,locale2... Les lignes vides ou commençant par # sont ignorées.
+        ...
