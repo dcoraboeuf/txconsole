@@ -405,10 +405,6 @@ home
 
 [project]
 
-project.languages.help
-    en -> List of languages, separated by commas.
-    fr -> Liste des langages, séparés par des virgules.
-
 project.list
     en -> Projects
     fr -> Projets
