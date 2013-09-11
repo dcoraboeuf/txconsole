@@ -450,3 +450,19 @@ request.create.version.help
         calculée en fonction de la liste de toutes les demandes passées mais
         peut être vide quand aucune demande n'a encore été faite.
         ...
+
+request.create.keys
+    en -> Additional keys
+    fr -> Clefs supplémentaires
+
+request.create.keys.filter
+    en -> Key filter
+    fr -> Filtre pour les clefs
+
+request.create.keys.filter.help
+    en -> Enter some text that will be used to filter on both keys and labels.
+    fr -> Saisissez du texte qui sera utilisé pour filter à la fois sur les clefs et les libellés.
+
+request.create.keys.filter.go
+    en -> Search
+    fr -> Chercher
