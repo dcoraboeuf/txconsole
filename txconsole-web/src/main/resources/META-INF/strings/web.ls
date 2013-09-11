@@ -463,6 +463,8 @@ request.create.keys.filter.help
     en -> Enter some text that will be used to filter on both keys and labels.
     fr -> Saisissez du texte qui sera utilisé pour filter à la fois sur les clefs et les libellés.
 
-request.create.keys.filter.go
+[keyfilter]
+
+keyfilter.go
     en -> Search
     fr -> Chercher
