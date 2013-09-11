@@ -1,9 +1,11 @@
 package net.txconsole.backend.security;
 
+import net.txconsole.backend.support.MockTranslationSourceConfig;
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.core.model.ProjectCreationForm;
 import net.txconsole.core.model.ProjectSummary;
 import net.txconsole.service.StructureService;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,6 +21,8 @@ public class StructureServiceIntegrationSecurityTest extends AbstractSecurityTes
 
     @Autowired
     private StructureService structureService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     public void project_list_anonymous_ok() throws Exception {
@@ -79,7 +83,7 @@ public class StructureServiceIntegrationSecurityTest extends AbstractSecurityTes
                         Arrays.asList("en"),
                         new JsonConfiguration(
                                 "mock",
-                                null
+                                objectMapper.valueToTree(new MockTranslationSourceConfig("fake"))
                         )));
             }
         });

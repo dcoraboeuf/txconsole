@@ -29,3 +29,7 @@ net.txconsole.backend.exceptions.ProjectParametersNotDefinedException
 net.txconsole.backend.exceptions.ProjectParameterNotDefinedException
     en -> [E-008] The parameter "{0}" has not been defined.
     fr -> [E-008] Le paramètre "{0}" n'est pas défini.
+
+net.txconsole.backend.exceptions.IOContextException
+    en -> [E-009] IO exception.
+    fr -> [E-009] Erreur E/S.

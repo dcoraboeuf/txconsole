@@ -20,3 +20,9 @@ extension.svn.txfilesource.user
 extension.svn.txfilesource.password
     en -> SVN Password
     fr -> Mot de passe SVN
+
+[errors]
+
+net.txconsole.extension.svn.support.CoreSVNException
+    en -> [SVN-001] Subversion error.
+    fr -> [SVN-001] Erreur Subversion.

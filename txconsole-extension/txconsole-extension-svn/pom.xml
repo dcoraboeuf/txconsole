@@ -13,11 +13,21 @@
 
     <name>TxConsole SVN extension</name>
 
+    <properties>
+        <svnkit.version>1.7.8</svnkit.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>txconsole-extension-scm</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <!-- SVN Kit -->
+        <dependency>
+            <groupId>org.tmatesoft.svnkit</groupId>
+            <artifactId>svnkit</artifactId>
+            <version>${svnkit.version}</version>
         </dependency>
     </dependencies>
 

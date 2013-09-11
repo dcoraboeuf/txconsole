@@ -8,6 +8,7 @@ import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.RequestService;
 import net.txconsole.service.StructureService;
+import net.txconsole.service.TranslationMapService;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.ErrorHandler;
 import org.junit.Before;
@@ -31,6 +32,7 @@ public class UIControllerTest {
     private StructureService structureService;
     private SecurityUtils securityUtils;
     private RequestService requestService;
+    private TranslationMapService translationMapService;
 
     @Before
     public void before() {
@@ -39,6 +41,7 @@ public class UIControllerTest {
         structureService = mock(StructureService.class);
         requestService = mock(RequestService.class);
         securityUtils = mock(SecurityUtils.class);
+        translationMapService = mock(TranslationMapService.class);
         controller = new UIController(errorHandler, strings, structureService, requestService, translationMapService, securityUtils);
         // Current request
         MockHttpServletRequest request = new MockHttpServletRequest();
