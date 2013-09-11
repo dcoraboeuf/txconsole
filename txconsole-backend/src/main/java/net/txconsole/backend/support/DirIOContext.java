@@ -17,4 +17,9 @@ public class DirIOContext implements IOContext {
     public File getDir() {
         return dir;
     }
+
+    @Override
+    public File getFile(String fileName) {
+        return new File(dir, fileName);
+    }
 }

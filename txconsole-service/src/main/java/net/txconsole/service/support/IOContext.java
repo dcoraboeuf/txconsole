@@ -13,4 +13,8 @@ public interface IOContext {
      */
     File getDir();
 
+    /**
+     * Gets a file from the context
+     */
+    File getFile(String fileName);
 }

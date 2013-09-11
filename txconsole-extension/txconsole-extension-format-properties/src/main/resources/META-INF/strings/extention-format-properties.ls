@@ -21,3 +21,13 @@ extension.format.properties.groups.help
         des groupes et de leurs localisations associées est définie par des lignes au format
         group=locale1,locale2... Les lignes vides ou commençant par # sont ignorées.
         ...
+
+[errors]
+
+net.txconsole.extension.format.properties.PropertyFileNotFoundException
+    en -> [PF-001] Property file "{0}" not found.
+    fr -> [PF-001] Fichier de propriétés "{0}" non trouvé.
+
+net.txconsole.extension.format.properties.PropertyFileCannotReadException
+    en -> [PF-002] Property file "{0}" cannot be read.
+    fr -> [PF-002] Fichier de propriétés "{0}" impossible à lire.
