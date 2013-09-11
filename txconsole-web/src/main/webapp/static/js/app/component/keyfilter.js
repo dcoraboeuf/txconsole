@@ -1,7 +1,21 @@
-define(['jquery'], function ($) {
+define(['jquery','ajax'], function ($, ajax) {
 
     function filterKey(field) {
-        alert(field.input.val())
+        var filter = field.input.val().trim();
+        if (filter != '') {
+            ajax.post({
+                url: 'ui/map/{0}'.format(field.config.branch),
+                data: {
+                    filter: filter
+                },
+                loading: {
+                    el: field.go
+                },
+                successFn: function (map) {
+                    console.log('map', map);
+                }
+            })
+        }
     }
 
     function init(container, config) {

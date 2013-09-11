@@ -23,6 +23,8 @@ define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'component/k
                         });
                         // Key filter
                         keyFilterField = keyfilter.init(dialog.get('#request-key-filter'), {
+                            project: requestConfigurationData.data.project.id,
+                            branch: requestConfigurationData.data.branch.id,
                             help: 'request.create.keys.filter.help'.loc()
                         });
                     }
