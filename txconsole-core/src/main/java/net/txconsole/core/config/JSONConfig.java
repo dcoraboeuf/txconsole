@@ -1,10 +1,8 @@
 package net.txconsole.core.config;
 
 import com.netbeetle.jackson.ObjectMapperFactory;
-import net.txconsole.core.model.TranslationMap;
 import net.txconsole.core.support.json.LocalTimeDeserializer;
 import net.txconsole.core.support.json.LocalTimeSerializer;
-import net.txconsole.core.support.json.TranslationMapSerializer;
 import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ext.JodaDeserializers.LocalDateDeserializer;
@@ -26,19 +24,8 @@ public class JSONConfig {
         ObjectMapper mapper = ObjectMapperFactory.createObjectMapper();
 
         jsonJoda(mapper);
-        jsonTranslationMap(mapper);
 
         return mapper;
-    }
-
-    protected void jsonTranslationMap(ObjectMapper mapper) {
-        SimpleModule translationMapModule = new SimpleModule("TranslationMapModule", new Version(1, 0, 0, null));
-        jsonTranslationMap(translationMapModule, mapper);
-        mapper.registerModule(translationMapModule);
-    }
-
-    protected void jsonTranslationMap(SimpleModule module, ObjectMapper mapper) {
-        module.addSerializer(TranslationMap.class, new TranslationMapSerializer(mapper));
     }
 
     protected void jsonJoda(ObjectMapper mapper) {

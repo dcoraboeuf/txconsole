@@ -1,5 +1,10 @@
 package net.txconsole.core.model;
 
+import net.sf.jstring.builder.BundleBuilder;
+import net.sf.jstring.builder.BundleCollectionBuilder;
+import net.sf.jstring.builder.BundleKeyBuilder;
+import net.sf.jstring.builder.BundleSectionBuilder;
+import net.sf.jstring.model.Bundle;
 import net.txconsole.core.config.JSONConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
@@ -15,15 +20,36 @@ public class TranslationMapTest {
 
     @Test
     public void toJson_nogroup() throws IOException {
-        TranslationMap map = new TranslationMap();
-        map.insert(TranslationKey.key("one"), Locale.ENGLISH, "One");
-        map.insert(TranslationKey.key("one"), Locale.FRENCH, "Un");
-        map.insert(TranslationKey.key("one"), Locale.GERMAN, "Eins");
-        map.insert(TranslationKey.key("two"), Locale.ENGLISH, "Two");
-        map.insert(TranslationKey.key("two"), Locale.FRENCH, "Deux");
-        map.insert(TranslationKey.key("two"), Locale.GERMAN, "Zwei");
+        TranslationMap map = new TranslationMap(
+                BundleCollectionBuilder
+                        .create()
+                        .bundle(
+                                BundleBuilder
+                                        .create("common")
+                                        .section(
+                                                BundleSectionBuilder
+                                                        .create(Bundle.DEFAULT_SECTION)
+                                                        .key(
+                                                                BundleKeyBuilder
+                                                                        .create("one")
+                                                                        .addValue(Locale.ENGLISH, "One")
+                                                                        .addValue(Locale.FRENCH, "Un")
+                                                                        .addValue(Locale.GERMAN, "Eins")
+                                                        )
+                                                        .key(
+                                                                BundleKeyBuilder
+                                                                        .create("two")
+                                                                        .addValue(Locale.ENGLISH, "Two")
+                                                                        .addValue(Locale.FRENCH, "Deux")
+                                                                        .addValue(Locale.GERMAN, "Zwei")
+                                                        )
+                                        )
+                                        .build()
+                        )
+                        .build()
+        );
         String json = objectMapper.writeValueAsString(map);
-        assertEquals("", json);
+        assertEquals("{\"bundleCollection\":{\"bundles\":[{\"name\":\"common\",\"comments\":[],\"sections\":[{\"name\":\"default\",\"comments\":[],\"keys\":[{\"name\":\"one\",\"comments\":[],\"values\":{\"en\":{\"comments\":[],\"value\":\"One\"},\"fr\":{\"comments\":[],\"value\":\"Un\"},\"de\":{\"comments\":[],\"value\":\"Eins\"}}},{\"name\":\"two\",\"comments\":[],\"values\":{\"en\":{\"comments\":[],\"value\":\"Two\"},\"fr\":{\"comments\":[],\"value\":\"Deux\"},\"de\":{\"comments\":[],\"value\":\"Zwei\"}}}]}]}]}}", json);
     }
 
 }

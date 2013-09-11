@@ -2,7 +2,10 @@ package net.txconsole.extension.format.properties;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import net.txconsole.core.model.TranslationKey;
+import net.sf.jstring.builder.BundleBuilder;
+import net.sf.jstring.builder.BundleCollectionBuilder;
+import net.sf.jstring.builder.BundleKeyBuilder;
+import net.sf.jstring.builder.BundleSectionBuilder;
 import net.txconsole.core.model.TranslationMap;
 import net.txconsole.core.support.UnicodeReader;
 import net.txconsole.service.support.AbstractSimpleConfigurable;
@@ -30,30 +33,45 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
 
     @Override
     public TranslationMap readFrom(PropertiesTxFileFormatConfig config, IOContext context) {
-        // Map
-        TranslationMap map = new TranslationMap();
+        // Bundle collection builder
+        BundleCollectionBuilder collectionBuilder = BundleCollectionBuilder.create();
         // For each group
         for (PropertyGroup propertyGroup : config.getGroups()) {
+            String groupName = propertyGroup.getName();
+            // Group ==> bundle
+            BundleBuilder bundleBuilder = BundleBuilder.create(groupName);
+            // Only one section for the properties
+            BundleSectionBuilder sectionBuilder = bundleBuilder.getDefaultSectionBuilder();
+            // Map of keys
+            // TODO Waiting for jstring #15, no need for this map any longer
+            Map<String, BundleKeyBuilder> keyBuilders = new HashMap<>();
             // For each supported locale
             for (Locale locale : propertyGroup.getLocales()) {
                 // Gets the file name
-                String name = String.format("%s_%s.properties", propertyGroup.getName(), locale);
+                String name = String.format("%s_%s.properties", groupName, locale);
                 // Loads the content of the property file
                 Map<String, String> properties = loadProperties(context, name);
                 // Loads into the map
                 for (Map.Entry<String, String> entry : properties.entrySet()) {
                     String key = entry.getKey();
                     String label = entry.getValue();
-                    map.insert(
-                            TranslationKey.key(key).withGroup(propertyGroup.getName()),
-                            locale,
-                            label
-                    );
+                    // Gets the existing key builder, or create it
+                    // TODO After jstring #15 is fixed, no need for that neither
+                    BundleKeyBuilder keyBuilder = keyBuilders.get(key);
+                    if (keyBuilder == null) {
+                        keyBuilder = BundleKeyBuilder.create(key);
+                        sectionBuilder.key(keyBuilder);
+                        keyBuilders.put(key, keyBuilder);
+                    }
+                    // Adds the key into the bundle
+                    keyBuilder.addValue(locale, label);
                 }
             }
+            // Adds the bundle to the collection
+            collectionBuilder.bundle(bundleBuilder.build());
         }
         // OK
-        return map;
+        return new TranslationMap(collectionBuilder.build());
     }
 
     protected Map<String, String> loadProperties(IOContext context, String fileName) {
@@ -72,11 +90,8 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
 
     protected Map<String, String> readProperties(File file, String encoding) {
         try {
-            FileInputStream in = new FileInputStream(file);
-            try {
+            try (FileInputStream in = new FileInputStream(file)) {
                 return readProperties(in, encoding);
-            } finally {
-                in.close();
             }
         } catch (IOException ex) {
             throw new PropertyFileCannotReadException(file.getName(), ex);
@@ -87,7 +102,7 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
         BufferedReader in = new BufferedReader(new UnicodeReader(input, encoding));
         Properties properties = new Properties();
         properties.load(in);
-        Map<String, String> map = new TreeMap<String, String>(new Comparator<String>() {
+        Map<String, String> map = new TreeMap<>(new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
                 if (StringUtils.equalsIgnoreCase(o1, o2)) {
