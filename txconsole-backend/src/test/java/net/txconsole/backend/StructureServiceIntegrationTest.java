@@ -6,6 +6,7 @@ import net.txconsole.backend.support.SimpleTranslationSourceConfig;
 import net.txconsole.core.model.*;
 import net.txconsole.extension.format.properties.PropertiesTxFileFormat;
 import net.txconsole.extension.format.properties.PropertiesTxFileFormatConfig;
+import net.txconsole.extension.format.properties.PropertyGroup;
 import net.txconsole.extension.svn.SVNTxFileSource;
 import net.txconsole.extension.svn.SVNTxFileSourceConfig;
 import net.txconsole.service.StructureService;
@@ -18,18 +19,18 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 public class StructureServiceIntegrationTest extends AbstractSecurityTest {
 
     @Autowired
     private ObjectMapper mapper;
-
     @Autowired
     private StructureService structureService;
-
     @Autowired
     private SimpleTranslationSource simpleTranslationSource;
     @Autowired
@@ -62,7 +63,10 @@ public class StructureServiceIntegrationTest extends AbstractSecurityTest {
                                                 ),
                                                 new Configured<PropertiesTxFileFormatConfig, TxFileFormat<PropertiesTxFileFormatConfig>>(
                                                         new PropertiesTxFileFormatConfig(
-                                                                "*.properties"
+                                                                asList(
+                                                                        new PropertyGroup("common", asList(Locale.ENGLISH, Locale.FRENCH)),
+                                                                        new PropertyGroup("lux", asList(Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN))
+                                                                )
                                                         ),
                                                         propertiesTxFileFormat
                                                 )
@@ -101,7 +105,10 @@ public class StructureServiceIntegrationTest extends AbstractSecurityTest {
                         ),
                         new Configured<PropertiesTxFileFormatConfig, TxFileFormat<PropertiesTxFileFormatConfig>>(
                                 new PropertiesTxFileFormatConfig(
-                                        "*.properties"
+                                        asList(
+                                                new PropertyGroup("common", asList(Locale.ENGLISH, Locale.FRENCH)),
+                                                new PropertyGroup("lux", asList(Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN))
+                                        )
                                 ),
                                 propertiesTxFileFormat
                         )

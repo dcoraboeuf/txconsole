@@ -10,7 +10,16 @@
     "txFileFormatConfigured": {
         "id": "extension-txfileformat-properties",
         "node": {
-            "pathPattern": "*.properties"
+            "groups": [
+                {
+                    "name": "common",
+                    "locales": [ "en", "fr" ]
+                },
+                {
+                    "name": "lux",
+                    "locales": [ "en", "fr", "de" ]
+                }
+            ]
         }
     }
 }

@@ -3,6 +3,7 @@ package net.txconsole.backend.support;
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.extension.format.properties.PropertiesTxFileFormat;
 import net.txconsole.extension.format.properties.PropertiesTxFileFormatConfig;
+import net.txconsole.extension.format.properties.PropertyGroup;
 import net.txconsole.extension.svn.SVNTxFileSource;
 import net.txconsole.extension.svn.SVNTxFileSourceConfig;
 import net.txconsole.service.support.*;
@@ -14,7 +15,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.util.Locale;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 public class TranslationSourceServiceIntegrationTest extends AbstractIntegrationTest {
@@ -51,7 +54,10 @@ public class TranslationSourceServiceIntegrationTest extends AbstractIntegration
                         ),
                         new Configured<PropertiesTxFileFormatConfig, TxFileFormat<PropertiesTxFileFormatConfig>>(
                                 new PropertiesTxFileFormatConfig(
-                                        "*.properties"
+                                        asList(
+                                                new PropertyGroup("common", asList(Locale.ENGLISH, Locale.FRENCH)),
+                                                new PropertyGroup("lux", asList(Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN))
+                                        )
                                 ),
                                 propertiesTxFileFormat
                         )
