@@ -8,6 +8,7 @@ import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.RequestService;
 import net.txconsole.service.StructureService;
+import net.txconsole.service.TranslationMapService;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
@@ -26,6 +27,7 @@ public class UIController extends AbstractUIController implements UI {
 
     private final StructureService structureService;
     private final RequestService requestService;
+    private final TranslationMapService translationMapService;
     private final SecurityUtils securityUtils;
     /**
      * Gets the resource for a project
@@ -77,10 +79,11 @@ public class UIController extends AbstractUIController implements UI {
             };
 
     @Autowired
-    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, RequestService requestService, SecurityUtils securityUtils) {
+    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, RequestService requestService, TranslationMapService translationMapService, SecurityUtils securityUtils) {
         super(errorHandler, strings);
         this.structureService = structureService;
         this.requestService = requestService;
+        this.translationMapService = translationMapService;
         this.securityUtils = securityUtils;
     }
 
@@ -189,4 +192,19 @@ public class UIController extends AbstractUIController implements UI {
                 requestService.getRequestConfigurationData(branchId)
         );
     }
+
+    /**
+     * Gets the translation map for a branch, for a given version and a given filter.
+     */
+    @RequestMapping(value = "/map/{branchId}", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Resource<TranslationMap> getTranslationMap(@PathVariable int branchId, @RequestBody TranslationMapRequest request) {
+        return new Resource<>(translationMapService.request(branchId, request))
+                .withLink(linkTo(methodOn(UIController.class).getBranch(branchId)).withRel("branch"))
+                .withLink(linkTo(methodOn(GUIController.class).getBranch(branchId)).withRel("branch-gui"));
+        // TODO ACL for the map edition
+    }
+
+
 }

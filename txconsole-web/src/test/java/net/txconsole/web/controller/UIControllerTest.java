@@ -39,7 +39,7 @@ public class UIControllerTest {
         structureService = mock(StructureService.class);
         requestService = mock(RequestService.class);
         securityUtils = mock(SecurityUtils.class);
-        controller = new UIController(errorHandler, strings, structureService, requestService, securityUtils);
+        controller = new UIController(errorHandler, strings, structureService, requestService, translationMapService, securityUtils);
         // Current request
         MockHttpServletRequest request = new MockHttpServletRequest();
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
