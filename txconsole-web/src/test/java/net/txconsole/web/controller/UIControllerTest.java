@@ -144,9 +144,36 @@ public class UIControllerTest {
         assertEquals(1, resource.getData().getProjectId());
         assertEquals("B1", resource.getData().getName());
         // Grants
-        assertTrue(resource.getActions().contains(ProjectFunction.REQUEST_CREATE));
-        assertFalse(resource.getActions().contains(ProjectFunction.UPDATE));
-        assertFalse(resource.getActions().contains(ProjectFunction.DELETE));
+        assertTrue(resource.getActions().contains("PROJECT#REQUEST_CREATE"));
+        assertFalse(resource.getActions().contains("PROJECT#UPDATE"));
+        assertFalse(resource.getActions().contains("PROJECT#DELETE"));
+    }
+
+    @Test
+    public void branchACL_admin() {
+        // Branch summary
+        when(structureService.getBranch(10)).thenReturn(
+                new BranchSummary(
+                        10,
+                        1,
+                        "B1"
+                )
+        );
+        // Grants
+        when(securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, 1)).thenReturn(true);
+        when(securityUtils.isGranted(ProjectFunction.UPDATE, 1)).thenReturn(true);
+        when(securityUtils.isGranted(ProjectFunction.DELETE, 1)).thenReturn(true);
+        // Call
+        Resource<BranchSummary> resource = controller.getBranch(10);
+        // Basic checks
+        assertNotNull(resource);
+        assertEquals(10, resource.getData().getId());
+        assertEquals(1, resource.getData().getProjectId());
+        assertEquals("B1", resource.getData().getName());
+        // Grants
+        assertTrue(resource.getActions().contains("PROJECT#REQUEST_CREATE"));
+        assertTrue(resource.getActions().contains("PROJECT#UPDATE"));
+        assertTrue(resource.getActions().contains("PROJECT#DELETE"));
     }
 
 }
