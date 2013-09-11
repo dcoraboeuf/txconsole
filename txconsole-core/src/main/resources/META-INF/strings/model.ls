@@ -41,3 +41,7 @@ branch.name
 request
     en -> Translation request
     fr -> Demande de traductions
+
+request.txfileexchange
+    en -> File exchange type
+    fr -> Protocole d'échange

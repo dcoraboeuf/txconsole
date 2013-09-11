@@ -18,6 +18,7 @@ public class TranslationSourceServiceImpl implements TranslationSourceService {
     private Map<String, TranslationSource<?>> sources;
     private Map<String, TxFileSource<?>> txFileSources;
     private Map<String, TxFileFormat<?>> txFileFormats;
+    private Map<String, TxFileExchange<?>> txFileExchanges;
 
     @Autowired
     public void setSources(Collection<TranslationSource<?>> sources) {
@@ -34,6 +35,11 @@ public class TranslationSourceServiceImpl implements TranslationSourceService {
         this.txFileFormats = Maps.uniqueIndex(txFileFormats, Descriptible.idFn);
     }
 
+    @Autowired
+    public void setTxFileExchanges(Collection<TxFileExchange<?>> txFileExchanges) {
+        this.txFileExchanges = Maps.uniqueIndex(txFileExchanges, Descriptible.idFn);
+    }
+
     @Override
     public Collection<TranslationSource<?>> getTranslationSourceList() {
         return sources.values();
@@ -47,6 +53,11 @@ public class TranslationSourceServiceImpl implements TranslationSourceService {
     @Override
     public Collection<TxFileFormat<?>> getTxFileFormatList() {
         return txFileFormats.values();
+    }
+
+    @Override
+    public Collection<TxFileExchange<?>> getTxFileExchangeList() {
+        return txFileExchanges.values();
     }
 
     protected <C, T extends Configurable<C>> Configured<C, T> getConfigured(String configType, Map<String, ? extends Configurable<?>> configMap, JsonConfiguration config) {

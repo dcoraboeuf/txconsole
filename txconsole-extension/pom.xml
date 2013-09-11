@@ -8,6 +8,7 @@
         <module>txconsole-extension-svn</module>
         <module>txconsole-extension-scm</module>
         <module>txconsole-extension-format-properties</module>
+        <module>txconsole-extension-exchange-properties</module>
     </modules>
     <parent>
         <artifactId>txconsole-parent</artifactId>

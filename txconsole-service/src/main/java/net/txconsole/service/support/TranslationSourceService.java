@@ -22,6 +22,11 @@ public interface TranslationSourceService {
     Collection<TxFileFormat<?>> getTxFileFormatList();
 
     /**
+     * Gets the list of translation file exchanges
+     */
+    Collection<TxFileExchange<?>> getTxFileExchangeList();
+
+    /**
      * Gets an actual configuration using an input configuration
      */
     <C> Configured<C, TranslationSource<C>> getConfiguredTranslationSource(JsonConfiguration config);

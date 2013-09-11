@@ -65,4 +65,17 @@ public class UIRefController extends AbstractUIController {
                 Description.fromDescriptible(strings, locale)
         );
     }
+
+    /**
+     * Gets the list of all possible tx file exchanges
+     */
+    @RequestMapping(value = "/txfileexchange", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Collection<Description> getTxFileExchangeList(Locale locale) {
+        return Collections2.transform(
+                translationSourceService.getTxFileExchangeList(),
+                Description.fromDescriptible(strings, locale)
+        );
+    }
 }
