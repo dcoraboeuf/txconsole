@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 
-import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 import static org.junit.Assert.assertEquals;
@@ -44,7 +43,6 @@ public class StructureServiceIntegrationSecurityTest extends AbstractSecurityTes
                 structureService.createProject(new ProjectCreationForm(
                         "project_anonymous",
                         "Cannot create a project",
-                        Arrays.asList("en"),
                         null));
                 return null;
             }
@@ -59,7 +57,6 @@ public class StructureServiceIntegrationSecurityTest extends AbstractSecurityTes
                 structureService.createProject(new ProjectCreationForm(
                         "project_user",
                         "Cannot create a project",
-                        Arrays.asList("en"),
                         null));
                 return null;
             }
@@ -80,7 +77,6 @@ public class StructureServiceIntegrationSecurityTest extends AbstractSecurityTes
                 return structureService.createProject(new ProjectCreationForm(
                         name,
                         "OK",
-                        Arrays.asList("en"),
                         new JsonConfiguration(
                                 "mock",
                                 objectMapper.valueToTree(new MockTranslationSourceConfig("fake"))

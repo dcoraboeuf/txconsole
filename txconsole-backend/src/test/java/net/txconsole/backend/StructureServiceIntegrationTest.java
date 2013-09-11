@@ -48,7 +48,6 @@ public class StructureServiceIntegrationTest extends AbstractSecurityTest {
                 return structureService.createProject(new ProjectCreationForm(
                         "SSIP1",
                         "saveAndGetConfigurationForBranch",
-                        Arrays.asList("en", "fr"),
                         new JsonConfiguration(
                                 "simple",
                                 simpleTranslationSource.writeConfiguration(

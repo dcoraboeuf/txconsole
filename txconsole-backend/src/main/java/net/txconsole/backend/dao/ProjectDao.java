@@ -12,7 +12,7 @@ public interface ProjectDao {
 
     TProject getById(int id);
 
-    int create(String name, String fullName, List<String> languages, JsonConfiguration configuration);
+    int create(String name, String fullName, JsonConfiguration configuration);
 
     Ack delete(int id);
 }

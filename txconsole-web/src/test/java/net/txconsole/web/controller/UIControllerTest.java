@@ -99,7 +99,6 @@ public class UIControllerTest {
                 new ProjectCreationForm(
                         "P3",
                         "Project 3",
-                        Arrays.asList("en"),
                         null
                 )
         )).thenReturn(
@@ -113,7 +112,6 @@ public class UIControllerTest {
                 new ProjectCreationForm(
                         "P3",
                         "Project 3",
-                        Arrays.asList("en"),
                         null
                 )
         );

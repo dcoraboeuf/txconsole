@@ -6,8 +6,6 @@ import net.txconsole.backend.dao.model.TProject;
 import net.txconsole.backend.exceptions.ProjectAlreadyExistException;
 import net.txconsole.core.model.Ack;
 import net.txconsole.core.model.JsonConfiguration;
-import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -34,7 +31,6 @@ public class ProjectJdbcDao extends AbstractJdbcDao implements ProjectDao {
                     rs.getInt("id"),
                     rs.getString("name"),
                     rs.getString("fullName"),
-                    Arrays.asList(StringUtils.split(rs.getString("languages"), ",")),
                     new JsonConfiguration(
                             rs.getString("txsource_id"),
                             jsonFromDB(rs, "txsource_config")
@@ -72,13 +68,12 @@ public class ProjectJdbcDao extends AbstractJdbcDao implements ProjectDao {
     @Override
     @Transactional
     @CacheEvict(value = Caches.PROJECT_LIST, key = "'0'")
-    public int create(String name, String fullName, List<String> languages, JsonConfiguration configuration) {
+    public int create(String name, String fullName, JsonConfiguration configuration) {
         try {
             return dbCreate(
                     SQL.PROJECT_CREATE,
                     params("name", name)
                             .addValue("fullName", fullName)
-                            .addValue("languages", StringUtils.join(languages, ","))
                             .addValue("txsource_id", configuration.getId())
                             .addValue("txsource_config", jsonToDB(configuration.getNode()))
             );

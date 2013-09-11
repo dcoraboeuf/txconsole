@@ -5,7 +5,7 @@ public interface SQL {
     // Project
     String PROJECT_ALL = "SELECT * FROM PROJECT ORDER BY NAME";
     String PROJECT_BY_ID = "SELECT * FROM PROJECT WHERE ID = :id";
-    String PROJECT_CREATE = "INSERT INTO PROJECT (NAME, FULLNAME, LANGUAGES, TXSOURCE_ID, TXSOURCE_CONFIG) VALUES (:name, :fullName, :languages, :txsource_id, :txsource_config)";
+    String PROJECT_CREATE = "INSERT INTO PROJECT (NAME, FULLNAME, TXSOURCE_ID, TXSOURCE_CONFIG) VALUES (:name, :fullName, :txsource_id, :txsource_config)";
     String PROJECT_DELETE = "DELETE FROM PROJECT WHERE ID = id";
     // Configuration
     String CONFIGURATION_GET = "SELECT VALUE FROM CONFIGURATION WHERE NAME = :name";
