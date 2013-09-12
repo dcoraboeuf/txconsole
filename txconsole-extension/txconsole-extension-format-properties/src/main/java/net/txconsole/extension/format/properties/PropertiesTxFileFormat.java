@@ -42,9 +42,6 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
             BundleBuilder bundleBuilder = BundleBuilder.create(groupName);
             // Only one section for the properties
             BundleSectionBuilder sectionBuilder = bundleBuilder.getDefaultSectionBuilder();
-            // Map of keys
-            // TODO Waiting for jstring #15, no need for this map any longer
-            Map<String, BundleKeyBuilder> keyBuilders = new HashMap<>();
             // For each supported locale
             for (Locale locale : propertyGroup.getLocales()) {
                 // Gets the file name
@@ -56,13 +53,7 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
                     String key = entry.getKey();
                     String label = entry.getValue();
                     // Gets the existing key builder, or create it
-                    // TODO After jstring #15 is fixed, no need for that neither
-                    BundleKeyBuilder keyBuilder = keyBuilders.get(key);
-                    if (keyBuilder == null) {
-                        keyBuilder = BundleKeyBuilder.create(key);
-                        sectionBuilder.key(keyBuilder);
-                        keyBuilders.put(key, keyBuilder);
-                    }
+                    BundleKeyBuilder keyBuilder = sectionBuilder.key(key);
                     // Adds the key into the bundle
                     keyBuilder.addValue(locale, label);
                 }
