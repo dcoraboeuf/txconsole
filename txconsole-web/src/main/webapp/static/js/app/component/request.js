@@ -39,6 +39,24 @@ define(
                                 }
                             });
                              */
+                        },
+                        submitFn: function (dialog) {
+                            // Exchange data
+                            var txFileExchangeConfig = txExchangeJCombo.val();
+                            // Sends the request
+                            ajax.post({
+                                url: 'ui/branch/{0}/request'.format(branchId),
+                                data: {
+                                    version: dialog.get('#request-version').val(),
+                                    txFileExchangeConfig: txFileExchangeConfig
+                                    // FIXME Additional keys
+                                },
+                                successFn: function () {
+                                    dialog.closeFn();
+                                    // Goes back to the branch
+                                    application.goLink(requestConfigurationData, 'branch-gui');
+                                }
+                            })
                         }
                     })
                 }

@@ -17,10 +17,9 @@ define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'common'], f
                     })
                 })
             },
-            submitFn: function (config) {
+            submitFn: function (dialog) {
                 // Tx Source configuration
                 var txSourceConfig = txSourceJCombo.val();
-                console.log(txSourceConfig);
                 // Sending the project creation
                 ajax.post({
                     url: 'ui/project',
@@ -30,10 +29,10 @@ define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'common'], f
                         txSourceConfig: txSourceConfig
                     },
                     successFn: function (project) {
-                        config.closeFn();
+                        dialog.closeFn();
                         application.gui(project);
                     },
-                    errorFn: ajax.simpleAjaxErrorFn(config.errorFn)
+                    errorFn: ajax.simpleAjaxErrorFn(dialog.errorFn)
                 });
             }
         });
