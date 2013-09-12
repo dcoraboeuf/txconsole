@@ -26,7 +26,7 @@ define(['jquery','ajax'], function ($, ajax) {
             config: config
         };
         // Input field
-        field.input = $('<input/>').attr('type', 'text').attr('size', 40).attr('maxlength', 80).appendTo(container);
+        field.input = $('<input/>').addClass('input-xlarge').attr('type', 'text').attr('size', 40).attr('maxlength', 80).appendTo(container);
         // Search button
         field.go = $('<button></button>').addClass('btn').attr('type', 'button').text('keyfilter.go'.loc()).appendTo(container);
         // Help?
