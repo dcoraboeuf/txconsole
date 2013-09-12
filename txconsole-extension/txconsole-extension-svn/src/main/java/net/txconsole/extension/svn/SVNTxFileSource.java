@@ -26,6 +26,9 @@ import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Component
 public class SVNTxFileSource
@@ -36,6 +39,10 @@ public class SVNTxFileSource
     private final Logger logger = LoggerFactory.getLogger(SVNTxFileSource.class);
     private final IOContextFactory ioContextFactory;
     private final SVNService svnService;
+    /**
+     * Sync lock.
+     */
+    private final ReadWriteLock syncLock = new ReentrantReadWriteLock();
     /**
      * Cache for contexts
      */
@@ -102,11 +109,20 @@ public class SVNTxFileSource
     }
 
     private IOContext updateOrCheckout(SVNTxFileSourceConfig config, IOContext context, SVNRevision revision) {
-        File wc = context.getDir();
-        if (svnService.isWorkingCopy(wc)) {
-            return update(config, context);
-        } else {
-            return checkout(config, context, revision);
+        Lock lock = syncLock.readLock();
+        try {
+            if (lock.tryLock(30, TimeUnit.SECONDS)) {
+                File wc = context.getDir();
+                if (svnService.isWorkingCopy(wc)) {
+                    return update(config, context);
+                } else {
+                    return checkout(config, context, revision);
+                }
+            } else {
+                throw new SVNTxFileSourceLockTimeoutException(config.getUrl());
+            }
+        } catch (InterruptedException e) {
+            throw new SVNTxFileSourceSyncInterruptedException(config.getUrl());
         }
     }
 
@@ -143,11 +159,24 @@ public class SVNTxFileSource
     @Override
     public void run() {
         logger.debug("[svntxfilesource] Sync start");
-        Collection<Pair<IOContext, SVNTxFileSourceConfig>> values = contextCache.asMap().values();
-        for (Pair<IOContext, SVNTxFileSourceConfig> value : values) {
-            IOContext context = value.getLeft();
-            SVNTxFileSourceConfig config = value.getRight();
-            updateOrCheckout(config, context, SVNRevision.HEAD);
+        Lock lock = syncLock.writeLock();
+        try {
+            if (lock.tryLock(10, TimeUnit.SECONDS)) {
+                try {
+                    Collection<Pair<IOContext, SVNTxFileSourceConfig>> values = contextCache.asMap().values();
+                    for (Pair<IOContext, SVNTxFileSourceConfig> value : values) {
+                        IOContext context = value.getLeft();
+                        SVNTxFileSourceConfig config = value.getRight();
+                        updateOrCheckout(config, context, SVNRevision.HEAD);
+                    }
+                } finally {
+                    lock.unlock();
+                }
+            } else {
+                logger.warn("[svntxfilesource] Could not lock the repositories in less than 10 seconds");
+            }
+        } catch (InterruptedException e) {
+            logger.error("[svntxfilesource] The synchronization was interrupted");
         }
         logger.debug("[svntxfilesource] Sync end");
     }
