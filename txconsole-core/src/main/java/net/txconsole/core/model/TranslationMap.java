@@ -9,6 +9,7 @@ import net.txconsole.core.support.LocaleComparator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Defines an access to an annotated map of
@@ -24,30 +25,6 @@ public class TranslationMap {
             return bundleValue.getValue();
         }
     };
-
-    public static class FilterPredicate implements Predicate<TranslationEntry> {
-
-        private final String filter;
-
-        public FilterPredicate(String filter) {
-            this.filter = filter;
-        }
-
-        @Override
-        public boolean apply(TranslationEntry entry) {
-            if (StringUtils.contains(entry.getKey().getName(), filter)) {
-                return true;
-            } else {
-                for (String label : entry.getLabels().values()) {
-                    if (StringUtils.contains(label, filter)) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-    }
-
     private final BundleCollection bundleCollection;
 
     public TranslationMap(BundleCollection bundleCollection) {
@@ -112,6 +89,30 @@ public class TranslationMap {
                 new ArrayList<>(locales),
                 entries
         );
+    }
+
+    public static class FilterPredicate implements Predicate<TranslationEntry> {
+
+        private final Pattern filter;
+
+        public FilterPredicate(String filter) {
+            this.filter = Pattern.compile(filter, Pattern.CASE_INSENSITIVE);
+        }
+
+        @Override
+        public boolean apply(TranslationEntry entry) {
+            String key = entry.getKey().getName();
+            if (StringUtils.isNotBlank(key) && filter.matcher(key).find()) {
+                return true;
+            } else {
+                for (String label : entry.getLabels().values()) {
+                    if (StringUtils.isNotBlank(label) && filter.matcher(label).find()) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
     }
 
 }
