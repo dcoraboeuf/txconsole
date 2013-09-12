@@ -31,7 +31,7 @@ define(['jquery','ajax'], function ($, ajax) {
         field.go = $('<button></button>').addClass('btn').attr('type', 'button').text('keyfilter.go'.loc()).appendTo(container);
         // Help?
         if (config.help) {
-            $('<span></span>').addClass('help-block').text(config.help);
+            $('<span></span>').addClass('help-block').text(config.help).appendTo(container);
         }
         // Key filter on RETURN
         field.input.keydown(function (e) {
