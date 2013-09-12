@@ -8,6 +8,8 @@ import net.txconsole.service.support.TranslationSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+// TODO Cache for the blank versions
+// TODO Scheduled service for getting up-to-date latest versions for each branch
 @Service
 public class TranslationMapServiceImpl implements TranslationMapService {
 
@@ -25,15 +27,8 @@ public class TranslationMapServiceImpl implements TranslationMapService {
         // Reads the map
         // TODO Cache: branch x version
         // Note: if the version is blank, the actual version for the caching must be computed from the file source
-        TranslationMap rawMap = txConfigured.getConfigurable().read(txConfigured.getConfiguration(), version);
         // OK
-        return rawMap;
-    }
-
-    protected TranslationMap filterMap(TranslationMap map, String filter) {
-        // FIXME Applies the filter (think generic, by having an interface for the filtering on a 'translation row',
-        // a key and its labels
-        return map;
+        return txConfigured.getConfigurable().read(txConfigured.getConfiguration(), version);
     }
 
 }
