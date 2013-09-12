@@ -68,6 +68,10 @@ public class TranslationMap {
     }
 
     public TranslationMapResponse filter(int limit, Predicate<TranslationEntry> entryPredicate) {
+        // Limit must be set
+        if (limit <= 0) {
+            throw new IllegalArgumentException("Filter limit must be set");
+        }
         // Result
         int total = 0;
         int count = 0;

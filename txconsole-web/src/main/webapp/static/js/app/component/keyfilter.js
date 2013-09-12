@@ -6,6 +6,7 @@ define(['jquery','ajax'], function ($, ajax) {
             ajax.post({
                 url: 'ui/map/{0}'.format(field.config.branch),
                 data: {
+                    limit: 20,
                     filter: filter
                 },
                 loading: {
