@@ -23,6 +23,11 @@
             <artifactId>txconsole-extension-scm</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- Spring security -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
         <!-- SVN Kit -->
         <dependency>
             <groupId>org.tmatesoft.svnkit</groupId>

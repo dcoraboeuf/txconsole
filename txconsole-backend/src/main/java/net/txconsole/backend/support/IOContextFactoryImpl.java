@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import static java.lang.String.format;
+
 @Component
 public class IOContextFactoryImpl implements IOContextFactory {
 
@@ -24,8 +26,16 @@ public class IOContextFactoryImpl implements IOContextFactory {
 
     @Override
     public IOContext createContext(String category) {
-        // Unique name
-        String name = String.format("%s-%s", category, UUID.randomUUID());
+        return createContextWithName(format("%s-%s", category, UUID.randomUUID()));
+
+    }
+
+    @Override
+    public IOContext getOrCreateContext(String category, String idInCategory) {
+        return createContextWithName(format("%s-%s", category, idInCategory));
+    }
+
+    protected IOContext createContextWithName(String name) {
         // Directory
         File dir = new File(environmentConfig.homeDir(), name);
         // Creates it

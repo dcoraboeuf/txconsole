@@ -26,3 +26,7 @@ extension.svn.txfilesource.password
 net.txconsole.extension.svn.support.CoreSVNException
     en -> [SVN-001] Subversion error.
     fr -> [SVN-001] Erreur Subversion.
+
+net.txconsole.extension.svn.SVNTxFileSourceCannotGetLastVersionException
+    en -> [SVN-002] Cannot get last version for {0}.
+    fr -> [SVN-002] Impossible d'obtenir la dernière version pour {0}.
