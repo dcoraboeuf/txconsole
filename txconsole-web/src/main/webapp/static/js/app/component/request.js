@@ -24,8 +24,9 @@ define(
                                     path: 'txfileexchange'
                                 })
                             });
-                            // Key filter
-                            keyFilterField = keyfilter.init(dialog.get('#request-key-filter'), {
+                            // FIXME Key filter - disabled temporarily (diff priority)
+                            /**
+                             keyFilterField = keyfilter.init(dialog.get('#request-key-filter'), {
                                 project: requestConfigurationData.data.project.id,
                                 branch: requestConfigurationData.data.branch.id,
                                 help: 'request.create.keys.filter.help'.loc(),
@@ -37,6 +38,7 @@ define(
                                     )
                                 }
                             });
+                             */
                         }
                     })
                 }
