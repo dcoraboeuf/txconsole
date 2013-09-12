@@ -77,8 +77,8 @@
     font-family: "Courier New", monospace;
 }
 
-.keyfilter-results tbody {
-    height: 400px;
+.keyfilter-results {
+    height: 250px !important;
     overflow: auto;
 }
 
