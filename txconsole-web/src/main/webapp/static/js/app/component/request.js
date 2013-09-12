@@ -51,10 +51,10 @@ define(
                                     txFileExchangeConfig: txFileExchangeConfig
                                     // FIXME Additional keys
                                 },
-                                successFn: function () {
+                                successFn: function (request) {
                                     dialog.closeFn();
-                                    // Goes back to the branch
-                                    application.goLink(requestConfigurationData, 'branch-gui');
+                                    // Goes to the request page
+                                    application.gui(request);
                                 }
                             })
                         }

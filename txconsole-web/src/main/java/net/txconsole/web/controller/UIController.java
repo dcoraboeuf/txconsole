@@ -77,6 +77,19 @@ public class UIController extends AbstractUIController implements UI {
                             .withLink(linkTo(methodOn(GUIController.class).getProject(o.getProject().getId())).withRel("project-gui"));
                 }
             };
+    /**
+     * Gets the resource for a request summary
+     */
+    private final Function<RequestSummary, Resource<RequestSummary>> requestSummaryResourceFn = new Function<RequestSummary, Resource<RequestSummary>>() {
+        @Override
+        public Resource<RequestSummary> apply(RequestSummary o) {
+            return new Resource<>(o)
+                    .withLink(linkTo(methodOn(UIController.class).getBranch(o.getBranchId())).withRel("branch"))
+                    .withLink(linkTo(methodOn(GUIController.class).getBranch(o.getBranchId())).withRel("branch-gui"));
+            // TODO Request UI
+            // TODO Request GUI
+        }
+    };
 
     @Autowired
     public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, RequestService requestService, TranslationMapService translationMapService, SecurityUtils securityUtils) {
@@ -191,6 +204,19 @@ public class UIController extends AbstractUIController implements UI {
         return requestConfigurationDataResourceFn.apply(
                 requestService.getRequestConfigurationData(branchId)
         );
+    }
+
+    /**
+     * Sends a form for creation of a translation request for a branch
+     *
+     * @param branchId ID of the branch
+     * @param form     Request creation form
+     */
+    @RequestMapping(value = "/branch/{branchId}/request", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Resource<RequestSummary> createRequest(@PathVariable int branchId, @RequestBody RequestCreationForm form) {
+        return requestSummaryResourceFn.apply(requestService.createRequest(branchId, form));
     }
 
     /**

@@ -1,8 +1,8 @@
 package net.txconsole.backend;
 
-import net.txconsole.core.model.BranchSummary;
-import net.txconsole.core.model.ProjectSummary;
-import net.txconsole.core.model.RequestConfigurationData;
+import net.txconsole.core.model.*;
+import net.txconsole.core.security.ProjectFunction;
+import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.RequestService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.support.Configured;
@@ -15,10 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class RequestServiceImpl implements RequestService {
 
     private final StructureService structureService;
+    private final SecurityUtils securityUtils;
 
     @Autowired
-    public RequestServiceImpl(StructureService structureService) {
+    public RequestServiceImpl(StructureService structureService, SecurityUtils securityUtils) {
         this.structureService = structureService;
+        this.securityUtils = securityUtils;
     }
 
     @Override
@@ -28,7 +30,7 @@ public class RequestServiceImpl implements RequestService {
         BranchSummary branchSummary = structureService.getBranch(branchId);
         ProjectSummary projectSummary = structureService.getProject(branchSummary.getProjectId());
         // Gets the configuration information
-        Configured<Object,TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
+        Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
         Object configuration = configuredTranslationSource.getConfiguration();
         TranslationSource<Object> translationSource = configuredTranslationSource.getConfigurable();
         // Last version
@@ -41,5 +43,18 @@ public class RequestServiceImpl implements RequestService {
                 translationSource.getVersionSemantics(configuration),
                 lastVersion
         );
+    }
+
+    @Override
+    @Transactional
+    public RequestSummary createRequest(int branchId, RequestCreationForm form) {
+        // Loads the branch
+        BranchSummary branch = structureService.getBranch(branchId);
+        // Checks the rights
+        securityUtils.checkGrant(ProjectFunction.REQUEST_CREATE, branch.getProjectId());
+        // FIXME Saves the request
+        // FIXME Launches the request creation job asynchronously
+        // FIXME Returns the request summary
+        return null;
     }
 }
