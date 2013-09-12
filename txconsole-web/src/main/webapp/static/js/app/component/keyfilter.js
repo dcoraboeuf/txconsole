@@ -1,4 +1,4 @@
-define(['jquery', 'ajax', 'render'], function ($, ajax, render) {
+define(['jquery', 'ajax'], function ($, ajax) {
 
     function filterKey(field) {
         var filter = field.input.val().trim();
@@ -13,14 +13,9 @@ define(['jquery', 'ajax', 'render'], function ($, ajax, render) {
                     el: field.go
                 },
                 successFn: function (map) {
-                    render.renderInto(
-                        field.results,
-                        'keyfilter-results',
-                        map,
-                        function () {
-                            field.results.show();
-                        }
-                    )
+                    if (field.config.resultsFn) {
+                        field.config.resultsFn(map);
+                    }
                 }
             })
         }
@@ -36,8 +31,6 @@ define(['jquery', 'ajax', 'render'], function ($, ajax, render) {
         field.input = $('<input/>').addClass('input-xlarge').attr('type', 'text').attr('size', 40).attr('maxlength', 80).appendTo(container);
         // Search button
         field.go = $('<button></button>').addClass('btn').attr('type', 'button').text('keyfilter.go'.loc()).appendTo(container);
-        // Results
-        field.results = $('<div></div>').addClass('hidden').appendTo(container);
         // Help?
         if (config.help) {
             $('<span></span>').addClass('help-block').text(config.help).appendTo(container);
