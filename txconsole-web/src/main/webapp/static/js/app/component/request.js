@@ -11,6 +11,7 @@ define(['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'component/k
             successFn: function (requestConfigurationData) {
                 dialog.show({
                     title: 'request.create'.loc(),
+                    width: 800,
                     templateId: 'request-create',
                     data: requestConfigurationData,
                     initFn: function (dialog) {

@@ -65,3 +65,24 @@
     text-decoration: none;
     color: black;
 }
+
+/* Translations */
+
+.translation-bundle, .translation-section {
+    font-style: italic;
+    color: #AAAAAA;
+}
+
+.translation-key {
+    font-family: "Courier New", monospace;
+}
+
+.keyfilter-results tbody {
+    height: 400px;
+    overflow: auto;
+}
+
+.keyfilter-results-count {
+    font-style: italic;
+    color: #AAAAAA;
+}

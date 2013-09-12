@@ -41,3 +41,22 @@ request
 request.txfileexchange
     en -> File exchange type
     fr -> Protocole d'échange
+
+translation.bundle
+    en -> Bundle
+    fr -> Bundle
+
+translation.section
+    en,fr -> Section
+
+translation.key
+    en -> Key
+    fr -> Clef
+
+translation.keys
+    en -> Keys
+    fr -> Clefs
+
+translation.locale.default
+    en -> English label
+    fr -> Libellé anglais

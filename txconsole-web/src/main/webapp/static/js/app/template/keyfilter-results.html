@@ -1,0 +1,32 @@
+<table class="table table-condensed table-hover table-striped keyfilter-results">
+    <thead>
+        <tr>
+            <th>{{loc 'translation.bundle'}}</th>
+            <th>{{loc 'translation.section'}}</th>
+            <th>{{loc 'translation.key'}}</th>
+            <!-- TODO Default language? -->
+            <th>{{loc 'translation.locale.default'}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#data.entries}}
+            <tr>
+                <td class="translation-bundle">{{key.bundle}}</td>
+                <td class="translation-section">{{key.section}}</td>
+                <td class="translation-key">{{key.name}}</td>
+                <!-- TODO Default language? -->
+                <td class="translation-label">{{labels.en}}</td>
+            </tr>
+        {{/data.entries}}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4" class="keyfilter-results-count">
+                {{data.entries.length}}
+                /
+                {{data.total}}
+                {{loc 'translation.keys'}}
+            </td>
+        </tr>
+    </tfoot>
+</table>
