@@ -7,5 +7,6 @@ public class RequestSummary {
 
     private final int id;
     private final int branchId;
+    private final String version;
 
 }

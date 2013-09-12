@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import static java.lang.String.valueOf;
+
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventForm {
@@ -47,6 +49,21 @@ public class EventForm {
                         .of(EventEntity.BRANCH, branch.getId())
                         .with(EventEntity.PROJECT, project.getId())
                         .get(),
+                branch.getName(),
+                project.getName()
+        );
+    }
+
+    public static EventForm requestCreated(RequestSummary request, BranchSummary branch, ProjectSummary project) {
+        return new EventForm(
+                EventCode.REQUEST_CREATED,
+                MapBuilder
+                        .of(EventEntity.REQUEST, request.getId())
+                        .with(EventEntity.BRANCH, branch.getId())
+                        .with(EventEntity.PROJECT, project.getId())
+                        .get(),
+                valueOf(request.getId()),
+                request.getVersion(),
                 branch.getName(),
                 project.getName()
         );

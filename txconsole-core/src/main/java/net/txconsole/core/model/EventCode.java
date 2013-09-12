@@ -6,6 +6,8 @@ public enum EventCode {
 
     PROJECT_DELETED,
 
-    BRANCH_CREATED
+    BRANCH_CREATED,
+
+    REQUEST_CREATED
 
 }

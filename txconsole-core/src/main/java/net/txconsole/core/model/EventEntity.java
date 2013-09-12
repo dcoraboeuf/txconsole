@@ -6,6 +6,8 @@ public enum EventEntity {
 
     PROJECT,
 
-    BRANCH
+    BRANCH,
+
+    REQUEST
 
 }

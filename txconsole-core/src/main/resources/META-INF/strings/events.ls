@@ -12,3 +12,7 @@ event.PROJECT_DELETED
 event.BRANCH_CREATED
     en -> Branch {0,BRANCH} has been created for project {1,PROJECT}.
     fr -> La branche {0,BRANCH} a été créée pour le projet {1,PROJECT}.
+
+event.REQUEST_CREATED
+    en -> Request {0,REQUEST} for version {1} has been created for the branch {2,BRANCH} of the project {3,PROJECT}.
+    fr -> La demande {0,REQUEST} pour la version {1} a été créée pour la branche {2,BRANCH} du projet {3,PROJECT}.
