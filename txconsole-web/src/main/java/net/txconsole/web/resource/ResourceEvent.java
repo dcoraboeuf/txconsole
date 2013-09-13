@@ -11,5 +11,6 @@ public class ResourceEvent {
     private final String author;
     private final String formattedTimestamp;
     private final String elapsedTime;
+    private final String elapsedTimeAndAuthor;
 
 }

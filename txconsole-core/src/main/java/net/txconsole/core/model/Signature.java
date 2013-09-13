@@ -7,7 +7,7 @@ import net.txconsole.core.support.TimeUtils;
 import org.joda.time.DateTime;
 
 @Data
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class Signature {
 
     private final Integer authorId;

@@ -3,18 +3,18 @@ package net.txconsole.web.controller;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.sf.jstring.Strings;
-import net.txconsole.core.model.RequestConfigurationData;
-import net.txconsole.core.model.RequestCreationForm;
-import net.txconsole.core.model.RequestSummary;
+import net.txconsole.core.model.*;
 import net.txconsole.service.RequestService;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
+import net.txconsole.web.support.GUIEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -24,6 +24,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class UIRequestController extends AbstractUIController {
 
     private final RequestService requestService;
+    private final GUIEventService guiEventService;
     /**
      * Gets the resource for a request configuration data
      */
@@ -41,14 +42,20 @@ public class UIRequestController extends AbstractUIController {
     /**
      * Gets the resource for a request summary
      */
-    private final Function<RequestSummary, Resource<RequestSummary>> requestSummaryResourceFn = new Function<RequestSummary, Resource<RequestSummary>>() {
+    private final Function<Locale, Function<RequestSummary, Resource<RequestSummary>>> requestSummaryResourceFn = new Function<Locale, Function<RequestSummary, Resource<RequestSummary>>>() {
         @Override
-        public Resource<RequestSummary> apply(RequestSummary o) {
-            return new Resource<>(o)
-                    .withLink(linkTo(methodOn(UIController.class).getBranch(o.getBranchId())).withRel("branch"))
-                    .withLink(linkTo(methodOn(GUIController.class).getBranch(o.getBranchId())).withRel("branch-gui"));
-            // TODO Request UI
-            // TODO Request GUI
+        public Function<RequestSummary, Resource<RequestSummary>> apply(final Locale locale) {
+            return new Function<RequestSummary, Resource<RequestSummary>>() {
+                @Override
+                public Resource<RequestSummary> apply(RequestSummary o) {
+                    return new Resource<>(o)
+                            .withLink(linkTo(methodOn(UIController.class).getBranch(o.getBranchId())).withRel("branch"))
+                            .withLink(linkTo(methodOn(GUIController.class).getBranch(o.getBranchId())).withRel("branch-gui"))
+                            .withEvent(guiEventService.getResourceEvent(locale, EventEntity.REQUEST, o.getId(), EventCode.REQUEST_CREATED));
+                    // TODO Request UI
+                    // TODO Request GUI
+                }
+            };
         }
     };
 
@@ -57,9 +64,10 @@ public class UIRequestController extends AbstractUIController {
      */
 
     @Autowired
-    public UIRequestController(ErrorHandler errorHandler, Strings strings, RequestService requestService) {
+    public UIRequestController(ErrorHandler errorHandler, Strings strings, RequestService requestService, GUIEventService guiEventService) {
         super(errorHandler, strings);
         this.requestService = requestService;
+        this.guiEventService = guiEventService;
     }
 
     /**
@@ -86,8 +94,8 @@ public class UIRequestController extends AbstractUIController {
     @RequestMapping(value = "/branch/{branchId}/request", method = RequestMethod.POST)
     public
     @ResponseBody
-    Resource<RequestSummary> createRequest(@PathVariable int branchId, @RequestBody RequestCreationForm form) {
-        return requestSummaryResourceFn.apply(requestService.createRequest(branchId, form));
+    Resource<RequestSummary> createRequest(Locale locale, @PathVariable int branchId, @RequestBody RequestCreationForm form) {
+        return requestSummaryResourceFn.apply(locale).apply(requestService.createRequest(branchId, form));
     }
 
     /**
@@ -97,12 +105,13 @@ public class UIRequestController extends AbstractUIController {
     public
     @ResponseBody
     List<Resource<RequestSummary>> getRequestsForBranch(
+            Locale locale,
             @PathVariable int branchId,
             @RequestParam(required = false, defaultValue = "0") int offset,
             @RequestParam(required = false, defaultValue = "10") int count) {
         return Lists.transform(
                 requestService.getRequestsForBranch(branchId, offset, count),
-                requestSummaryResourceFn
+                requestSummaryResourceFn.apply(locale)
         );
     }
 

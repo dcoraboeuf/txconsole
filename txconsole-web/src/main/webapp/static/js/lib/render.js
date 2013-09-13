@@ -25,6 +25,20 @@ define(['common', 'handlebars'], function (common, handlebars) {
         }
     );
 
+    Handlebars.registerHelper('eventTimestampAndElapsed', function (code) {
+        for (var i = 0; i < this.events.length; i++) {
+            var event = this.events[i];
+            if (code == event.code) {
+                return '<span class="event-signature"><span class="event-timestamp">{0}</span> <span class="event-elapsed">{1}</span></span>'.format(
+                    event.formattedTimestamp,
+                    event.elapsedTimeAndAuthor
+                );
+            }
+        }
+        common.log('render')('"{0}" event not found', code);
+        return '';
+    });
+
     function withTemplate(templateId, templateFn) {
         require(['text!template/' + templateId + '.html'], function (rawTemplate) {
             templateFn(Handlebars.compile(rawTemplate));

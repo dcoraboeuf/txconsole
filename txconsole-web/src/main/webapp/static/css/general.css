@@ -66,6 +66,17 @@
     color: black;
 }
 
+/* Events */
+
+.event-timestamp {
+
+}
+
+.event-elapsed {
+    font-style: italic;
+    color: #AAAAAA;
+}
+
 /* Translations */
 
 .translation-bundle, .translation-section {

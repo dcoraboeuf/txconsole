@@ -119,7 +119,7 @@ public class SecurityUtilsImpl implements SecurityUtils {
         if (account != null) {
             return new Signature(
                     account.getId(),
-                    account.getName()
+                    account.getFullName()
             );
         } else {
             return Signature.anonymous();
