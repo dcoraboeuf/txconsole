@@ -9,4 +9,6 @@ public interface RequestService {
     RequestConfigurationData getRequestConfigurationData(int branchId);
 
     RequestSummary createRequest(int branchId, RequestCreationForm form);
+
+    RequestSummary getRequest(int requestId);
 }

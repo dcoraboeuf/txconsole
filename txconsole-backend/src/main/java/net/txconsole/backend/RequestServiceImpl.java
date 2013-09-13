@@ -1,8 +1,12 @@
 package net.txconsole.backend;
 
+import com.google.common.base.Function;
+import net.txconsole.backend.dao.RequestDao;
+import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
+import net.txconsole.service.EventService;
 import net.txconsole.service.RequestService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.support.Configured;
@@ -15,11 +19,29 @@ import org.springframework.transaction.annotation.Transactional;
 public class RequestServiceImpl implements RequestService {
 
     private final StructureService structureService;
+    private final EventService eventService;
+    private final RequestDao requestDao;
     private final SecurityUtils securityUtils;
+    /**
+     * Request summary
+     */
+    private final Function<TRequest, RequestSummary> requestSummaryFn = new Function<TRequest, RequestSummary>() {
+        @Override
+        public RequestSummary apply(TRequest t) {
+            return new RequestSummary(
+                    t.getId(),
+                    t.getBranchId(),
+                    t.getVersion(),
+                    t.getStatus()
+            );
+        }
+    };
 
     @Autowired
-    public RequestServiceImpl(StructureService structureService, SecurityUtils securityUtils) {
+    public RequestServiceImpl(StructureService structureService, EventService eventService, RequestDao requestDao, SecurityUtils securityUtils) {
         this.structureService = structureService;
+        this.eventService = eventService;
+        this.requestDao = requestDao;
         this.securityUtils = securityUtils;
     }
 
@@ -52,9 +74,24 @@ public class RequestServiceImpl implements RequestService {
         BranchSummary branch = structureService.getBranch(branchId);
         // Checks the rights
         securityUtils.checkGrant(ProjectFunction.REQUEST_CREATE, branch.getProjectId());
-        // FIXME Saves the request
+        // Saves the request
+        int requestId = requestDao.createRequest(branchId, form.getTxFileExchangeConfig());
+        // Gets the request summary
+        RequestSummary requestSummary = getRequest(requestId);
+        // Event creation
+        eventService.event(EventForm.requestCreated(
+                requestSummary,
+                branch,
+                structureService.getProject(branch.getProjectId())
+        ));
         // FIXME Launches the request creation job asynchronously
-        // FIXME Returns the request summary
-        return null;
+        // Returns the request summary
+        return requestSummary;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RequestSummary getRequest(int requestId) {
+        return requestSummaryFn.apply(requestDao.getById(requestId));
     }
 }

@@ -1,9 +1,10 @@
-package net.txconsole.core.model;
+package net.txconsole.backend.dao.model;
 
 import lombok.Data;
+import net.txconsole.core.model.RequestStatus;
 
 @Data
-public class RequestSummary {
+public class TRequest {
 
     private final int id;
     private final int branchId;
