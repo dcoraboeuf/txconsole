@@ -6,7 +6,6 @@ import net.sf.jstring.Strings;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
-import net.txconsole.service.RequestService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
 import net.txconsole.web.resource.Resource;
@@ -26,7 +25,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class UIController extends AbstractUIController implements UI {
 
     private final StructureService structureService;
-    private final RequestService requestService;
     private final TranslationMapService translationMapService;
     private final SecurityUtils securityUtils;
     /**
@@ -63,39 +61,11 @@ public class UIController extends AbstractUIController implements UI {
                     .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getProjectId()));
         }
     };
-    /**
-     * Gets the resource for a request configuration data
-     */
-    private final Function<RequestConfigurationData, Resource<RequestConfigurationData>> requestConfigurationDataResourceFn =
-            new Function<RequestConfigurationData, Resource<RequestConfigurationData>>() {
-                @Override
-                public Resource<RequestConfigurationData> apply(RequestConfigurationData o) {
-                    return new Resource<>(o)
-                            .withLink(linkTo(methodOn(UIController.class).getBranch(o.getBranch().getId())).withRel("branch"))
-                            .withLink(linkTo(methodOn(GUIController.class).getBranch(o.getBranch().getId())).withRel("branch-gui"))
-                            .withLink(linkTo(methodOn(UIController.class).getProject(o.getProject().getId())).withRel("project"))
-                            .withLink(linkTo(methodOn(GUIController.class).getProject(o.getProject().getId())).withRel("project-gui"));
-                }
-            };
-    /**
-     * Gets the resource for a request summary
-     */
-    private final Function<RequestSummary, Resource<RequestSummary>> requestSummaryResourceFn = new Function<RequestSummary, Resource<RequestSummary>>() {
-        @Override
-        public Resource<RequestSummary> apply(RequestSummary o) {
-            return new Resource<>(o)
-                    .withLink(linkTo(methodOn(UIController.class).getBranch(o.getBranchId())).withRel("branch"))
-                    .withLink(linkTo(methodOn(GUIController.class).getBranch(o.getBranchId())).withRel("branch-gui"));
-            // TODO Request UI
-            // TODO Request GUI
-        }
-    };
 
     @Autowired
-    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, RequestService requestService, TranslationMapService translationMapService, SecurityUtils securityUtils) {
+    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, TranslationMapService translationMapService, SecurityUtils securityUtils) {
         super(errorHandler, strings);
         this.structureService = structureService;
-        this.requestService = requestService;
         this.translationMapService = translationMapService;
         this.securityUtils = securityUtils;
     }
@@ -188,35 +158,6 @@ public class UIController extends AbstractUIController implements UI {
     @ResponseBody
     Resource<BranchSummary> getBranch(@PathVariable int id) {
         return branchSummaryResourceFn.apply(structureService.getBranch(id));
-    }
-
-    /**
-     * Gets the configuration data to create a translation request for a branch.
-     *
-     * @param branchId ID of the branch
-     * @return Configuration data
-     */
-    @Override
-    @RequestMapping(value = "/branch/{branchId}/request", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    Resource<RequestConfigurationData> getRequestConfigurationData(@PathVariable int branchId) {
-        return requestConfigurationDataResourceFn.apply(
-                requestService.getRequestConfigurationData(branchId)
-        );
-    }
-
-    /**
-     * Sends a form for creation of a translation request for a branch
-     *
-     * @param branchId ID of the branch
-     * @param form     Request creation form
-     */
-    @RequestMapping(value = "/branch/{branchId}/request", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    Resource<RequestSummary> createRequest(@PathVariable int branchId, @RequestBody RequestCreationForm form) {
-        return requestSummaryResourceFn.apply(requestService.createRequest(branchId, form));
     }
 
     /**

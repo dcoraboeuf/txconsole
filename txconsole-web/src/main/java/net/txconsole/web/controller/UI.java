@@ -2,7 +2,6 @@ package net.txconsole.web.controller;
 
 import net.txconsole.core.model.BranchSummary;
 import net.txconsole.core.model.ProjectSummary;
-import net.txconsole.core.model.RequestConfigurationData;
 import net.txconsole.web.resource.Resource;
 
 public interface UI {
@@ -10,7 +9,5 @@ public interface UI {
     Resource<ProjectSummary> getProject(int id);
 
     Resource<BranchSummary> getBranch(int id);
-
-    Resource<RequestConfigurationData> getRequestConfigurationData(int branchId);
 
 }

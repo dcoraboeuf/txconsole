@@ -429,6 +429,10 @@ branch.create
 
 [request]
 
+request.list
+    en -> Existing requests
+    fr -> Demandes existantes
+
 request.create
     en -> Create a translation request
     fr -> Créer une demande de traductions

@@ -9,7 +9,7 @@ define(
             var txExchangeJCombo;
             var keyFilterField;
             ajax.get({
-                url: 'ui/branch/{0}/request'.format(branchId),
+                url: 'ui/branch/{0}/request/config'.format(branchId),
                 successFn: function (requestConfigurationData) {
                     dialog.show({
                         title: 'request.create'.loc(),

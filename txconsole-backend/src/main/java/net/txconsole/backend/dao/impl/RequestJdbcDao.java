@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Component
 public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
@@ -36,10 +37,11 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
 
     @Override
     @Transactional
-    public int createRequest(int branchId, JsonConfiguration txFileExchangeConfig) {
+    public int createRequest(int branchId, String version, JsonConfiguration txFileExchangeConfig) {
         return dbCreate(
                 SQL.REQUEST_CREATE,
                 params("branch", branchId)
+                        .addValue("version", version)
                         .addValue("configId", txFileExchangeConfig.getId())
                         .addValue("configNode", jsonToDB(txFileExchangeConfig.getNode()))
                         .addValue("status", RequestStatus.CREATED.name())
@@ -52,6 +54,18 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
         return getNamedParameterJdbcTemplate().queryForObject(
                 SQL.REQUEST_BY_ID,
                 params("id", requestId),
+                requestRowMapper
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TRequest> findByBranch(int branchId, int offset, int count) {
+        return getNamedParameterJdbcTemplate().query(
+                SQL.REQUESTS_BY_BRANCH,
+                params("branch", branchId)
+                        .addValue("offset", offset)
+                        .addValue("count", count),
                 requestRowMapper
         );
     }

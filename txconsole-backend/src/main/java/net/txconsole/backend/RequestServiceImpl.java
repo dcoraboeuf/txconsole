@@ -1,6 +1,7 @@
 package net.txconsole.backend;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.core.model.*;
@@ -14,6 +15,8 @@ import net.txconsole.service.support.TranslationSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -75,7 +78,7 @@ public class RequestServiceImpl implements RequestService {
         // Checks the rights
         securityUtils.checkGrant(ProjectFunction.REQUEST_CREATE, branch.getProjectId());
         // Saves the request
-        int requestId = requestDao.createRequest(branchId, form.getTxFileExchangeConfig());
+        int requestId = requestDao.createRequest(branchId, form.getVersion(), form.getTxFileExchangeConfig());
         // Gets the request summary
         RequestSummary requestSummary = getRequest(requestId);
         // Event creation
@@ -93,5 +96,14 @@ public class RequestServiceImpl implements RequestService {
     @Transactional(readOnly = true)
     public RequestSummary getRequest(int requestId) {
         return requestSummaryFn.apply(requestDao.getById(requestId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RequestSummary> getRequestsForBranch(int branchId, int offset, int count) {
+        return Lists.transform(
+                requestDao.findByBranch(branchId, offset, count),
+                requestSummaryFn
+        );
     }
 }

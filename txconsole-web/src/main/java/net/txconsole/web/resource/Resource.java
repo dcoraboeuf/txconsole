@@ -6,6 +6,8 @@ import net.txconsole.core.security.SecurityFunction;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,9 +16,9 @@ import java.util.Set;
 public class Resource<T> extends ResourceSupport {
 
     public static final String REL_GUI = "gui";
-
     private final T data;
     private final Set<String> actions = new HashSet<>();
+    private final Collection<ResourceEvent> events = new ArrayList<>();
 
     public Resource<T> withLink(Link link) {
         add(link);
@@ -34,6 +36,11 @@ public class Resource<T> extends ResourceSupport {
         } else {
             return this;
         }
+    }
+
+    public Resource<T> withEvent(ResourceEvent event) {
+        events.add(event);
+        return this;
     }
 
 }

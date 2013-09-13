@@ -1,8 +1,8 @@
-define(['ajax','common'], function (ajax, common) {
+define(['ajax', 'common'], function (ajax, common) {
 
-    function deleteEntity (entityPath, id, callbackFn, nameFn) {
+    function deleteEntity(entityPath, id, callbackFn, nameFn) {
         var url = 'ui/manage/{0}/{1}'.format(entityPath, id);
-        ajax.get ({
+        ajax.get({
             url: url,
             successFn: function (o) {
                 var name;
@@ -25,7 +25,7 @@ define(['ajax','common'], function (ajax, common) {
         });
     }
 
-    function extractEntity (value) {
+    function extractEntity(value) {
         var pos = value.lastIndexOf('/');
         if (pos > 0) {
             return value.substring(pos + 1);
@@ -34,11 +34,21 @@ define(['ajax','common'], function (ajax, common) {
         }
     }
 
-    function gui (resource) {
+    function staticPathTo(relativePath) {
+        // 'staticPath' variable is declared in 'layout.html'
+        if (staticPath) {
+            return '{0}/{1}'.format(staticPath, relativePath);
+        } else {
+            common.log('application')('Cannot find "staticPath" variable.');
+            return 'static/{0}'.format(relativePath);
+        }
+    }
+
+    function gui(resource) {
         goLink(resource, 'gui')
     }
 
-    function goLink (resource, rel) {
+    function goLink(resource, rel) {
         var href = link(resource, rel);
         if (href) {
             location.href = href;
@@ -47,7 +57,7 @@ define(['ajax','common'], function (ajax, common) {
         }
     }
 
-    function link (resource, rel) {
+    function link(resource, rel) {
         for (var i in resource.links) {
             var link = resource.links[i];
             if (link.rel == rel) {
@@ -58,6 +68,7 @@ define(['ajax','common'], function (ajax, common) {
 
     return {
         deleteEntity: deleteEntity,
+        staticPathTo: staticPathTo,
         gui: gui,
         goLink: goLink,
         link: link

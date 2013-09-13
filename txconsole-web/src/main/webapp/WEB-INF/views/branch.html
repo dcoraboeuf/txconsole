@@ -21,4 +21,18 @@
         </@acl>
     </@title>
 
+    <div class="row-fluid">
+        <div class="span12">
+            <@section title=loc('request.list')>
+                <div
+                    id="request-list"
+                    class="dynamic"
+                    dynamic-controller="request-list"
+                    dynamic-branch-id="${branch.data.id?c}"
+                    dynamic-more="true"
+                    ></div>
+            </@section>
+        </div>
+    </div>
+
 </@layout_std>
