@@ -28,7 +28,7 @@ public class ResourceTest {
                 .withAction(ProjectFunction.DELETE, false)
                 .withAction(ProjectFunction.REQUEST_CREATE, true);
         String json = mapper.writeValueAsString(r);
-        assertEquals("{\"links\":[{\"rel\":\"self\",\"href\":\"http://host/ui/branch/10\"},{\"rel\":\"gui\",\"href\":\"http://host/branch/10\"},{\"rel\":\"project\",\"href\":\"http://host/ui/project/1\"}],\"data\":{\"id\":10,\"projectId\":1,\"name\":\"B1\"},\"actions\":[\"PROJECT#REQUEST_CREATE\"]}", json);
+        assertEquals("{\"links\":[{\"rel\":\"self\",\"href\":\"http://host/ui/branch/10\"},{\"rel\":\"gui\",\"href\":\"http://host/branch/10\"},{\"rel\":\"project\",\"href\":\"http://host/ui/project/1\"}],\"data\":{\"id\":10,\"projectId\":1,\"name\":\"B1\"},\"actions\":[\"PROJECT#REQUEST_CREATE\"],\"events\":[]}", json);
     }
 
 }
