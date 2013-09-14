@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -30,37 +31,49 @@ public class UIController extends AbstractUIController implements UI {
     /**
      * Gets the resource for a project
      */
-    private final Function<ProjectSummary, Resource<ProjectSummary>> projectSummaryResourceFn = new Function<ProjectSummary, Resource<ProjectSummary>>() {
-        @Override
-        public Resource<ProjectSummary> apply(ProjectSummary o) {
-            return new Resource<>(o)
-                    .withLink(linkTo(methodOn(UIController.class).getProject(o.getId())).withSelfRel())
-                    .withLink(linkTo(methodOn(GUIController.class).getProject(o.getId())).withRel(Resource.REL_GUI))
-                            // List of branches
-                    .withLink(linkTo(methodOn(UIController.class).getProjectBranches(o.getId())).withRel("branches"))
-                            // ACL
-                    .withAction(ProjectFunction.UPDATE, securityUtils.isGranted(ProjectFunction.UPDATE, o.getId()))
-                    .withAction(ProjectFunction.DELETE, securityUtils.isGranted(ProjectFunction.DELETE, o.getId()))
-                    .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getId()));
-        }
-    };
+    private final Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>> projectSummaryResourceFn =
+            new Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>>() {
+                @Override
+                public Function<ProjectSummary, Resource<ProjectSummary>> apply(final Locale locale) {
+                    return new Function<ProjectSummary, Resource<ProjectSummary>>() {
+                        @Override
+                        public Resource<ProjectSummary> apply(ProjectSummary o) {
+                            return new Resource<>(o)
+                                    .withLink(linkTo(methodOn(UIController.class).getProject(locale, o.getId())).withSelfRel())
+                                    .withLink(linkTo(methodOn(GUIController.class).getProject(locale, o.getId())).withRel(Resource.REL_GUI))
+                                            // List of branches
+                                    .withLink(linkTo(methodOn(UIController.class).getProjectBranches(locale, o.getId())).withRel("branches"))
+                                            // ACL
+                                    .withAction(ProjectFunction.UPDATE, securityUtils.isGranted(ProjectFunction.UPDATE, o.getId()))
+                                    .withAction(ProjectFunction.DELETE, securityUtils.isGranted(ProjectFunction.DELETE, o.getId()))
+                                    .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getId()));
+                        }
+                    };
+                }
+            };
     /**
      * Gets the resource for a branch
      */
-    private final Function<BranchSummary, Resource<BranchSummary>> branchSummaryResourceFn = new Function<BranchSummary, Resource<BranchSummary>>() {
-        @Override
-        public Resource<BranchSummary> apply(BranchSummary o) {
-            return new Resource<>(o)
-                    .withLink(linkTo(methodOn(UIController.class).getBranch(o.getId())).withSelfRel())
-                    .withLink(linkTo(methodOn(GUIController.class).getBranch(o.getId())).withRel(Resource.REL_GUI))
-                            // Project link
-                    .withLink(linkTo(methodOn(UIController.class).getProject(o.getProjectId())).withRel("project"))
-                            // ACL
-                    .withAction(ProjectFunction.UPDATE, securityUtils.isGranted(ProjectFunction.UPDATE, o.getProjectId()))
-                    .withAction(ProjectFunction.DELETE, securityUtils.isGranted(ProjectFunction.DELETE, o.getProjectId()))
-                    .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getProjectId()));
-        }
-    };
+    private final Function<Locale, Function<BranchSummary, Resource<BranchSummary>>> branchSummaryResourceFn =
+            new Function<Locale, Function<BranchSummary, Resource<BranchSummary>>>() {
+                @Override
+                public Function<BranchSummary, Resource<BranchSummary>> apply(final Locale locale) {
+                    return new Function<BranchSummary, Resource<BranchSummary>>() {
+                        @Override
+                        public Resource<BranchSummary> apply(BranchSummary o) {
+                            return new Resource<>(o)
+                                    .withLink(linkTo(methodOn(UIController.class).getBranch(locale, o.getId())).withSelfRel())
+                                    .withLink(linkTo(methodOn(GUIController.class).getBranch(locale, o.getId())).withRel(Resource.REL_GUI))
+                                            // Project link
+                                    .withLink(linkTo(methodOn(UIController.class).getProject(locale, o.getProjectId())).withRel("project"))
+                                            // ACL
+                                    .withAction(ProjectFunction.UPDATE, securityUtils.isGranted(ProjectFunction.UPDATE, o.getProjectId()))
+                                    .withAction(ProjectFunction.DELETE, securityUtils.isGranted(ProjectFunction.DELETE, o.getProjectId()))
+                                    .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getProjectId()));
+                        }
+                    };
+                }
+            };
 
     @Autowired
     public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, TranslationMapService translationMapService, SecurityUtils securityUtils) {
@@ -73,36 +86,36 @@ public class UIController extends AbstractUIController implements UI {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public
     @ResponseBody
-    Resource<String> home() {
+    Resource<String> home(Locale locale) {
         return new Resource<>("home")
-                .withLink(linkTo(methodOn(UIController.class).home()).withSelfRel())
+                .withLink(linkTo(methodOn(UIController.class).home(locale)).withSelfRel())
                 .withLink(linkTo(methodOn(GUIController.class).home()).withRel(Resource.REL_GUI))
-                .withLink(linkTo(methodOn(UIController.class).getProjectList()).withRel("projectList"));
+                .withLink(linkTo(methodOn(UIController.class).getProjectList(locale)).withRel("projectList"));
     }
 
     @RequestMapping(value = "/project", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Resource<ProjectSummary>> getProjectList() {
+    List<Resource<ProjectSummary>> getProjectList(Locale locale) {
         return Lists.transform(
                 structureService.getProjects(),
-                projectSummaryResourceFn
+                projectSummaryResourceFn.apply(locale)
         );
     }
 
     @RequestMapping(value = "/project", method = RequestMethod.POST)
     public
     @ResponseBody
-    Resource<ProjectSummary> createProject(@RequestBody ProjectCreationForm form) {
-        return projectSummaryResourceFn.apply(structureService.createProject(form));
+    Resource<ProjectSummary> createProject(Locale locale, @RequestBody ProjectCreationForm form) {
+        return projectSummaryResourceFn.apply(locale).apply(structureService.createProject(form));
     }
 
     @Override
     @RequestMapping(value = "/project/{id}", method = RequestMethod.GET)
     public
     @ResponseBody
-    Resource<ProjectSummary> getProject(@PathVariable int id) {
-        return projectSummaryResourceFn.apply(structureService.getProject(id));
+    Resource<ProjectSummary> getProject(Locale locale, @PathVariable int id) {
+        return projectSummaryResourceFn.apply(locale).apply(structureService.getProject(id));
     }
 
     /**
@@ -121,9 +134,9 @@ public class UIController extends AbstractUIController implements UI {
     @RequestMapping(value = "/project/{id}", method = RequestMethod.DELETE)
     public
     @ResponseBody
-    Resource<String> deleteProject(@PathVariable int id) {
+    Resource<String> deleteProject(Locale locale, @PathVariable int id) {
         structureService.deleteProject(id);
-        return home();
+        return home(locale);
     }
 
     /**
@@ -132,8 +145,8 @@ public class UIController extends AbstractUIController implements UI {
     @RequestMapping(value = "/project/{id}/branch", method = RequestMethod.POST)
     public
     @ResponseBody
-    Resource<BranchSummary> createBranch(@PathVariable int id, @RequestBody BranchCreationForm form) {
-        return branchSummaryResourceFn.apply(structureService.createBranch(id, form));
+    Resource<BranchSummary> createBranch(Locale locale, @PathVariable int id, @RequestBody BranchCreationForm form) {
+        return branchSummaryResourceFn.apply(locale).apply(structureService.createBranch(id, form));
     }
 
     /**
@@ -142,10 +155,10 @@ public class UIController extends AbstractUIController implements UI {
     @RequestMapping(value = "/project/{id}/branch", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Resource<BranchSummary>> getProjectBranches(@PathVariable int id) {
+    List<Resource<BranchSummary>> getProjectBranches(Locale locale, @PathVariable int id) {
         return Lists.transform(
                 structureService.getProjectBranches(id),
-                branchSummaryResourceFn
+                branchSummaryResourceFn.apply(locale)
         );
     }
 
@@ -156,8 +169,8 @@ public class UIController extends AbstractUIController implements UI {
     @RequestMapping(value = "/branch/{id}", method = RequestMethod.GET)
     public
     @ResponseBody
-    Resource<BranchSummary> getBranch(@PathVariable int id) {
-        return branchSummaryResourceFn.apply(structureService.getBranch(id));
+    Resource<BranchSummary> getBranch(Locale locale, @PathVariable int id) {
+        return branchSummaryResourceFn.apply(locale).apply(structureService.getBranch(id));
     }
 
     /**
@@ -166,10 +179,10 @@ public class UIController extends AbstractUIController implements UI {
     @RequestMapping(value = "/map/{branchId}", method = RequestMethod.POST)
     public
     @ResponseBody
-    Resource<TranslationMapResponse> getTranslationMap(@PathVariable int branchId, @RequestBody TranslationMapRequest request) {
+    Resource<TranslationMapResponse> getTranslationMap(Locale locale, @PathVariable int branchId, @RequestBody TranslationMapRequest request) {
         return new Resource<>(translationMapService.map(branchId, request.getVersion()).filter(request.getLimit(), request.getFilter()))
-                .withLink(linkTo(methodOn(UIController.class).getBranch(branchId)).withRel("branch"))
-                .withLink(linkTo(methodOn(GUIController.class).getBranch(branchId)).withRel("branch-gui"));
+                .withLink(linkTo(methodOn(UIController.class).getBranch(locale, branchId)).withRel("branch"))
+                .withLink(linkTo(methodOn(GUIController.class).getBranch(locale, branchId)).withRel("branch-gui"));
         // TODO ACL for the map edition
     }
 

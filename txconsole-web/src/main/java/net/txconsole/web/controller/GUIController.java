@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Locale;
+
 @Controller
 public class GUIController extends AbstractGUIController {
 
@@ -32,21 +34,21 @@ public class GUIController extends AbstractGUIController {
      * Project page
      */
     @RequestMapping(value = "/project/{id}", method = RequestMethod.GET)
-    public ModelAndView getProject(@PathVariable int id) {
-        return new ModelAndView("project", "project", ui.getProject(id));
+    public ModelAndView getProject(Locale locale, @PathVariable int id) {
+        return new ModelAndView("project", "project", ui.getProject(locale, id));
     }
 
     /**
      * Branch page
      */
     @RequestMapping(value = "/branch/{id}", method = RequestMethod.GET)
-    public ModelAndView getBranch(@PathVariable int id) {
-        Resource<BranchSummary> branch = ui.getBranch(id);
+    public ModelAndView getBranch(Locale locale, @PathVariable int id) {
+        Resource<BranchSummary> branch = ui.getBranch(locale, id);
         return new ModelAndView("branch",
                 MapBuilder
                         .params()
                         .with("branch", branch)
-                        .with("project", ui.getProject(branch.getData().getProjectId()))
+                        .with("project", ui.getProject(locale, branch.getData().getProjectId()))
                         .get()
         );
     }

@@ -28,15 +28,20 @@ public class UIRequestController extends AbstractUIController {
     /**
      * Gets the resource for a request configuration data
      */
-    private final Function<RequestConfigurationData, Resource<RequestConfigurationData>> requestConfigurationDataResourceFn =
-            new Function<RequestConfigurationData, Resource<RequestConfigurationData>>() {
+    private final Function<Locale, Function<RequestConfigurationData, Resource<RequestConfigurationData>>> requestConfigurationDataResourceFn =
+            new Function<Locale, Function<RequestConfigurationData, Resource<RequestConfigurationData>>>() {
                 @Override
-                public Resource<RequestConfigurationData> apply(RequestConfigurationData o) {
-                    return new Resource<>(o)
-                            .withLink(linkTo(methodOn(UIController.class).getBranch(o.getBranch().getId())).withRel("branch"))
-                            .withLink(linkTo(methodOn(GUIController.class).getBranch(o.getBranch().getId())).withRel("branch-gui"))
-                            .withLink(linkTo(methodOn(UIController.class).getProject(o.getProject().getId())).withRel("project"))
-                            .withLink(linkTo(methodOn(GUIController.class).getProject(o.getProject().getId())).withRel("project-gui"));
+                public Function<RequestConfigurationData, Resource<RequestConfigurationData>> apply(final Locale locale) {
+                    return new Function<RequestConfigurationData, Resource<RequestConfigurationData>>() {
+                        @Override
+                        public Resource<RequestConfigurationData> apply(RequestConfigurationData o) {
+                            return new Resource<>(o)
+                                    .withLink(linkTo(methodOn(UIController.class).getBranch(locale, o.getBranch().getId())).withRel("branch"))
+                                    .withLink(linkTo(methodOn(GUIController.class).getBranch(locale, o.getBranch().getId())).withRel("branch-gui"))
+                                    .withLink(linkTo(methodOn(UIController.class).getProject(locale, o.getProject().getId())).withRel("project"))
+                                    .withLink(linkTo(methodOn(GUIController.class).getProject(locale, o.getProject().getId())).withRel("project-gui"));
+                        }
+                    };
                 }
             };
     /**
@@ -49,8 +54,8 @@ public class UIRequestController extends AbstractUIController {
                 @Override
                 public Resource<RequestSummary> apply(RequestSummary o) {
                     return new Resource<>(o)
-                            .withLink(linkTo(methodOn(UIController.class).getBranch(o.getBranchId())).withRel("branch"))
-                            .withLink(linkTo(methodOn(GUIController.class).getBranch(o.getBranchId())).withRel("branch-gui"))
+                            .withLink(linkTo(methodOn(UIController.class).getBranch(locale, o.getBranchId())).withRel("branch"))
+                            .withLink(linkTo(methodOn(GUIController.class).getBranch(locale, o.getBranchId())).withRel("branch-gui"))
                             .withEvent(guiEventService.getResourceEvent(locale, EventEntity.REQUEST, o.getId(), EventCode.REQUEST_CREATED));
                     // TODO Request UI
                     // TODO Request GUI
@@ -79,8 +84,8 @@ public class UIRequestController extends AbstractUIController {
     @RequestMapping(value = "/branch/{branchId}/request/config", method = RequestMethod.GET)
     public
     @ResponseBody
-    Resource<RequestConfigurationData> getRequestConfigurationData(@PathVariable int branchId) {
-        return requestConfigurationDataResourceFn.apply(
+    Resource<RequestConfigurationData> getRequestConfigurationData(Locale locale, @PathVariable int branchId) {
+        return requestConfigurationDataResourceFn.apply(locale).apply(
                 requestService.getRequestConfigurationData(branchId)
         );
     }

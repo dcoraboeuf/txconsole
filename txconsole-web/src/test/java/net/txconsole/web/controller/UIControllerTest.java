@@ -18,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -48,7 +49,7 @@ public class UIControllerTest {
 
     @Test
     public void home() {
-        Resource<String> r = controller.home();
+        Resource<String> r = controller.home(Locale.ENGLISH);
         assertEquals("home", r.getData());
         assertEquals("http://localhost/ui", r.getLink("self").getHref());
         assertEquals("http://localhost/", r.getLink("gui").getHref());
@@ -63,7 +64,7 @@ public class UIControllerTest {
                         new ProjectSummary(2, "P2", "Project 2")
                 )
         );
-        List<Resource<ProjectSummary>> list = controller.getProjectList();
+        List<Resource<ProjectSummary>> list = controller.getProjectList(Locale.ENGLISH);
         assertEquals(2, list.size());
         {
             Resource<ProjectSummary> p = list.get(0);
@@ -84,7 +85,7 @@ public class UIControllerTest {
         when(structureService.getProject(1)).thenReturn(
                 new ProjectSummary(1, "P1", "Project 1")
         );
-        Resource<ProjectSummary> p = controller.getProject(1);
+        Resource<ProjectSummary> p = controller.getProject(Locale.ENGLISH, 1);
         assertEquals("P1", p.getData().getName());
         assertEquals("http://localhost/ui/project/1", p.getLink("self").getHref());
         assertEquals("http://localhost/project/1", p.getLink("gui").getHref());
@@ -106,6 +107,7 @@ public class UIControllerTest {
                 )
         );
         Resource<ProjectSummary> p = controller.createProject(
+                Locale.ENGLISH,
                 new ProjectCreationForm(
                         "P3",
                         "Project 3",
@@ -132,7 +134,7 @@ public class UIControllerTest {
         // Grants
         when(securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, 1)).thenReturn(true);
         // Call
-        Resource<BranchSummary> resource = controller.getBranch(10);
+        Resource<BranchSummary> resource = controller.getBranch(Locale.ENGLISH, 10);
         // Basic checks
         assertNotNull(resource);
         assertEquals(10, resource.getData().getId());
@@ -159,7 +161,7 @@ public class UIControllerTest {
         when(securityUtils.isGranted(ProjectFunction.UPDATE, 1)).thenReturn(true);
         when(securityUtils.isGranted(ProjectFunction.DELETE, 1)).thenReturn(true);
         // Call
-        Resource<BranchSummary> resource = controller.getBranch(10);
+        Resource<BranchSummary> resource = controller.getBranch(Locale.ENGLISH, 10);
         // Basic checks
         assertNotNull(resource);
         assertEquals(10, resource.getData().getId());

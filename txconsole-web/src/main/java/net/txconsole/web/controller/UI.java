@@ -4,10 +4,12 @@ import net.txconsole.core.model.BranchSummary;
 import net.txconsole.core.model.ProjectSummary;
 import net.txconsole.web.resource.Resource;
 
+import java.util.Locale;
+
 public interface UI {
 
-    Resource<ProjectSummary> getProject(int id);
+    Resource<ProjectSummary> getProject(Locale locale, int id);
 
-    Resource<BranchSummary> getBranch(int id);
+    Resource<BranchSummary> getBranch(Locale locale, int id);
 
 }
