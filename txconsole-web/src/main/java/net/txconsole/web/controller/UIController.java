@@ -11,6 +11,7 @@ import net.txconsole.service.TranslationMapService;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
+import net.txconsole.web.support.GUIEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class UIController extends AbstractUIController implements UI {
 
     private final StructureService structureService;
     private final TranslationMapService translationMapService;
+    private final GUIEventService guiEventService;
     private final SecurityUtils securityUtils;
     /**
      * Gets the resource for a project
@@ -46,7 +48,9 @@ public class UIController extends AbstractUIController implements UI {
                                             // ACL
                                     .withAction(ProjectFunction.UPDATE, securityUtils.isGranted(ProjectFunction.UPDATE, o.getId()))
                                     .withAction(ProjectFunction.DELETE, securityUtils.isGranted(ProjectFunction.DELETE, o.getId()))
-                                    .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getId()));
+                                    .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getId()))
+                                            // Events
+                                    .withEvent(guiEventService.getResourceEvent(locale, EventEntity.PROJECT, o.getId(), EventCode.PROJECT_CREATED));
                         }
                     };
                 }
@@ -69,17 +73,20 @@ public class UIController extends AbstractUIController implements UI {
                                             // ACL
                                     .withAction(ProjectFunction.UPDATE, securityUtils.isGranted(ProjectFunction.UPDATE, o.getProjectId()))
                                     .withAction(ProjectFunction.DELETE, securityUtils.isGranted(ProjectFunction.DELETE, o.getProjectId()))
-                                    .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getProjectId()));
+                                    .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getProjectId()))
+                                            // Events
+                                    .withEvent(guiEventService.getResourceEvent(locale, EventEntity.BRANCH, o.getId(), EventCode.BRANCH_CREATED));
                         }
                     };
                 }
             };
 
     @Autowired
-    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, TranslationMapService translationMapService, SecurityUtils securityUtils) {
+    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, TranslationMapService translationMapService, GUIEventService guiEventService, SecurityUtils securityUtils) {
         super(errorHandler, strings);
         this.structureService = structureService;
         this.translationMapService = translationMapService;
+        this.guiEventService = guiEventService;
         this.securityUtils = securityUtils;
     }
 

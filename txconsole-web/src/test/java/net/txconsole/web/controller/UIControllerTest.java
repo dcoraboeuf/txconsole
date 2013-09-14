@@ -10,6 +10,7 @@ import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.ErrorHandler;
+import net.txconsole.web.support.GUIEventService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -32,6 +33,7 @@ public class UIControllerTest {
     private StructureService structureService;
     private SecurityUtils securityUtils;
     private TranslationMapService translationMapService;
+    private GUIEventService guiEventService;
 
     @Before
     public void before() {
@@ -40,7 +42,8 @@ public class UIControllerTest {
         structureService = mock(StructureService.class);
         securityUtils = mock(SecurityUtils.class);
         translationMapService = mock(TranslationMapService.class);
-        controller = new UIController(errorHandler, strings, structureService, translationMapService, securityUtils);
+        guiEventService = mock(GUIEventService.class);
+        controller = new UIController(errorHandler, strings, structureService, translationMapService, guiEventService, securityUtils);
         // Current request
         MockHttpServletRequest request = new MockHttpServletRequest();
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
