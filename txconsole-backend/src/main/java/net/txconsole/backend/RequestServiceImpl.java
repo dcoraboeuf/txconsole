@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -133,6 +134,8 @@ public class RequestServiceImpl implements RequestService {
             String version = request.getVersion();
             // Gets the configuration for the branch
             Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
+            // Default locale
+            Locale defaultLocale = configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration());
             // Gets the configuration for the file exchange
             JsonConfiguration jsonConfiguration = requestDao.getTxFileExchangeConfiguration(requestId);
             // Gets the configured TxFileExchange from the JSON configuration
@@ -143,13 +146,13 @@ public class RequestServiceImpl implements RequestService {
             // TODO Gets the last version from this translation map
             TranslationMap newMap = translationMapService.map(branchId, null);
             // Gets the diff between the two maps
-            TranslationDiff diff = translationMapService.diff(oldMap, newMap);
+            TranslationDiff diff = translationMapService.diff(defaultLocale, oldMap, newMap);
             // FIXME Saves the diff into the database (takes way too much time...)
             // requestDao.saveDiff(requestId, diff);
             // Export the diff as a file
             Content content = configuredTxFileExchange.getConfigurable().export(
                     configuredTxFileExchange.getConfiguration(),
-                    configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration()),
+                    defaultLocale,
                     configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration()),
                     diff);
             // TODO Saves the diff file into the database

@@ -1,7 +1,6 @@
 package net.txconsole.backend;
 
 import com.google.common.base.Function;
-import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import net.sf.jstring.model.Bundle;
 import net.sf.jstring.model.BundleKey;
@@ -51,7 +50,7 @@ public class TranslationMapServiceImpl implements TranslationMapService {
     }
 
     @Override
-    public TranslationDiff diff(TranslationMap oldMap, TranslationMap newMap) {
+    public TranslationDiff diff(Locale referenceLocale, TranslationMap oldMap, TranslationMap newMap) {
         TranslationDiffBuilder diffBuilder = TranslationDiffBuilder.create();
         // Bundle names
         Map<String, Bundle> oldBundles = Maps.uniqueIndex(oldMap.getBundleCollection().getBundles(), bundleNameFn);
@@ -63,68 +62,99 @@ public class TranslationMapServiceImpl implements TranslationMapService {
         for (String bundleName : bundleNames) {
             Bundle oldBundle = oldBundles.get(bundleName);
             Bundle newBundle = newBundles.get(bundleName);
-            diffBundle(diffBuilder, bundleName, oldBundle, newBundle);
+            diffBundle(referenceLocale, diffBuilder, bundleName, oldBundle, newBundle);
         }
         // OK
         return diffBuilder.build();
     }
 
-    protected void diffBundle(TranslationDiffBuilder diffBuilder, String bundleName, Bundle oldBundle, Bundle newBundle) {
+    protected void diffBundle(Locale referenceLocale, TranslationDiffBuilder diffBuilder, String bundleName, Bundle oldBundle, Bundle newBundle) {
         // Collects the index of values per pair of (section x key)
         Map<Pair<String, String>, Map<Locale, BundleValue>> oldValues = getValueIndex(oldBundle);
         Map<Pair<String, String>, Map<Locale, BundleValue>> newValues = getValueIndex(newBundle);
 
-        // Gets the differences
-        MapDifference<Pair<String, String>, Map<Locale, BundleValue>> difference = Maps.difference(oldValues, newValues);
-
-        // ADDED keys
-        for (Map.Entry<Pair<String, String>, Map<Locale, BundleValue>> entry : difference.entriesOnlyOnRight().entrySet()) {
-            diffBuilder.added(bundleName, entry.getKey().getLeft(), entry.getKey().getRight(),
+        // Keys only in old ==> deleted keys
+        Set<Pair<String, String>> deletedKeys = new HashSet<>(oldValues.keySet());
+        deletedKeys.removeAll(newValues.keySet());
+        for (Pair<String, String> deletedKey : deletedKeys) {
+            diffBuilder.deleted(
+                    bundleName,
+                    deletedKey.getLeft(),
+                    deletedKey.getRight(),
                     Maps.transformValues(
-                            entry.getValue(),
+                            oldValues.get(deletedKey),
                             TranslationMap.bundleValueFn
                     )
             );
         }
 
-        // DELETED keys
-        for (Map.Entry<Pair<String, String>, Map<Locale, BundleValue>> entry : difference.entriesOnlyOnLeft().entrySet()) {
-            diffBuilder.deleted(bundleName, entry.getKey().getLeft(), entry.getKey().getRight(),
+        // Keys only in new ==> added keys
+        Set<Pair<String, String>> addedKeys = new HashSet<>(newValues.keySet());
+        addedKeys.removeAll(oldValues.keySet());
+        for (Pair<String, String> addedKey : addedKeys) {
+            diffBuilder.added(
+                    bundleName,
+                    addedKey.getLeft(),
+                    addedKey.getRight(),
                     Maps.transformValues(
-                            entry.getValue(),
+                            newValues.get(addedKey),
                             TranslationMap.bundleValueFn
                     )
             );
         }
 
-        // UPDATED keys
-        for (Map.Entry<Pair<String, String>, Map<Locale, BundleValue>> entry : difference.entriesInCommon().entrySet()) {
-            diffValues(diffBuilder, bundleName, entry.getKey().getLeft(), entry.getKey().getRight(),
-                    oldValues.get(entry.getKey()),
-                    newValues.get(entry.getKey()));
-        }
-
-        //To change body of created methods use File | Settings | File Templates.
-    }
-
-    protected void diffValues(TranslationDiffBuilder diffBuilder, String bundleName, String section, String key, Map<Locale, BundleValue> oldValues, Map<Locale, BundleValue> newValues) {
-        // TODO Default locale
-        Locale defaultLocale = Locale.ENGLISH;
-        // Gets the default value
-        String oldValue = getValue(oldValues, defaultLocale);
-        String newValue = getValue(newValues, defaultLocale);
-        // Different?
-        if (!StringUtils.equals(oldValue, newValue)) {
-            diffBuilder.updated(bundleName, section, key,
-                    Maps.transformValues(
-                            oldValues,
-                            TranslationMap.bundleValueFn
-                    ),
-                    Maps.transformValues(
-                            newValues,
-                            TranslationMap.bundleValueFn
-                    )
-            );
+        // Keys in both ==> potentially updated
+        Set<Pair<String, String>> commonKeys = new HashSet<>(newValues.keySet());
+        commonKeys.retainAll(oldValues.keySet());
+        for (Pair<String, String> commonKey : commonKeys) {
+            Map<Locale, BundleValue> oldValue = oldValues.get(commonKey);
+            Map<Locale, BundleValue> newValue = newValues.get(commonKey);
+            // Gets the reference value
+            String oldLabel = getValue(oldValue, referenceLocale);
+            String newLabel = getValue(newValue, referenceLocale);
+            // If different
+            if (!StringUtils.equals(oldLabel, newLabel)) {
+                // Old null ==> new key
+                if (oldLabel == null) {
+                    diffBuilder.added(
+                            bundleName,
+                            commonKey.getLeft(),
+                            commonKey.getRight(),
+                            Maps.transformValues(
+                                    newValues.get(commonKey),
+                                    TranslationMap.bundleValueFn
+                            )
+                    );
+                }
+                // New null ==> deleted key
+                else if (newLabel == null) {
+                    diffBuilder.deleted(
+                            bundleName,
+                            commonKey.getLeft(),
+                            commonKey.getRight(),
+                            Maps.transformValues(
+                                    oldValues.get(commonKey),
+                                    TranslationMap.bundleValueFn
+                            )
+                    );
+                }
+                // Just different ==> update
+                else {
+                    diffBuilder.updated(
+                            bundleName,
+                            commonKey.getLeft(),
+                            commonKey.getRight(),
+                            Maps.transformValues(
+                                    oldValues.get(commonKey),
+                                    TranslationMap.bundleValueFn
+                            ),
+                            Maps.transformValues(
+                                    newValues.get(commonKey),
+                                    TranslationMap.bundleValueFn
+                            )
+                    );
+                }
+            }
         }
     }
 
