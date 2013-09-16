@@ -54,6 +54,7 @@ public class TranslationSourceServiceIntegrationTest extends AbstractIntegration
                         ),
                         new Configured<PropertiesTxFileFormatConfig, TxFileFormat<PropertiesTxFileFormatConfig>>(
                                 new PropertiesTxFileFormatConfig(
+                                        Locale.ENGLISH,
                                         asList(
                                                 new PropertyGroup("common", asList(Locale.ENGLISH, Locale.FRENCH)),
                                                 new PropertyGroup("lux", asList(Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN))

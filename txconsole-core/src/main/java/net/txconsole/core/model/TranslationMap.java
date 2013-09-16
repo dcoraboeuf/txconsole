@@ -44,6 +44,23 @@ public class TranslationMap {
         );
     }
 
+    public Set<Locale> getSupportedLocales() {
+        Set<Locale> locales = new TreeSet<>(LocaleComparator.INSTANCE);
+        // For all bundles
+        for (Bundle bundle : bundleCollection.getBundles()) {
+            // For all sections
+            for (BundleSection bundleSection : bundle.getSections()) {
+                // For all keys
+                for (BundleKey bundleKey : bundleSection.getKeys()) {
+                    // Locales
+                    locales.addAll(bundleKey.getValues().keySet());
+                }
+            }
+        }
+        // OK
+        return locales;
+    }
+
     public TranslationMapResponse filter(int limit, Predicate<TranslationEntry> entryPredicate) {
         // Limit must be set
         if (limit <= 0) {

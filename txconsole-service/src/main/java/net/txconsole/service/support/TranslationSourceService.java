@@ -34,4 +34,6 @@ public interface TranslationSourceService {
     <S> Configured<S, TxFileSource<S>> getConfiguredTxFileSource(JsonConfiguration config);
 
     <F> Configured<F, TxFileFormat<F>> getConfiguredTxFileFormat(JsonConfiguration config);
+
+    <F> Configured<F, TxFileExchange<F>> getConfiguredTxFileExchange(JsonConfiguration config);
 }

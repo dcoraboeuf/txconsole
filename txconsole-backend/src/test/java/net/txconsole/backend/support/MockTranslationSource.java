@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Set;
+
 @Component
 @Profile(RunProfile.TEST)
 public class MockTranslationSource
@@ -38,4 +42,13 @@ public class MockTranslationSource
     public void write(MockTranslationSourceConfig config, TranslationMap map) {
     }
 
+    @Override
+    public Locale getDefaultLocale(MockTranslationSourceConfig configuration) {
+        return Locale.ENGLISH;
+    }
+
+    @Override
+    public Set<Locale> getSupportedLocales(MockTranslationSourceConfig configuration) {
+        return Collections.singleton(Locale.ENGLISH);
+    }
 }

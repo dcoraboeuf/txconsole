@@ -6,6 +6,10 @@ extension.format.properties.description
     en -> Set of files using the JDK Properties format.
     fr -> Ensemble de fichiers au format Properties du JDK.
 
+extension.format.properties.defaultLocale
+    en -> Default locale
+    fr -> Language par défaut
+
 extension.format.properties.groups
     en -> List of groups
     fr -> Liste de groupes

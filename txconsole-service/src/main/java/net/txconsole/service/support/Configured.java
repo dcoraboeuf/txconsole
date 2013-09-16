@@ -5,6 +5,7 @@ import net.txconsole.core.model.JsonConfiguration;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.IOException;
+import java.util.Locale;
 
 @Data
 public class Configured<C, T extends Configurable<C>> {

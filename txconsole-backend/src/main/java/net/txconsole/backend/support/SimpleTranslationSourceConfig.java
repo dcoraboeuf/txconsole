@@ -5,6 +5,9 @@ import net.txconsole.service.support.Configured;
 import net.txconsole.service.support.TxFileFormat;
 import net.txconsole.service.support.TxFileSource;
 
+import java.util.Locale;
+import java.util.Set;
+
 @Data
 public class SimpleTranslationSourceConfig<S, F> {
 

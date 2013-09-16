@@ -32,6 +32,20 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
     }
 
     @Override
+    public Locale getDefaultLocale(PropertiesTxFileFormatConfig config) {
+        return config.getDefaultLocale();
+    }
+
+    @Override
+    public Set<Locale> getSupportedLocales(PropertiesTxFileFormatConfig config) {
+        Set<Locale> locales = new HashSet<>();
+        for (PropertyGroup propertyGroup : config.getGroups()) {
+            locales.addAll(propertyGroup.getLocales());
+        }
+        return locales;
+    }
+
+    @Override
     public TranslationMap readFrom(PropertiesTxFileFormatConfig config, IOContext context) {
         // Bundle collection builder
         BundleCollectionBuilder collectionBuilder = BundleCollectionBuilder.create();

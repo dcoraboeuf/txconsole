@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
+import net.txconsole.core.Content;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
@@ -13,6 +14,8 @@ import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
 import net.txconsole.service.support.Configured;
 import net.txconsole.service.support.TranslationSource;
+import net.txconsole.service.support.TranslationSourceService;
+import net.txconsole.service.support.TxFileExchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,7 @@ public class RequestServiceImpl implements RequestService {
     private final Logger logger = LoggerFactory.getLogger(RequestService.class);
     private final StructureService structureService;
     private final TranslationMapService translationMapService;
+    private final TranslationSourceService translationSourceService;
     private final EventService eventService;
     private final RequestDao requestDao;
     private final SecurityUtils securityUtils;
@@ -46,9 +50,10 @@ public class RequestServiceImpl implements RequestService {
     };
 
     @Autowired
-    public RequestServiceImpl(StructureService structureService, TranslationMapService translationMapService, EventService eventService, RequestDao requestDao, SecurityUtils securityUtils) {
+    public RequestServiceImpl(StructureService structureService, TranslationMapService translationMapService, TranslationSourceService translationSourceService, EventService eventService, RequestDao requestDao, SecurityUtils securityUtils) {
         this.structureService = structureService;
         this.translationMapService = translationMapService;
+        this.translationSourceService = translationSourceService;
         this.eventService = eventService;
         this.requestDao = requestDao;
         this.securityUtils = securityUtils;
@@ -126,9 +131,12 @@ public class RequestServiceImpl implements RequestService {
         } else {
             int branchId = request.getBranchId();
             String version = request.getVersion();
+            // Gets the configuration for the branch
+            Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
             // Gets the configuration for the file exchange
             JsonConfiguration jsonConfiguration = requestDao.getTxFileExchangeConfiguration(requestId);
-            // TODO Gets the configured TxFileExchange from the JSON configuration
+            // Gets the configured TxFileExchange from the JSON configuration
+            Configured<Object, TxFileExchange<Object>> configuredTxFileExchange = translationSourceService.getConfiguredTxFileExchange(jsonConfiguration);
             // Gets the translation map for the given version
             TranslationMap oldMap = translationMapService.map(branchId, version);
             // Gets the translation map for the last version
@@ -136,11 +144,17 @@ public class RequestServiceImpl implements RequestService {
             TranslationMap newMap = translationMapService.map(branchId, null);
             // Gets the diff between the two maps
             TranslationDiff diff = translationMapService.diff(oldMap, newMap);
-            // Saves the diff into the database
-            requestDao.saveDiff(requestId, diff);
-            // TODO Export the diff as a file
+            // FIXME Saves the diff into the database (takes way too much time...)
+            // requestDao.saveDiff(requestId, diff);
+            // Export the diff as a file
+            Content content = configuredTxFileExchange.getConfigurable().export(
+                    configuredTxFileExchange.getConfiguration(),
+                    configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration()),
+                    configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration()),
+                    diff);
             // TODO Saves the diff file into the database
             // TODO Changes the status to 'EXPORTED'
+            // TODO Saves the last version with the new status
             // TODO In case of error, sets the request status as 'ERROR', and resends the error
         }
     }

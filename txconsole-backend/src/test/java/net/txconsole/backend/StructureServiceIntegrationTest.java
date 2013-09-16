@@ -62,6 +62,7 @@ public class StructureServiceIntegrationTest extends AbstractSecurityTest {
                                                 ),
                                                 new Configured<PropertiesTxFileFormatConfig, TxFileFormat<PropertiesTxFileFormatConfig>>(
                                                         new PropertiesTxFileFormatConfig(
+                                                                Locale.ENGLISH,
                                                                 asList(
                                                                         new PropertyGroup("common", asList(Locale.ENGLISH, Locale.FRENCH)),
                                                                         new PropertyGroup("lux", asList(Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN))
@@ -104,6 +105,7 @@ public class StructureServiceIntegrationTest extends AbstractSecurityTest {
                         ),
                         new Configured<PropertiesTxFileFormatConfig, TxFileFormat<PropertiesTxFileFormatConfig>>(
                                 new PropertiesTxFileFormatConfig(
+                                        Locale.ENGLISH,
                                         asList(
                                                 new PropertyGroup("common", asList(Locale.ENGLISH, Locale.FRENCH)),
                                                 new PropertyGroup("lux", asList(Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN))

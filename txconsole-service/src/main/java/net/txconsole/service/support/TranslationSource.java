@@ -3,6 +3,9 @@ package net.txconsole.service.support;
 import net.txconsole.core.model.TranslationMap;
 import net.txconsole.core.model.VersionFormat;
 
+import java.util.Locale;
+import java.util.Set;
+
 /**
  * Provides access to a {@link net.txconsole.core.model.TranslationMap},
  * in writing or in reading.
@@ -39,4 +42,7 @@ public interface TranslationSource<C> extends Configurable<C> {
      */
     void write(C config, TranslationMap map);
 
+    Locale getDefaultLocale(C configuration);
+
+    Set<Locale> getSupportedLocales(C configuration);
 }

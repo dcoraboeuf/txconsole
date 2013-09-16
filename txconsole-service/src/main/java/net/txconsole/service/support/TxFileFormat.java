@@ -2,6 +2,9 @@ package net.txconsole.service.support;
 
 import net.txconsole.core.model.TranslationMap;
 
+import java.util.Locale;
+import java.util.Set;
+
 /**
  * Defines the protocol needed for accessing the files and transform them back and forth
  * into translation maps:
@@ -19,5 +22,9 @@ public interface TxFileFormat<C> extends Configurable<C> {
      * Writes the map into the file context
      */
     void writeTo(C config, TranslationMap map, IOContext context);
+
+    Locale getDefaultLocale(C config);
+
+    Set<Locale> getSupportedLocales(C config);
 
 }

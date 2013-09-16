@@ -30,6 +30,7 @@ define(['jquery', 'render'], function ($, render) {
                 }
             });
             value.node = {
+                defaultLocale: field.configContainer.find('#txfileformat-properties-defaultLocale').val(),
                 groups: groups
             };
         }

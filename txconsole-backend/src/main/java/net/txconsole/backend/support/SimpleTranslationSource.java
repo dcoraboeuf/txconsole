@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.Set;
 
 @Component
 public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTranslationSourceConfig<S, F>> implements TranslationSource<SimpleTranslationSourceConfig<S, F>> {
@@ -95,5 +97,15 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
     @Override
     public String writeConfigurationAsJsonString(SimpleTranslationSourceConfig<S, F> config) throws IOException {
         return objectMapper.writeValueAsString(writeConfiguration(config));
+    }
+
+    @Override
+    public Locale getDefaultLocale(SimpleTranslationSourceConfig<S, F> configuration) {
+        return configuration.getTxFileFormatConfigured().getConfigurable().getDefaultLocale(configuration.getTxFileFormatConfigured().getConfiguration());
+    }
+
+    @Override
+    public Set<Locale> getSupportedLocales(SimpleTranslationSourceConfig<S, F> configuration) {
+        return configuration.getTxFileFormatConfigured().getConfigurable().getSupportedLocales(configuration.getTxFileFormatConfigured().getConfiguration());
     }
 }

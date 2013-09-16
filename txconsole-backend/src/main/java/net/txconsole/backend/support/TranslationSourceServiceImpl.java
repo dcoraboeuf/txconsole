@@ -95,4 +95,10 @@ public class TranslationSourceServiceImpl implements TranslationSourceService {
     public <F> Configured<F, TxFileFormat<F>> getConfiguredTxFileFormat(JsonConfiguration config) {
         return getConfigured("txfileformat", txFileFormats, config);
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <F> Configured<F, TxFileExchange<F>> getConfiguredTxFileExchange(JsonConfiguration config) {
+        return getConfigured("txfileexchange", txFileExchanges, config);
+    }
 }
