@@ -102,18 +102,20 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
                             // Diff in all languages
                             for (Map.Entry<Locale, Pair<String, String>> localeEntry : entry.getValues().entrySet()) {
                                 Locale locale = localeEntry.getKey();
-                                String oldLocaleValue = getOldValue(entry, locale);
-                                String newLocaleValue = getNewValue(entry, locale);
-                                if (StringUtils.isNotBlank(oldLocaleValue)) {
-                                    writer.format("# Old value (%s): %s%n",
-                                            locale,
-                                            escapeForComment(oldLocaleValue)
-                                    );
-                                    if (!StringUtils.equals(oldLocaleValue, newLocaleValue)) {
-                                        writer.format("# New value (%s): %s%n",
+                                if (defaultLocale.equals(locale) || targetLocale.equals(locale)) {
+                                    String oldLocaleValue = getOldValue(entry, locale);
+                                    String newLocaleValue = getNewValue(entry, locale);
+                                    if (StringUtils.isNotBlank(oldLocaleValue)) {
+                                        writer.format("# Old value (%s): %s%n",
                                                 locale,
-                                                escapeForComment(newLocaleValue)
+                                                escapeForComment(oldLocaleValue)
                                         );
+                                        if (!StringUtils.equals(oldLocaleValue, newLocaleValue)) {
+                                            writer.format("# New value (%s): %s%n",
+                                                    locale,
+                                                    escapeForComment(newLocaleValue)
+                                            );
+                                        }
                                     }
                                 }
                             }
