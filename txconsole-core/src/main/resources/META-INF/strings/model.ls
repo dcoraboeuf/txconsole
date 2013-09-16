@@ -46,6 +46,14 @@ request.status.CREATED
     en -> Created
     fr -> Créée
 
+request.status.REQUEST_GENERATION
+    en -> Generating request...
+    fr -> Génération de la demande...
+
+request.status.REQUEST_EXPORTED
+    en -> Request generated
+    fr -> Demande générée
+
 translation.bundle
     en -> Bundle
     fr -> Bundle

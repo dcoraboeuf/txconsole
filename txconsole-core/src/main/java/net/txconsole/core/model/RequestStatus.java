@@ -5,6 +5,10 @@ package net.txconsole.core.model;
  */
 public enum RequestStatus {
 
-    CREATED
+    CREATED,
+
+    REQUEST_GENERATION,
+
+    REQUEST_EXPORTED
 
 }

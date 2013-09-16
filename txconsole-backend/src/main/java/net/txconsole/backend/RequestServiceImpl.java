@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -36,16 +38,24 @@ public class RequestServiceImpl implements RequestService {
     private final RequestDao requestDao;
     private final SecurityUtils securityUtils;
     /**
+     * Requests being generated
+     */
+    private final Set<Integer> inGenerationRequests = new ConcurrentSkipListSet<>();
+    /**
      * Request summary
      */
     private final Function<TRequest, RequestSummary> requestSummaryFn = new Function<TRequest, RequestSummary>() {
         @Override
         public RequestSummary apply(TRequest t) {
+            RequestStatus status = t.getStatus();
+            if (status == RequestStatus.CREATED && inGenerationRequests.contains(t.getId())) {
+                status = RequestStatus.REQUEST_GENERATION;
+            }
             return new RequestSummary(
                     t.getId(),
                     t.getBranchId(),
                     t.getVersion(),
-                    t.getStatus()
+                    status
             );
         }
     };
@@ -130,36 +140,41 @@ public class RequestServiceImpl implements RequestService {
         if (request.getStatus() != RequestStatus.CREATED) {
             logger.warn("[request] The request {} is no longer in {} status", requestId, RequestStatus.CREATED);
         } else {
-            int branchId = request.getBranchId();
-            String version = request.getVersion();
-            // Gets the configuration for the branch
-            Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
-            // Default locale
-            Locale defaultLocale = configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration());
-            // Gets the configuration for the file exchange
-            JsonConfiguration jsonConfiguration = requestDao.getTxFileExchangeConfiguration(requestId);
-            // Gets the configured TxFileExchange from the JSON configuration
-            Configured<Object, TxFileExchange<Object>> configuredTxFileExchange = translationSourceService.getConfiguredTxFileExchange(jsonConfiguration);
-            // Gets the translation map for the given version
-            TranslationMap oldMap = translationMapService.map(branchId, version);
-            // Gets the translation map for the last version
-            // TODO Gets the last version from this translation map
-            TranslationMap newMap = translationMapService.map(branchId, null);
-            // Gets the diff between the two maps
-            TranslationDiff diff = translationMapService.diff(defaultLocale, oldMap, newMap);
-            // FIXME Saves the diff into the database (takes way too much time...)
-            // requestDao.saveDiff(requestId, diff);
-            // Export the diff as a file
-            Content content = configuredTxFileExchange.getConfigurable().export(
-                    configuredTxFileExchange.getConfiguration(),
-                    defaultLocale,
-                    configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration()),
-                    diff);
-            // Saves the diff file into the database
-            requestDao.saveRequestFile(requestId, content);
-            // TODO Changes the status to 'EXPORTED'
-            // TODO Saves the last version with the new status
-            // TODO In case of error, sets the request status as 'ERROR', and resends the error
+            inGenerationRequests.add(requestId);
+            try {
+                int branchId = request.getBranchId();
+                String version = request.getVersion();
+                // Gets the configuration for the branch
+                Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
+                // Default locale
+                Locale defaultLocale = configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration());
+                // Gets the configuration for the file exchange
+                JsonConfiguration jsonConfiguration = requestDao.getTxFileExchangeConfiguration(requestId);
+                // Gets the configured TxFileExchange from the JSON configuration
+                Configured<Object, TxFileExchange<Object>> configuredTxFileExchange = translationSourceService.getConfiguredTxFileExchange(jsonConfiguration);
+                // Gets the translation map for the given version
+                TranslationMap oldMap = translationMapService.map(branchId, version);
+                // Gets the translation map for the last version
+                // TODO Gets the last version from this translation map
+                TranslationMap newMap = translationMapService.map(branchId, null);
+                // Gets the diff between the two maps
+                TranslationDiff diff = translationMapService.diff(defaultLocale, oldMap, newMap);
+                // FIXME Saves the diff into the database (takes way too much time...)
+                // requestDao.saveDiff(requestId, diff);
+                // Export the diff as a file
+                Content content = configuredTxFileExchange.getConfigurable().export(
+                        configuredTxFileExchange.getConfiguration(),
+                        defaultLocale,
+                        configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration()),
+                        diff);
+                // Saves the diff file into the database
+                requestDao.saveRequestFile(requestId, content);
+                // TODO Changes the status to 'EXPORTED'
+                // TODO Saves the last version with the new status
+                // TODO In case of error, sets the request status as 'ERROR', and resends the error
+            } finally {
+                inGenerationRequests.remove(requestId);
+            }
         }
     }
 }
