@@ -3,6 +3,7 @@
 <@layout_std
     page="request"
     title=request.data.version?html
+    noscript=true
     breadcrumbs={
         loc("home"): "",
         project.data.name?html: "project/${project.data.id?c}",
@@ -19,8 +20,13 @@
     </@title>
 
     <div class="row-fluid">
-        <div class="span12">
-        </div>
+        <div
+            id="request-status"
+            class="span12 dynamic"
+            dynamic-controller="request-status"
+            dynamic-request-id="${request.data.id?c}"
+            dynamic-refresh="true"
+            ></div>
     </div>
 
 </@layout_std>

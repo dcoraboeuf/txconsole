@@ -42,6 +42,10 @@ request.txfileexchange
     en -> File exchange type
     fr -> Protocole d'échange
 
+request.status
+    en -> Status
+    fr -> Statut
+
 request.status.CREATED
     en -> Created
     fr -> Créée

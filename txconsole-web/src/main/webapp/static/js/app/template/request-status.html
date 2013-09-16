@@ -1,0 +1,17 @@
+<table>
+    <tbody>
+        <tr>
+            <td>{{{requestStatus data.status}}}</td>
+        </tr>
+        {{#if data.downloadable}}
+            <tr>
+                <td>
+                    <a href="ui/request/{{data.id}}/download">
+                        <img src="{{static 'images/download.gif'}}" />
+                        {{loc 'request.request.download'}}
+                    </a>
+                </td>
+            </tr>
+        {{/if}}
+    </tbody>
+</table>

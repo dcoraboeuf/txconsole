@@ -1,6 +1,13 @@
 define(
     ['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'component/keyfilter', 'render'],
-    function (dialog, ajax, application, jcombo, jconfigurable, keyfilter, render) {
+    function (dialog, ajax, application, jcombo, jconfigurable) {
+
+        Handlebars.registerHelper('requestStatus', function (status) {
+            var html = '';
+            html += '<img src="{0}"/> '.format(application.staticPathTo('images/request-status-{0}.png'.format(status)));
+            html += 'request.status.{0}'.format(status).loc();
+            return html;
+        });
 
         /**
          * Creating a request for a branch
