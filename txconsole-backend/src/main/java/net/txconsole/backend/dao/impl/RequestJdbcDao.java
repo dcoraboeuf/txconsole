@@ -4,6 +4,9 @@ import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.core.model.RequestStatus;
+import net.txconsole.core.model.TranslationDiff;
+import net.txconsole.core.model.TranslationDiffEntry;
+import org.apache.commons.lang3.tuple.Pair;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,6 +17,8 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Component
 public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
@@ -96,5 +101,33 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                     }
                 }
         );
+    }
+
+    @Override
+    @Transactional
+    public void saveDiff(int requestId, TranslationDiff diff) {
+        // All entries
+        for (TranslationDiffEntry diffEntry : diff.getEntries()) {
+            // Request entry
+            int requestEntryId = dbCreate(
+                    SQL.REQUEST_ENTRY_INSERT,
+                    params("request", requestId)
+                            .addValue("bundle", diffEntry.getBundle())
+                            .addValue("section", diffEntry.getSection())
+                            .addValue("name", diffEntry.getKey())
+                            .addValue("type", diffEntry.getType().name())
+            );
+            // Request values
+            for (Map.Entry<Locale, Pair<String, String>> entry : diffEntry.getValues().entrySet()) {
+                dbCreate(
+                        SQL.REQUEST_ENTRY_VALUE_INSERT,
+                        params("requestEntry", requestEntryId)
+                                .addValue("locale", entry.getKey().toString())
+                                .addValue("oldValue", entry.getValue().getLeft())
+                                .addValue("newValue", entry.getValue().getRight())
+                );
+            }
+        }
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

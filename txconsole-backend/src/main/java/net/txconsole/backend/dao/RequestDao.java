@@ -2,6 +2,7 @@ package net.txconsole.backend.dao;
 
 import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.core.model.JsonConfiguration;
+import net.txconsole.core.model.TranslationDiff;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface RequestDao {
     List<Integer> findCreated();
 
     JsonConfiguration getTxFileExchangeConfiguration(int requestId);
+
+    void saveDiff(int requestId, TranslationDiff diff);
 }

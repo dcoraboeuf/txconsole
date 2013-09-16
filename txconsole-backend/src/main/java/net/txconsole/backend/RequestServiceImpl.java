@@ -136,10 +136,12 @@ public class RequestServiceImpl implements RequestService {
             TranslationMap newMap = translationMapService.map(branchId, null);
             // Gets the diff between the two maps
             TranslationDiff diff = translationMapService.diff(oldMap, newMap);
-            // TODO Saves the diff into the database
+            // Saves the diff into the database
+            requestDao.saveDiff(requestId, diff);
             // TODO Export the diff as a file
             // TODO Saves the diff file into the database
             // TODO Changes the status to 'EXPORTED'
+            // TODO In case of error, sets the request status as 'ERROR', and resends the error
         }
     }
 }

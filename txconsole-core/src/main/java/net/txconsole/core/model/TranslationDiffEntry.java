@@ -1,6 +1,7 @@
 package net.txconsole.core.model;
 
 import lombok.Data;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Locale;
 import java.util.Map;
@@ -12,7 +13,6 @@ public class TranslationDiffEntry {
     private final String section;
     private final String key;
     private final TranslationDiffType type;
-    private final Map<Locale, String> oldValues;
-    private final Map<Locale, String> newValues;
+    private final Map<Locale, Pair<String, String>> values;
 
 }
