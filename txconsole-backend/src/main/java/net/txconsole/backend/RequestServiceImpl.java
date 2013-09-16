@@ -169,7 +169,8 @@ public class RequestServiceImpl implements RequestService {
                         diff);
                 // Saves the diff file into the database
                 requestDao.saveRequestFile(requestId, content);
-                // TODO Changes the status to 'EXPORTED'
+                // Changes the status to 'EXPORTED'
+                requestDao.setStatus(requestId, RequestStatus.REQUEST_EXPORTED);
                 // TODO Saves the last version with the new status
                 // TODO In case of error, sets the request status as 'ERROR', and resends the error
             } finally {

@@ -3,6 +3,7 @@ package net.txconsole.backend.dao;
 import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.core.Content;
 import net.txconsole.core.model.JsonConfiguration;
+import net.txconsole.core.model.RequestStatus;
 import net.txconsole.core.model.TranslationDiff;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface RequestDao {
     void saveDiff(int requestId, TranslationDiff diff);
 
     void saveRequestFile(int requestId, Content content);
+
+    void setStatus(int requestId, RequestStatus status);
 }
