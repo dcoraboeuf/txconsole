@@ -155,7 +155,8 @@ public class RequestServiceImpl implements RequestService {
                     defaultLocale,
                     configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration()),
                     diff);
-            // TODO Saves the diff file into the database
+            // Saves the diff file into the database
+            requestDao.saveRequestFile(requestId, content);
             // TODO Changes the status to 'EXPORTED'
             // TODO Saves the last version with the new status
             // TODO In case of error, sets the request status as 'ERROR', and resends the error

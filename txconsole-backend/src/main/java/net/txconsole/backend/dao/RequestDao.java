@@ -1,6 +1,7 @@
 package net.txconsole.backend.dao;
 
 import net.txconsole.backend.dao.model.TRequest;
+import net.txconsole.core.Content;
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.core.model.TranslationDiff;
 
@@ -19,4 +20,6 @@ public interface RequestDao {
     JsonConfiguration getTxFileExchangeConfiguration(int requestId);
 
     void saveDiff(int requestId, TranslationDiff diff);
+
+    void saveRequestFile(int requestId, Content content);
 }

@@ -2,6 +2,7 @@ package net.txconsole.backend.dao.impl;
 
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
+import net.txconsole.core.Content;
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.core.model.RequestStatus;
 import net.txconsole.core.model.TranslationDiff;
@@ -129,5 +130,17 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
             }
         }
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    @Transactional
+    public void saveRequestFile(int requestId, Content content) {
+        getNamedParameterJdbcTemplate().update(
+                SQL.REQUEST_SET_REQUEST_FILE,
+                params("id", requestId)
+                        .addValue("type", content.getType())
+                        .addValue("length", content.getBytes().length)
+                        .addValue("content", content.getBytes())
+        );
     }
 }
