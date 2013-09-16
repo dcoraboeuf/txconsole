@@ -7,6 +7,7 @@ import net.txconsole.core.model.TranslationDiffType;
 import net.txconsole.service.support.AbstractSimpleConfigurable;
 import net.txconsole.service.support.IOContextFactory;
 import net.txconsole.service.support.TxFileExchange;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Component
 public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<PropertiesTxFileExchangeConfig> implements TxFileExchange<PropertiesTxFileExchangeConfig> {
@@ -59,9 +62,50 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
                 }
             }
         }
-        // TODO ZIP the folder
-        // TODO Returns the ZIP file
-        return null;
+        // ZIP the folder
+        File zip = zip(dir);
+        // Returns the ZIP file
+        try {
+            return Content.of(zip, "application/zip");
+        } catch (IOException ex) {
+            throw new PropertiesTxFileExchangeIOException(zip.getName(), ex);
+        }
+    }
+
+    protected File zip(File dir) {
+        try {
+            // ZIP file to create
+            File zip = new File(dir, "export.zip");
+            // Opens the file for ZIP
+            try (ZipOutputStream zout = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zip)))) {
+                // Gets all files in the output directory
+                File[] files = dir.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        String name = file.getName();
+                        if (name.startsWith(".") || name.endsWith(".zip")) {
+                            continue;
+                        }
+                        // Creates the ZIP entry
+                        ZipEntry entry = new ZipEntry(name);
+                        // Pushes it
+                        zout.putNextEntry(entry);
+                        try {
+                            // Copies the file content
+                            try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(file))) {
+                                IOUtils.copy(in, zout);
+                            }
+                        } finally {
+                            zout.closeEntry();
+                        }
+                    }
+                }
+            }
+            // OK
+            return zip;
+        } catch (IOException ex) {
+            throw new PropertiesTxFileExchangeIOException("export.zip", ex);
+        }
     }
 
     protected void export(File dir, String bundle, Locale targetLocale, List<TranslationDiffEntry> entries, Locale defaultLocale) {
