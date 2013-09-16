@@ -12,4 +12,8 @@ public interface RequestDao {
     TRequest getById(int requestId);
 
     List<TRequest> findByBranch(int branchId, int offset, int count);
+
+    List<Integer> findCreated();
+
+    JsonConfiguration getTxFileExchangeConfiguration(int requestId);
 }

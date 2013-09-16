@@ -69,4 +69,32 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                 requestRowMapper
         );
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> findCreated() {
+        return getNamedParameterJdbcTemplate().queryForList(
+                SQL.REQUESTS_CREATED,
+                params("status", RequestStatus.CREATED.name()),
+                Integer.class
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public JsonConfiguration getTxFileExchangeConfiguration(int requestId) {
+        return getNamedParameterJdbcTemplate().queryForObject(
+                SQL.REQUEST_TXFILEEXCHANGE_CONFIG,
+                params("id", requestId),
+                new RowMapper<JsonConfiguration>() {
+                    @Override
+                    public JsonConfiguration mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return new JsonConfiguration(
+                                rs.getString("TXFILEEXCHANGE_ID"),
+                                jsonFromDB(rs, "TXFILEEXCHANGE_CONFIG")
+                        );
+                    }
+                }
+        );
+    }
 }

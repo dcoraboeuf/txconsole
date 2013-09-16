@@ -15,4 +15,6 @@ public interface RequestService {
     RequestSummary getRequest(int requestId);
 
     List<RequestSummary> getRequestsForBranch(int branchId, int offset, int count);
+
+    void launchCreation(int requestId);
 }

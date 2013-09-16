@@ -10,8 +10,11 @@ import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.EventService;
 import net.txconsole.service.RequestService;
 import net.txconsole.service.StructureService;
+import net.txconsole.service.TranslationMapService;
 import net.txconsole.service.support.Configured;
 import net.txconsole.service.support.TranslationSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +24,9 @@ import java.util.List;
 @Service
 public class RequestServiceImpl implements RequestService {
 
+    private final Logger logger = LoggerFactory.getLogger(RequestService.class);
     private final StructureService structureService;
+    private final TranslationMapService translationMapService;
     private final EventService eventService;
     private final RequestDao requestDao;
     private final SecurityUtils securityUtils;
@@ -41,8 +46,9 @@ public class RequestServiceImpl implements RequestService {
     };
 
     @Autowired
-    public RequestServiceImpl(StructureService structureService, EventService eventService, RequestDao requestDao, SecurityUtils securityUtils) {
+    public RequestServiceImpl(StructureService structureService, TranslationMapService translationMapService, EventService eventService, RequestDao requestDao, SecurityUtils securityUtils) {
         this.structureService = structureService;
+        this.translationMapService = translationMapService;
         this.eventService = eventService;
         this.requestDao = requestDao;
         this.securityUtils = securityUtils;
@@ -87,7 +93,7 @@ public class RequestServiceImpl implements RequestService {
                 branch,
                 structureService.getProject(branch.getProjectId())
         ));
-        // FIXME Launches the request creation job asynchronously
+        // The request treatment is launched asynchronously (see )
         // Returns the request summary
         return requestSummary;
     }
@@ -105,5 +111,35 @@ public class RequestServiceImpl implements RequestService {
                 requestDao.findByBranch(branchId, offset, count),
                 requestSummaryFn
         );
+    }
+
+    @Override
+    @Transactional
+    public void launchCreation(int requestId) {
+        // Admin account? (granted by the RequestCreationBatch class)
+        securityUtils.checkIsAdmin();
+        // Gets the request
+        TRequest request = requestDao.getById(requestId);
+        // Checks the status
+        if (request.getStatus() != RequestStatus.CREATED) {
+            logger.warn("[request] The request {} is no longer in {} status", requestId, RequestStatus.CREATED);
+        } else {
+            int branchId = request.getBranchId();
+            String version = request.getVersion();
+            // Gets the configuration for the file exchange
+            JsonConfiguration jsonConfiguration = requestDao.getTxFileExchangeConfiguration(requestId);
+            // TODO Gets the configured TxFileExchange from the JSON configuration
+            // Gets the translation map for the given version
+            TranslationMap oldMap = translationMapService.map(branchId, version);
+            // Gets the translation map for the last version
+            // TODO Gets the last version from this translation map
+            TranslationMap newMap = translationMapService.map(branchId, null);
+            // Gets the diff between the two maps
+            TranslationDiff diff = translationMapService.diff(oldMap, newMap);
+            // TODO Saves the diff into the database
+            // TODO Export the diff as a file
+            // TODO Saves the diff file into the database
+            // TODO Changes the status to 'EXPORTED'
+        }
     }
 }
