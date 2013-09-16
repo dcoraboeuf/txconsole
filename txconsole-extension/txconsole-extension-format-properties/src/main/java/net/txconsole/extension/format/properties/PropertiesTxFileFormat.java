@@ -76,7 +76,7 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
             collectionBuilder.bundle(bundleBuilder.build());
         }
         // OK
-        return new TranslationMap(collectionBuilder.build());
+        return new TranslationMap(context.getVersion(), collectionBuilder.build());
     }
 
     protected Map<String, String> loadProperties(IOContext context, String fileName) {

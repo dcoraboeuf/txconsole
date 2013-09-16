@@ -41,7 +41,6 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
 
     @Override
     public TranslationMap read(SimpleTranslationSourceConfig<S, F> config, String version) {
-        // TODO Sync (transaction callback)
         // Gets the file source
         IOContext s = config.getTxFileSourceConfigured().getConfigurable().getSource(config.getTxFileSourceConfigured().getConfiguration(), version);
         // Reads the map
@@ -52,7 +51,6 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
 
     @Override
     public void write(SimpleTranslationSourceConfig<S, F> config, TranslationMap map) {
-        // TODO Sync (transaction callback)
         // Gets the file source
         IOContext s = config.getTxFileSourceConfigured().getConfigurable().getSource(config.getTxFileSourceConfigured().getConfiguration(), null);
         // Writes the map

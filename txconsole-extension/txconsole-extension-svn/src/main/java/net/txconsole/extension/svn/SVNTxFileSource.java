@@ -91,9 +91,8 @@ public class SVNTxFileSource
                 config.getPassword(),
                 revision
         );
-        // TODO Does something with the last revision (it should be returned somehow in the IOContext...)
         // OK
-        return context;
+        return context.withVersion(String.valueOf(lastRevision));
     }
 
     protected IOContext update(SVNTxFileSourceConfig config, IOContext context) {
@@ -103,9 +102,8 @@ public class SVNTxFileSource
                 config.getUser(),
                 config.getPassword()
         );
-        // TODO Does something with the last revision (it should be returned somehow in the IOContext...)
         // OK
-        return context;
+        return context.withVersion(String.valueOf(lastRevision));
     }
 
     private IOContext updateOrCheckout(SVNTxFileSourceConfig config, IOContext context, SVNRevision revision) {

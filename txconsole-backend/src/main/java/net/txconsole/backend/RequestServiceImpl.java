@@ -155,7 +155,6 @@ public class RequestServiceImpl implements RequestService {
                 // Gets the translation map for the given version
                 TranslationMap oldMap = translationMapService.map(branchId, version);
                 // Gets the translation map for the last version
-                // TODO Gets the last version from this translation map
                 TranslationMap newMap = translationMapService.map(branchId, null);
                 // Gets the diff between the two maps
                 TranslationDiff diff = translationMapService.diff(defaultLocale, oldMap, newMap);
@@ -171,7 +170,8 @@ public class RequestServiceImpl implements RequestService {
                 requestDao.saveRequestFile(requestId, content);
                 // Changes the status to 'EXPORTED'
                 requestDao.setStatus(requestId, RequestStatus.REQUEST_EXPORTED);
-                // TODO Saves the last version with the new status
+                // Saves the last version with the new status
+                requestDao.setToVersion(requestId, newMap.getVersion());
                 // TODO In case of error, sets the request status as 'ERROR', and resends the error
             } finally {
                 inGenerationRequests.remove(requestId);

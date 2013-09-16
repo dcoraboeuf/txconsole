@@ -25,4 +25,6 @@ public interface RequestDao {
     void saveRequestFile(int requestId, Content content);
 
     void setStatus(int requestId, RequestStatus status);
+
+    void setToVersion(int requestId, String version);
 }

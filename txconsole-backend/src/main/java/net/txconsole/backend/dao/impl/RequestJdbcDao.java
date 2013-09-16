@@ -152,4 +152,13 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                 params("id", requestId).addValue("status", status.name())
         );
     }
+
+    @Override
+    @Transactional
+    public void setToVersion(int requestId, String version) {
+        getNamedParameterJdbcTemplate().update(
+                SQL.REQUEST_SET_TOVERSION,
+                params("id", requestId).addValue("version", version)
+        );
+    }
 }

@@ -9,6 +9,16 @@ import java.io.File;
 public interface IOContext {
 
     /**
+     * Version for this context
+     */
+    String getVersion();
+
+    /**
+     * Sets the version for this content and returns this context
+     */
+    IOContext withVersion(String version);
+
+    /**
      * Gets the root directory
      */
     File getDir();

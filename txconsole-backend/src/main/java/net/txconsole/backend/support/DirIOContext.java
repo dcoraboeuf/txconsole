@@ -1,11 +1,9 @@
 package net.txconsole.backend.support;
 
-import net.txconsole.service.support.IOContext;
-
 import java.io.File;
 
 // FIXME Scheduled service to delete old directories
-public class DirIOContext implements IOContext {
+public class DirIOContext extends VersionedIOContext<DirIOContext> {
 
     private final File dir;
 

@@ -25,10 +25,16 @@ public class TranslationMap {
             return bundleValue.getValue();
         }
     };
+    private final String version;
     private final BundleCollection bundleCollection;
 
-    public TranslationMap(BundleCollection bundleCollection) {
+    public TranslationMap(String version, BundleCollection bundleCollection) {
+        this.version = version;
         this.bundleCollection = bundleCollection;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
     public BundleCollection getBundleCollection() {
