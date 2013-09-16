@@ -77,13 +77,19 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
                     String key = entry.getKey();
                     // ADDED key
                     if (entry.getType() == TranslationDiffType.ADDED) {
-                        Pair<String, String> defaultDiff = entry.getValues().get(defaultLocale);
-                        if (defaultDiff != null) {
-                            writer.format("# ADDED key%n");
-                            for (Map.Entry<Locale, Pair<String, String>> localeEntry : entry.getValues().entrySet()) {
-                                writer.format("# New value (%s): %s%n", localeEntry.getKey(), escapeForComment(localeEntry.getValue().getRight()));
+                        String defaultValue = getNewValue(entry, defaultLocale);
+                        if (StringUtils.isNotBlank(defaultValue)) {
+                            String targetValue = getNewValue(entry, targetLocale);
+                            if (StringUtils.isBlank(targetValue)) {
+                                writer.format("# ADDED key%n");
+                                for (Map.Entry<Locale, Pair<String, String>> localeEntry : entry.getValues().entrySet()) {
+                                    String localeValue = localeEntry.getValue().getRight();
+                                    if (StringUtils.isNotBlank(localeValue)) {
+                                        writer.format("# New value (%s): %s%n", localeEntry.getKey(), escapeForComment(localeValue));
+                                    }
+                                }
+                                writer.format("%s = %s%n%n", key, escape(defaultValue));
                             }
-                            writer.format("%s = %s%n", key, escape(defaultDiff.getRight()));
                         }
                     }
                     // UPDATED key
@@ -116,6 +122,15 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
             }
         } catch (IOException ex) {
             throw new PropertiesTxFileExchangeIOException(fileName, ex);
+        }
+    }
+
+    protected String getNewValue(TranslationDiffEntry entry, Locale locale) {
+        Pair<String, String> diff = entry.getValues().get(locale);
+        if (diff != null) {
+            return diff.getRight();
+        } else {
+            return null;
         }
     }
 
