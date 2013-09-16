@@ -3,6 +3,7 @@ package net.txconsole.web.controller;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.sf.jstring.Strings;
+import net.txconsole.core.Content;
 import net.txconsole.core.model.*;
 import net.txconsole.service.RequestService;
 import net.txconsole.web.resource.Resource;
@@ -13,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,9 +60,10 @@ public class UIRequestController extends AbstractUIController {
                     return new Resource<>(o)
                             .withLink(linkTo(methodOn(UIController.class).getBranch(locale, o.getBranchId())).withRel("branch"))
                             .withLink(linkTo(methodOn(GUIController.class).getBranch(locale, o.getBranchId())).withRel("branch-gui"))
+                                    // TODO Request UI
+                                    // TODO Request GUI
+                                    // Events
                             .withEvent(guiEventService.getResourceEvent(locale, EventEntity.REQUEST, o.getId(), EventCode.REQUEST_CREATED));
-                    // TODO Request UI
-                    // TODO Request GUI
                 }
             };
         }
@@ -118,6 +123,25 @@ public class UIRequestController extends AbstractUIController {
                 requestService.getRequestsForBranch(branchId, offset, count),
                 requestSummaryResourceFn.apply(locale)
         );
+    }
+
+    /**
+     * Downloading a request
+     */
+    @RequestMapping(value = "/request/{requestId}/download", method = RequestMethod.GET)
+    public void downloadRequest(Locale locale, @PathVariable int requestId, HttpServletResponse response) throws IOException {
+        // Gets the request file
+        Content content = requestService.getRequestFile(requestId);
+        // Updates the HTTP response
+        response.setContentType(content.getType());
+        response.addHeader("Content-Disposition", String.format("attachment; filename=\"request-%d.zip\"", requestId));
+        response.setContentLength(content.getBytes().length);
+        // Gets the output
+        ServletOutputStream out = response.getOutputStream();
+        // Writes to the output
+        out.write(content.getBytes());
+        out.flush();
+        out.close();
     }
 
 }

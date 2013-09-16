@@ -10,4 +10,7 @@ public class RequestSummary {
     private final String version;
     private final RequestStatus status;
 
+    public boolean isDownloadable() {
+        return status == RequestStatus.REQUEST_EXPORTED;
+    }
 }

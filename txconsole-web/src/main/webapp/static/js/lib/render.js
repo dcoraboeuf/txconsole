@@ -1,4 +1,4 @@
-define(['common', 'handlebars'], function (common, handlebars) {
+define(['common', 'application', 'handlebars'], function (common, application, handlebars) {
 
     Handlebars.registerHelper('loc', function (key, options) {
         return key.loc();
@@ -24,6 +24,10 @@ define(['common', 'handlebars'], function (common, handlebars) {
             }
         }
     );
+
+    Handlebars.registerHelper('static', function (path) {
+        return application.staticPathTo(path);
+    });
 
     Handlebars.registerHelper('eventTimestampAndElapsed', function (code) {
         for (var i = 0; i < this.events.length; i++) {

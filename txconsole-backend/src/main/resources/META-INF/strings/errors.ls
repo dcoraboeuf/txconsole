@@ -33,3 +33,7 @@ net.txconsole.backend.exceptions.ProjectParameterNotDefinedException
 net.txconsole.backend.exceptions.IOContextException
     en -> [E-009] IO exception.
     fr -> [E-009] Erreur E/S.
+
+net.txconsole.backend.exceptions.RequestNoRequestFileException
+    en -> [E-010] Cannot find any request file for {0}.
+    fr -> [E-010] Impossible de trouver un fichier pour la demande {0}.

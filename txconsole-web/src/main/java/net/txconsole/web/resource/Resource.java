@@ -20,6 +20,13 @@ public class Resource<T> extends ResourceSupport {
     private final Set<String> actions = new HashSet<>();
     private final Collection<ResourceEvent> events = new ArrayList<>();
 
+    public Resource<T> withLink(Link link, boolean test) {
+        if (test) {
+            add(link);
+        }
+        return this;
+    }
+
     public Resource<T> withLink(Link link) {
         add(link);
         return this;

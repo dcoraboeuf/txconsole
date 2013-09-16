@@ -11,4 +11,13 @@
     <td class="request-timestamp">
         {{{eventTimestampAndElapsed 'REQUEST_CREATED'}}}
     </td>
+    <td class="request-actions">
+        <span class="action action-optional action-inline">
+            {{#if data.downloadable}}
+                <a href="ui/request/{{data.id}}/download">
+                    <img src="{{static 'images/download.gif'}}" title="{{loc 'request.request.download'}}" />
+                </a>
+            {{/if}}
+        </span>
+    </td>
 </tr>

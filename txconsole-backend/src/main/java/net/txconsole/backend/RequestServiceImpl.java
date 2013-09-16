@@ -178,4 +178,10 @@ public class RequestServiceImpl implements RequestService {
             }
         }
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Content getRequestFile(int requestId) {
+        return requestDao.getRequestFile(requestId);
+    }
 }

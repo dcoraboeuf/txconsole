@@ -1,5 +1,6 @@
 package net.txconsole.service;
 
+import net.txconsole.core.Content;
 import net.txconsole.core.model.RequestConfigurationData;
 import net.txconsole.core.model.RequestCreationForm;
 import net.txconsole.core.model.RequestSummary;
@@ -17,4 +18,7 @@ public interface RequestService {
     List<RequestSummary> getRequestsForBranch(int branchId, int offset, int count);
 
     void launchCreation(int requestId);
+
+    Content getRequestFile(int requestId);
+
 }

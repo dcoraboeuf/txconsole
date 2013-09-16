@@ -463,6 +463,10 @@ request.create.keys.filter.help
     en -> Enter some text that will be used to filter on both keys and labels.
     fr -> Saisissez du texte qui sera utilisé pour filter à la fois sur les clefs et les libellés.
 
+request.request.download
+    en -> Download request file
+    fr -> Télécharger le fichier de demande
+
 [keyfilter]
 
 keyfilter.go
