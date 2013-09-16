@@ -94,27 +94,27 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
                     }
                     // UPDATED key
                     else {
-                        Pair<String, String> defaultDiff = entry.getValues().get(defaultLocale);
-                        Pair<String, String> targetLocaleDiff = entry.getValues().get(targetLocale);
-                        if (defaultDiff != null) {
+                        String defaultValue = getNewValue(entry, defaultLocale);
+                        if (StringUtils.isNotBlank(defaultValue)) {
                             writer.format("# UPDATED key%n");
-                            // Old value in this language (if any)
-                            if (targetLocaleDiff != null && targetLocaleDiff.getRight() != null) {
-                                writer.format("# Old value (%s): %s%n",
-                                        targetLocale,
-                                        escapeForComment(targetLocaleDiff.getRight())
-                                );
+                            // Diff in all languages
+                            for (Map.Entry<Locale, Pair<String, String>> localeEntry : entry.getValues().entrySet()) {
+                                String localeOldValue = localeEntry.getValue().getLeft();
+                                if (StringUtils.isNotBlank(localeOldValue)) {
+                                    writer.format("# Old value (%s): %s%n",
+                                            localeEntry.getKey(),
+                                            escapeForComment(localeOldValue)
+                                    );
+                                }
+                                String localeNewValue = localeEntry.getValue().getRight();
+                                if (StringUtils.isNotBlank(localeNewValue)) {
+                                    writer.format("# New value (%s): %s%n",
+                                            localeEntry.getKey(),
+                                            escapeForComment(localeNewValue)
+                                    );
+                                }
                             }
-                            // Old default value
-                            writer.format("# Old value (%s): %s%n",
-                                    defaultLocale,
-                                    escapeForComment(defaultDiff.getLeft())
-                            );
-                            writer.format("# New value (%s): %s%n",
-                                    defaultLocale,
-                                    escapeForComment(defaultDiff.getRight())
-                            );
-                            writer.format("%s = %s%n", key, escapeForComment(defaultDiff.getRight()));
+                            writer.format("%s = %s%n", key, escapeForComment(defaultValue));
                         }
                     }
                     // Ignoring deleted keys
