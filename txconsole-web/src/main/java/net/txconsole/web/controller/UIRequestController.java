@@ -25,7 +25,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Controller
 @RequestMapping("/ui")
-public class UIRequestController extends AbstractUIController {
+public class UIRequestController extends AbstractUIController implements UIRequest {
 
     private final RequestService requestService;
     private final GUIEventService guiEventService;
@@ -60,8 +60,8 @@ public class UIRequestController extends AbstractUIController {
                     return new Resource<>(o)
                             .withLink(linkTo(methodOn(UIController.class).getBranch(locale, o.getBranchId())).withRel("branch"))
                             .withLink(linkTo(methodOn(GUIController.class).getBranch(locale, o.getBranchId())).withRel("branch-gui"))
-                                    // TODO Request UI
-                                    // TODO Request GUI
+                            .withLink(linkTo(methodOn(UIRequestController.class).getRequest(locale, o.getId())).withSelfRel())
+                            .withLink(linkTo(methodOn(GUIController.class).getRequest(locale, o.getId())).withRel("gui"))
                                     // Events
                             .withEvent(guiEventService.getResourceEvent(locale, EventEntity.REQUEST, o.getId(), EventCode.REQUEST_CREATED));
                 }
@@ -142,6 +142,16 @@ public class UIRequestController extends AbstractUIController {
         out.write(content.getBytes());
         out.flush();
         out.close();
+    }
+
+    /**
+     * Gets a request by its ID
+     */
+    @RequestMapping(value = "/request/{id}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Resource<RequestSummary> getRequest(Locale locale, @PathVariable int id) {
+        return requestSummaryResourceFn.apply(locale).apply(requestService.getRequest(id));
     }
 
 }
