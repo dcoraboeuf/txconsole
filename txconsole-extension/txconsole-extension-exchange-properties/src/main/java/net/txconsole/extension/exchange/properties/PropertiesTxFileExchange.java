@@ -99,22 +99,40 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
                             writer.format("# UPDATED key%n");
                             // Diff in all languages
                             for (Map.Entry<Locale, Pair<String, String>> localeEntry : entry.getValues().entrySet()) {
-                                String localeOldValue = localeEntry.getValue().getLeft();
-                                if (StringUtils.isNotBlank(localeOldValue)) {
-                                    writer.format("# Old value (%s): %s%n",
-                                            localeEntry.getKey(),
-                                            escapeForComment(localeOldValue)
-                                    );
-                                }
-                                String localeNewValue = localeEntry.getValue().getRight();
-                                if (StringUtils.isNotBlank(localeNewValue)) {
-                                    writer.format("# New value (%s): %s%n",
-                                            localeEntry.getKey(),
-                                            escapeForComment(localeNewValue)
-                                    );
+                                Locale locale = localeEntry.getKey();
+                                if (!locale.equals(defaultLocale) && !locale.equals(targetLocale)) {
+                                    String localeOldValue = localeEntry.getValue().getLeft();
+                                    if (StringUtils.isNotBlank(localeOldValue)) {
+                                        writer.format("# Old value (%s): %s%n",
+                                                locale,
+                                                escapeForComment(localeOldValue)
+                                        );
+                                    }
+                                    String localeNewValue = localeEntry.getValue().getRight();
+                                    if (StringUtils.isNotBlank(localeNewValue)) {
+                                        writer.format("# New value (%s): %s%n",
+                                                locale,
+                                                escapeForComment(localeNewValue)
+                                        );
+                                    }
                                 }
                             }
-                            writer.format("%s = %s%n", key, escapeForComment(defaultValue));
+                            // Reference
+                            writer.format("# Old value (%s): %s%n",
+                                    defaultLocale,
+                                    escapeForComment(getOldValue(entry, defaultLocale))
+                            );
+                            writer.format("# New value (%s): %s%n",
+                                    defaultLocale,
+                                    escapeForComment(getNewValue(entry, defaultLocale))
+                            );
+                            // Target
+                            writer.format("# Old value (%s): %s%n",
+                                    defaultLocale,
+                                    escapeForComment(getOldValue(entry, targetLocale))
+                            );
+                            // New value
+                            writer.format("%s = %s%n%n", key, escapeForComment(defaultValue));
                         }
                     }
                     // Ignoring deleted keys
@@ -129,6 +147,15 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
         Pair<String, String> diff = entry.getValues().get(locale);
         if (diff != null) {
             return diff.getRight();
+        } else {
+            return null;
+        }
+    }
+
+    protected String getOldValue(TranslationDiffEntry entry, Locale locale) {
+        Pair<String, String> diff = entry.getValues().get(locale);
+        if (diff != null) {
+            return diff.getLeft();
         } else {
             return null;
         }

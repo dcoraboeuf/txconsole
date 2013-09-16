@@ -1,18 +1,15 @@
 package net.txconsole.core.model;
 
 import com.google.common.base.Function;
-import com.google.common.collect.MapDifference;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 public class TranslationDiffBuilder {
 
-    private final List<TranslationDiffEntry> entries = new ArrayList<>();
+    private final List<TranslationDiffEntryBuilder> entries = new ArrayList<>();
     private final Function<String, Pair<String, String>> newValuePairFn = new Function<String, Pair<String, String>>() {
         @Override
         public Pair<String, String> apply(String newValue) {
@@ -31,59 +28,49 @@ public class TranslationDiffBuilder {
     }
 
     public TranslationDiff build() {
-        return new TranslationDiff(entries);
-    }
-
-    public void added(String bundle, String section, String key, Map<Locale, String> values) {
-        entries.add(
-                new TranslationDiffEntry(
-                        bundle,
-                        section,
-                        key,
-                        TranslationDiffType.ADDED,
-                        Maps.transformValues(
-                                values,
-                                newValuePairFn
-                        )
+        return new TranslationDiff(
+                Lists.transform(
+                        entries,
+                        new Function<TranslationDiffEntryBuilder, TranslationDiffEntry>() {
+                            @Override
+                            public TranslationDiffEntry apply(TranslationDiffEntryBuilder builder) {
+                                return builder.build();
+                            }
+                        }
                 )
         );
     }
 
-    public void deleted(String bundle, String section, String key, Map<Locale, String> values) {
-        entries.add(
-                new TranslationDiffEntry(
-                        bundle,
-                        section,
-                        key,
-                        TranslationDiffType.DELETED,
-                        Maps.transformValues(
-                                values,
-                                oldValuePairFn
-                        )
-                )
+    public TranslationDiffEntryBuilder added(String bundle, String section, String key) {
+        TranslationDiffEntryBuilder entry = new TranslationDiffEntryBuilder(
+                bundle,
+                section,
+                key,
+                TranslationDiffType.ADDED
         );
+        entries.add(entry);
+        return entry;
     }
 
-    public void updated(String bundle, String section, String key, Map<Locale, String> oldValues, Map<Locale, String> newValues) {
-        // Diff
-        Map<Locale, Pair<String, String>> diff = Maps.transformValues(
-                Maps.difference(oldValues, newValues).entriesDiffering(),
-                new Function<MapDifference.ValueDifference<String>, Pair<String, String>>() {
-                    @Override
-                    public Pair<String, String> apply(MapDifference.ValueDifference<String> d) {
-                        return Pair.of(d.leftValue(), d.rightValue());
-                    }
-                }
+    public TranslationDiffEntryBuilder deleted(String bundle, String section, String key) {
+        TranslationDiffEntryBuilder entry = new TranslationDiffEntryBuilder(
+                bundle,
+                section,
+                key,
+                TranslationDiffType.DELETED
         );
-        // OK
-        entries.add(
-                new TranslationDiffEntry(
-                        bundle,
-                        section,
-                        key,
-                        TranslationDiffType.UPDATED,
-                        diff
-                )
+        entries.add(entry);
+        return entry;
+    }
+
+    public TranslationDiffEntryBuilder updated(String bundle, String section, String key) {
+        TranslationDiffEntryBuilder entry = new TranslationDiffEntryBuilder(
+                bundle,
+                section,
+                key,
+                TranslationDiffType.UPDATED
         );
+        entries.add(entry);
+        return entry;
     }
 }

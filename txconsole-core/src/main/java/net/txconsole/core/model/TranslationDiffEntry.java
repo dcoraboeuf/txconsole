@@ -3,6 +3,7 @@ package net.txconsole.core.model;
 import lombok.Data;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
