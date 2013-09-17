@@ -14,9 +14,7 @@
     <td class="request-actions">
         <span class="action action-optional action-inline">
             {{#if data.downloadable}}
-                <a href="ui/request/{{data.id}}/download">
-                    <img src="{{static 'images/download.gif'}}" title="{{loc 'request.request.download'}}" />
-                </a>
+                <a href="ui/request/{{data.id}}/download" title="{{loc 'request.request.download'}}"><i class="icon-download-alt"></i></a>
             {{/if}}
         </span>
     </td>
