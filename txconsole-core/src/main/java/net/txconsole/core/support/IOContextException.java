@@ -1,4 +1,4 @@
-package net.txconsole.backend.exceptions;
+package net.txconsole.core.support;
 
 import net.sf.jstring.support.CoreException;
 

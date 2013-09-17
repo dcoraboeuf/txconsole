@@ -12,3 +12,8 @@ time.ago.author
 time.ago
 	en -> {0} ago
 	fr -> il y a {0}
+
+
+net.txconsole.core.IOContextException
+    en -> [C-001] IO exception.
+    fr -> [C-001] Erreur E/S.

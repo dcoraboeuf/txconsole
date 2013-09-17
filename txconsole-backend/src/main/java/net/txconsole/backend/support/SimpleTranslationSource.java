@@ -5,7 +5,7 @@ import net.txconsole.core.model.TranslationMap;
 import net.txconsole.core.model.VersionFormat;
 import net.txconsole.core.support.MapBuilder;
 import net.txconsole.service.support.AbstractConfigurable;
-import net.txconsole.service.support.IOContext;
+import net.txconsole.core.support.IOContext;
 import net.txconsole.service.support.TranslationSource;
 import net.txconsole.service.support.TranslationSourceService;
 import org.codehaus.jackson.JsonNode;

@@ -9,7 +9,7 @@ import net.sf.jstring.builder.BundleSectionBuilder;
 import net.txconsole.core.model.TranslationMap;
 import net.txconsole.core.support.UnicodeReader;
 import net.txconsole.service.support.AbstractSimpleConfigurable;
-import net.txconsole.service.support.IOContext;
+import net.txconsole.core.support.IOContext;
 import net.txconsole.service.support.TxFileFormat;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;

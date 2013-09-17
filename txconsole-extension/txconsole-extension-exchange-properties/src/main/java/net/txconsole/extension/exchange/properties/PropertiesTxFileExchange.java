@@ -6,7 +6,7 @@ import net.txconsole.core.model.TranslationDiffEntry;
 import net.txconsole.core.model.TranslationDiffEntryValue;
 import net.txconsole.core.model.TranslationDiffType;
 import net.txconsole.service.support.AbstractSimpleConfigurable;
-import net.txconsole.service.support.IOContextFactory;
+import net.txconsole.core.support.IOContextFactory;
 import net.txconsole.service.support.TxFileExchange;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;

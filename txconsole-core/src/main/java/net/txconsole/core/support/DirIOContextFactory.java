@@ -1,12 +1,6 @@
-package net.txconsole.backend.support;
+package net.txconsole.core.support;
 
-import net.txconsole.backend.config.EnvironmentConfig;
-import net.txconsole.backend.exceptions.IOContextException;
-import net.txconsole.service.support.IOContext;
-import net.txconsole.service.support.IOContextFactory;
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,15 +8,7 @@ import java.util.UUID;
 
 import static java.lang.String.format;
 
-@Component
-public class IOContextFactoryImpl implements IOContextFactory {
-
-    private final EnvironmentConfig environmentConfig;
-
-    @Autowired
-    public IOContextFactoryImpl(EnvironmentConfig environmentConfig) {
-        this.environmentConfig = environmentConfig;
-    }
+public abstract class DirIOContextFactory implements IOContextFactory {
 
     @Override
     public IOContext createContext(String category) {
@@ -37,7 +23,7 @@ public class IOContextFactoryImpl implements IOContextFactory {
 
     protected IOContext createContextWithName(String name) {
         // Directory
-        File dir = new File(environmentConfig.homeDir(), name);
+        File dir = new File(getRootDir(), name);
         // Creates it
         try {
             FileUtils.forceMkdir(dir);
@@ -48,4 +34,5 @@ public class IOContextFactoryImpl implements IOContextFactory {
         return new DirIOContext(dir);
     }
 
+    protected abstract File getRootDir();
 }

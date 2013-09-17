@@ -11,10 +11,11 @@ import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Locale;
 
+import static net.txconsole.test.Helper.sampleDiff;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 public class TranslationMapServiceTest {
@@ -111,12 +112,12 @@ public class TranslationMapServiceTest {
         // Computes the diff
         TranslationDiff diff = service.diff(Locale.ENGLISH, oldMap, newMap).sorted();
         // Checks
-        assertEquals(referenceDiff(), diff);
+        assertEquals(sampleDiff(), diff);
     }
 
     @Test
     public void diff_to_edit() {
-        TranslationDiff diff = referenceDiff();
+        TranslationDiff diff = sampleDiff();
         diff = diff.forEdition(Arrays.asList(Locale.ENGLISH, Locale.FRENCH));
         assertEquals(
                 Arrays.asList(
@@ -144,76 +145,6 @@ public class TranslationMapServiceTest {
                         )
                 ),
                 diff.getEntries()
-        );
-    }
-
-    private TranslationDiff referenceDiff() {
-        return new TranslationDiff(
-                Arrays.asList(
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "added.both",
-                                TranslationDiffType.ADDED,
-                                MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, null, "Added both"),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, false, null, "Ajout des deux")
-                                )
-                        ),
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "added.default-only",
-                                TranslationDiffType.ADDED,
-                                MapBuilder.singleton(Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, null, "Added default only"))
-                        ),
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "deleted.both",
-                                TranslationDiffType.DELETED,
-                                MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, "Initial value", null),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, false, "Valeur initiale", null)
-                                )
-                        ),
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "deleted.default-only",
-                                TranslationDiffType.DELETED,
-                                MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, "Initial value", null),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, false, "Valeur initiale", null)
-                                )
-                        ),
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "updated.both",
-                                TranslationDiffType.UPDATED,
-                                MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, "Initial value", "Updated both"),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, false, "Valeur initiale", "Les deux sont modifiés")
-                                )
-                        ),
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "updated.default-only",
-                                TranslationDiffType.UPDATED,
-                                MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, "Initial value", "Updated default only"),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, true, "Valeur initiale", "Valeur initiale")
-                                )
-                        )
-                )
         );
     }
 

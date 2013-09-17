@@ -1,4 +1,4 @@
-package net.txconsole.service.support;
+package net.txconsole.core.support;
 
 public interface IOContextFactory {
 

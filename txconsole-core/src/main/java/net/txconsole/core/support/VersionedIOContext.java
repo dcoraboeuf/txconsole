@@ -1,6 +1,4 @@
-package net.txconsole.backend.support;
-
-import net.txconsole.service.support.IOContext;
+package net.txconsole.core.support;
 
 import java.util.concurrent.atomic.AtomicReference;
 
