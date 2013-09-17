@@ -158,8 +158,8 @@ public class RequestServiceImpl implements RequestService {
                 TranslationMap newMap = translationMapService.map(branchId, null);
                 // Gets the diff between the two maps
                 TranslationDiff diff = translationMapService.diff(defaultLocale, oldMap, newMap);
-                // FIXME Saves the diff into the database (takes way too much time...)
-                // requestDao.saveDiff(requestId, diff);
+                // Saves the diff into the database
+                requestDao.saveDiff(requestId, diff);
                 // Export the diff as a file
                 Content content = configuredTxFileExchange.getConfigurable().export(
                         configuredTxFileExchange.getConfiguration(),

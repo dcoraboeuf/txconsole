@@ -11,13 +11,14 @@ import net.txconsole.core.model.TranslationDiffEntry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -107,30 +108,39 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
 
     @Override
     @Transactional
-    public void saveDiff(int requestId, TranslationDiff diff) {
-        // All entries
-        for (TranslationDiffEntry diffEntry : diff.getEntries()) {
-            // Request entry
-            int requestEntryId = dbCreate(
-                    SQL.REQUEST_ENTRY_INSERT,
-                    params("request", requestId)
-                            .addValue("bundle", diffEntry.getBundle())
-                            .addValue("section", diffEntry.getSection())
-                            .addValue("name", diffEntry.getKey())
-                            .addValue("type", diffEntry.getType().name())
-            );
-            // Request values
-            for (Map.Entry<Locale, Pair<String, String>> entry : diffEntry.getValues().entrySet()) {
-                dbCreate(
-                        SQL.REQUEST_ENTRY_VALUE_INSERT,
-                        params("requestEntry", requestEntryId)
-                                .addValue("locale", entry.getKey().toString())
-                                .addValue("oldValue", entry.getValue().getLeft())
-                                .addValue("newValue", entry.getValue().getRight())
-                );
+    public void saveDiff(final int requestId, final TranslationDiff diff) {
+        getJdbcTemplate().execute(new ConnectionCallback<Void>() {
+            @Override
+            public Void doInConnection(Connection con) throws SQLException, DataAccessException {
+                try (
+                        PreparedStatement pse = con.prepareStatement(SQL.REQUEST_ENTRY_INSERT, Statement.RETURN_GENERATED_KEYS);
+                        PreparedStatement psev = con.prepareStatement(SQL.REQUEST_ENTRY_VALUE_INSERT)
+                ) {
+                    pse.setInt(1, requestId);
+                    // All entries
+                    for (TranslationDiffEntry diffEntry : diff.getEntries()) {
+                        // Request entry
+                        pse.setString(2, diffEntry.getBundle());
+                        pse.setString(3, diffEntry.getSection());
+                        pse.setString(4, diffEntry.getKey());
+                        pse.setString(5, diffEntry.getType().name());
+                        pse.executeUpdate();
+                        ResultSet psei = pse.getGeneratedKeys();
+                        psei.next();
+                        int requestEntryId = psei.getInt(1);
+                        // Request values
+                        psev.setInt(1, requestEntryId);
+                        for (Map.Entry<Locale, Pair<String, String>> entry : diffEntry.getValues().entrySet()) {
+                            psev.setString(2, entry.getKey().toString());
+                            psev.setString(3, entry.getValue().getLeft());
+                            psev.setString(4, entry.getValue().getRight());
+                            psev.executeUpdate();
+                        }
+                    }
+                }
+                return null;
             }
-        }
-        //To change body of implemented methods use File | Settings | File Templates.
+        });
     }
 
     @Override
