@@ -39,6 +39,11 @@
     color: #AAAAAA;
 }
 
+/* Muted */
+.muted {
+    opacity: 0.5;
+}
+
 /* Page title */
 
 .title {

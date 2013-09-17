@@ -167,6 +167,24 @@ public class UIRequestController extends AbstractUIController implements UIReque
     }
 
     /**
+     * Gets the view for a request
+     */
+    @RequestMapping(value = "/request/{id}/view", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Resource<RequestView> getRequestView(Locale locale, @PathVariable int id) {
+        // Gets the view
+        RequestView view = requestService.getRequestView(id);
+        // View resource
+        Resource<RequestView> r = new Resource<>(view);
+        // TODO Links
+        // TODO ACL: edition of the request
+        // TODO ACL: upload of the request
+        // OK
+        return r;
+    }
+
+    /**
      * Deletes a request
      */
     @RequestMapping(value = "/request/{id}", method = RequestMethod.DELETE)

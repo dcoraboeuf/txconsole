@@ -6,5 +6,6 @@ import lombok.Data;
 public class RequestView {
 
     private final RequestSummary summary;
+    private final TranslationDiff diff;
 
 }

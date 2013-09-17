@@ -31,4 +31,6 @@ public interface RequestDao {
     Content getRequestFile(int requestId);
 
     void delete(int id);
+
+    TranslationDiff loadDiff(int id);
 }

@@ -1,0 +1,15 @@
+<table class="table table-condensed">
+    <tbody>
+        {{#data.diff.entries}}
+            <tr class="{{cls}}">
+                <td>
+                    <span class="translation-bundle">{{bundle}}</span>
+                    <i class="icon-arrow-right muted"></i>
+                    <span class="translation-section">{{section}}</span>
+                    <i class="icon-arrow-right muted"></i>
+                    <span class="translation-key">{{key}}</span>
+                </td>
+            </tr>
+        {{/data.diff.entries}}
+    </tbody>
+</table>

@@ -10,6 +10,7 @@ import java.util.Map;
 @Data
 public class TranslationDiffEntry {
 
+    private final int entryId;
     private final String bundle;
     private final String section;
     private final String key;

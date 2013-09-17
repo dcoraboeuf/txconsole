@@ -11,6 +11,7 @@ import java.util.Map;
 @Data
 public class TranslationDiffEntryBuilder {
 
+    private final int entryId;
     private final String bundle;
     private final String section;
     private final String key;
@@ -29,17 +30,22 @@ public class TranslationDiffEntryBuilder {
             // Deleted key, no update needed
             toUpdate = false;
         }
-        values.put(locale, new TranslationDiffEntryValue(locale, toUpdate, oldValue, newValue));
-        return this;
+        return withDiff(locale, toUpdate, oldValue, newValue);
     }
 
     public TranslationDiffEntry build() {
         return new TranslationDiffEntry(
+                entryId,
                 bundle,
                 section,
                 key,
                 type,
                 ImmutableMap.copyOf(values)
         );
+    }
+
+    public TranslationDiffEntryBuilder withDiff(Locale locale, boolean toUpdate, String oldValue, String newValue) {
+        values.put(locale, new TranslationDiffEntryValue(locale, toUpdate, oldValue, newValue));
+        return this;
     }
 }

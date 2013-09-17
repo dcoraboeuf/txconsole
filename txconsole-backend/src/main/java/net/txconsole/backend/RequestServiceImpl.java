@@ -205,7 +205,9 @@ public class RequestServiceImpl implements RequestService {
     public RequestView getRequestView(int id) {
         // Gets the request summary
         RequestSummary summary = getRequest(id);
+        // Loads the diff for this request
+        TranslationDiff diff = requestDao.loadDiff(id);
         // OK
-        return new RequestView(summary);
+        return new RequestView(summary, diff);
     }
 }
