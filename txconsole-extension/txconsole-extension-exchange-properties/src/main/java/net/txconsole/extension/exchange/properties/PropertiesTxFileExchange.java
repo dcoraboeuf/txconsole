@@ -3,13 +3,13 @@ package net.txconsole.extension.exchange.properties;
 import net.txconsole.core.Content;
 import net.txconsole.core.model.TranslationDiff;
 import net.txconsole.core.model.TranslationDiffEntry;
+import net.txconsole.core.model.TranslationDiffEntryValue;
 import net.txconsole.core.model.TranslationDiffType;
 import net.txconsole.service.support.AbstractSimpleConfigurable;
 import net.txconsole.service.support.IOContextFactory;
 import net.txconsole.service.support.TxFileExchange;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -126,10 +126,10 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
                             String targetValue = getNewValue(entry, targetLocale);
                             if (StringUtils.isBlank(targetValue)) {
                                 writer.format("# ADDED key%n");
-                                for (Map.Entry<Locale, Pair<String, String>> localeEntry : entry.getValues().entrySet()) {
-                                    String localeValue = localeEntry.getValue().getRight();
+                                for (TranslationDiffEntryValue translationDiffEntryValue : entry.getValues().values()) {
+                                    String localeValue = translationDiffEntryValue.getNewValue();
                                     if (StringUtils.isNotBlank(localeValue)) {
-                                        writer.format("# New value (%s): %s%n", localeEntry.getKey(), escapeForComment(localeValue));
+                                        writer.format("# New value (%s): %s%n", translationDiffEntryValue.getLocale(), escapeForComment(localeValue));
                                     }
                                 }
                                 writer.format("%s = %s%n%n", key, escape(defaultValue));
@@ -144,11 +144,11 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
                         if (StringUtils.isNotBlank(defaultValue) && StringUtils.equals(oldTarget, newTarget)) {
                             writer.format("# UPDATED key%n");
                             // Diff in all languages
-                            for (Map.Entry<Locale, Pair<String, String>> localeEntry : entry.getValues().entrySet()) {
-                                Locale locale = localeEntry.getKey();
+                            for (TranslationDiffEntryValue translationDiffEntryValue : entry.getValues().values()) {
+                                Locale locale = translationDiffEntryValue.getLocale();
                                 if (defaultLocale.equals(locale) || targetLocale.equals(locale)) {
-                                    String oldLocaleValue = getOldValue(entry, locale);
-                                    String newLocaleValue = getNewValue(entry, locale);
+                                    String oldLocaleValue = translationDiffEntryValue.getOldValue();
+                                    String newLocaleValue = translationDiffEntryValue.getNewValue();
                                     if (StringUtils.isNotBlank(oldLocaleValue)) {
                                         writer.format("# Old value (%s): %s%n",
                                                 locale,
@@ -176,18 +176,18 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
     }
 
     protected String getNewValue(TranslationDiffEntry entry, Locale locale) {
-        Pair<String, String> diff = entry.getValues().get(locale);
-        if (diff != null) {
-            return diff.getRight();
+        TranslationDiffEntryValue entryValue = entry.getValues().get(locale);
+        if (entryValue != null) {
+            return entryValue.getNewValue();
         } else {
             return null;
         }
     }
 
     protected String getOldValue(TranslationDiffEntry entry, Locale locale) {
-        Pair<String, String> diff = entry.getValues().get(locale);
-        if (diff != null) {
-            return diff.getLeft();
+        TranslationDiffEntryValue entryValue = entry.getValues().get(locale);
+        if (entryValue != null) {
+            return entryValue.getOldValue();
         } else {
             return null;
         }

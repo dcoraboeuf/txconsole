@@ -199,4 +199,13 @@ public class RequestServiceImpl implements RequestService {
         // OK
         return request;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RequestView getRequestView(int id) {
+        // Gets the request summary
+        RequestSummary summary = getRequest(id);
+        // OK
+        return new RequestView(summary);
+    }
 }

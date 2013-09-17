@@ -14,6 +14,6 @@ public class TranslationDiffEntry {
     private final String section;
     private final String key;
     private final TranslationDiffType type;
-    private final Map<Locale, Pair<String, String>> values;
+    private final Map<Locale, TranslationDiffEntryValue> values;
 
 }

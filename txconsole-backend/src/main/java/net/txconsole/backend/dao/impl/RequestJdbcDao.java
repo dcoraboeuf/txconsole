@@ -4,11 +4,7 @@ import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.backend.exceptions.RequestNoRequestFileException;
 import net.txconsole.core.Content;
-import net.txconsole.core.model.JsonConfiguration;
-import net.txconsole.core.model.RequestStatus;
-import net.txconsole.core.model.TranslationDiff;
-import net.txconsole.core.model.TranslationDiffEntry;
-import org.apache.commons.lang3.tuple.Pair;
+import net.txconsole.core.model.*;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -20,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 @Component
 public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
@@ -119,21 +113,23 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                     pse.setInt(1, requestId);
                     // All entries
                     for (TranslationDiffEntry diffEntry : diff.getEntries()) {
+                        TranslationDiffType type = diffEntry.getType();
                         // Request entry
                         pse.setString(2, diffEntry.getBundle());
                         pse.setString(3, diffEntry.getSection());
                         pse.setString(4, diffEntry.getKey());
-                        pse.setString(5, diffEntry.getType().name());
+                        pse.setString(5, type.name());
                         pse.executeUpdate();
                         ResultSet psei = pse.getGeneratedKeys();
                         psei.next();
                         int requestEntryId = psei.getInt(1);
                         // Request values
                         psev.setInt(1, requestEntryId);
-                        for (Map.Entry<Locale, Pair<String, String>> entry : diffEntry.getValues().entrySet()) {
-                            psev.setString(2, entry.getKey().toString());
-                            psev.setString(3, entry.getValue().getLeft());
-                            psev.setString(4, entry.getValue().getRight());
+                        for (TranslationDiffEntryValue v : diffEntry.getValues().values()) {
+                            psev.setString(2, v.getLocale().toString());
+                            psev.setBoolean(3, v.isToUpdate());
+                            psev.setString(4, v.getOldValue());
+                            psev.setString(5, v.getNewValue());
                             psev.executeUpdate();
                         }
                     }
