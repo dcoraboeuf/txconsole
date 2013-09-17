@@ -5,7 +5,10 @@ import com.google.common.collect.Lists;
 import net.sf.jstring.Strings;
 import net.txconsole.core.Content;
 import net.txconsole.core.model.*;
+import net.txconsole.core.security.ProjectFunction;
+import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.RequestService;
+import net.txconsole.service.StructureService;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
@@ -28,7 +31,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class UIRequestController extends AbstractUIController implements UIRequest {
 
     private final RequestService requestService;
+    private final StructureService structureService;
     private final GUIEventService guiEventService;
+    private final SecurityUtils securityUtils;
     /**
      * Gets the resource for a request configuration data
      */
@@ -57,11 +62,14 @@ public class UIRequestController extends AbstractUIController implements UIReque
             return new Function<RequestSummary, Resource<RequestSummary>>() {
                 @Override
                 public Resource<RequestSummary> apply(RequestSummary o) {
+                    BranchSummary branch = structureService.getBranch(o.getBranchId());
                     return new Resource<>(o)
                             .withLink(linkTo(methodOn(UIController.class).getBranch(locale, o.getBranchId())).withRel("branch"))
                             .withLink(linkTo(methodOn(GUIController.class).getBranch(locale, o.getBranchId())).withRel("branch-gui"))
                             .withLink(linkTo(methodOn(UIRequestController.class).getRequest(locale, o.getId())).withSelfRel())
                             .withLink(linkTo(methodOn(GUIController.class).getRequest(locale, o.getId())).withRel("gui"))
+                                    // ACL
+                            .withAction(ProjectFunction.REQUEST_DELETE, securityUtils.isGranted(ProjectFunction.REQUEST_DELETE, branch.getProjectId()))
                                     // Events
                             .withEvent(guiEventService.getResourceEvent(locale, EventEntity.REQUEST, o.getId(), EventCode.REQUEST_CREATED));
                 }
@@ -74,10 +82,12 @@ public class UIRequestController extends AbstractUIController implements UIReque
      */
 
     @Autowired
-    public UIRequestController(ErrorHandler errorHandler, Strings strings, RequestService requestService, GUIEventService guiEventService) {
+    public UIRequestController(ErrorHandler errorHandler, Strings strings, RequestService requestService, StructureService structureService, GUIEventService guiEventService, SecurityUtils securityUtils) {
         super(errorHandler, strings);
         this.requestService = requestService;
+        this.structureService = structureService;
         this.guiEventService = guiEventService;
+        this.securityUtils = securityUtils;
     }
 
     /**

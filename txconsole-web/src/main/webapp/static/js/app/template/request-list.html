@@ -16,6 +16,9 @@
             {{#if data.downloadable}}
                 <a href="ui/request/{{data.id}}/download" title="{{loc 'request.request.download'}}"><i class="icon-download-alt"></i></a>
             {{/if}}
+            {{#granted 'PROJECT#REQUEST_DELETE'}}
+                <i class="icon-trash request-delete" title="{{loc 'request.delete'}}" data-request-id="{{data.id}}"></i>
+            {{/granted}}
         </span>
     </td>
 </tr>

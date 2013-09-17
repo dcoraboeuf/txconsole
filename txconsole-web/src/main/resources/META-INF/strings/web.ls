@@ -467,6 +467,14 @@ request.request.download
     en -> Download request file
     fr -> Télécharger le fichier de demande
 
+request.delete
+    en -> Delete request
+    fr -> Supprimer la demande
+
+request.delete.prompt
+    en -> Do you really want to delete this request?
+    fr -> Voulez-vous vraiment supprimer cette demande ?
+
 [keyfilter]
 
 keyfilter.go

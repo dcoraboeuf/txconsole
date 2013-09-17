@@ -3,7 +3,6 @@
 <@layout_std
     page="request"
     title=request.data.version?html
-    noscript=true
     breadcrumbs={
         loc("home"): "",
         project.data.name?html: "project/${project.data.id?c}",
@@ -17,6 +16,9 @@
     <@title value=request.data.version close="branch/${branch.data.id?c}">
         <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
         <@title_uplink name=branch.data.name href="branch/${branch.data.id?c}" />
+        <@acl resource=request action='PROJECT#REQUEST_DELETE'>
+            <@title_command id="request-delete" title=loc('request.delete') class="icon-trash" />
+        </@acl>
     </@title>
 
     <div class="row-fluid">

@@ -1,6 +1,6 @@
 define(
-    ['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'component/keyfilter', 'render'],
-    function (dialog, ajax, application, jcombo, jconfigurable) {
+    ['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'common', 'component/keyfilter', 'render'],
+    function (dialog, ajax, application, jcombo, jconfigurable, common) {
 
         Handlebars.registerHelper('requestStatus', function (status) {
             var html = '';
@@ -70,8 +70,24 @@ define(
             })
         }
 
+        function deleteRequest(requestId) {
+            common.confirmAndCall(
+                'request.delete.prompt'.loc(),
+                function () {
+                    ajax.del({
+                        url: 'ui/request/{0}'.format(requestId),
+                        successFn: function (branch) {
+                            // Goes to the branch
+                            application.gui(branch)
+                        }
+                    })
+                }
+            )
+        }
+
         return {
-            createRequest: createRequest
+            createRequest: createRequest,
+            deleteRequest: deleteRequest
         }
 
     }
