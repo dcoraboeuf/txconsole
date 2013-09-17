@@ -102,3 +102,7 @@
     font-style: italic;
     color: #AAAAAA;
 }
+
+.translation-diff-DELETED {
+    text-decoration: line-through;
+}

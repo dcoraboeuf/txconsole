@@ -8,12 +8,15 @@ define(['jquery', 'render', 'component/request'], function ($, render) {
                 switch (entry.type) {
                     case 'ADDED':
                         entry.cls = 'success';
+                        entry.icon = 'icon-plus';
                         break;
                     case 'UPDATED':
                         entry.cls = 'info';
+                        entry.icon = 'icon-pencil';
                         break;
                     case 'DELETED':
                         entry.cls = 'error';
+                        entry.icon = 'icon-minus';
                         break;
                 }
             });
