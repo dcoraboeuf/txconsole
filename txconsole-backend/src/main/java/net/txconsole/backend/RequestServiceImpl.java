@@ -161,11 +161,12 @@ public class RequestServiceImpl implements RequestService {
                 // Saves the diff into the database
                 requestDao.saveDiff(requestId, diff);
                 // Export the diff as a file
+                Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
                 Content content = configuredTxFileExchange.getConfigurable().export(
                         configuredTxFileExchange.getConfiguration(),
                         defaultLocale,
-                        configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration()),
-                        diff);
+                        supportedLocales,
+                        diff.forEdition(supportedLocales));
                 // Saves the diff file into the database
                 requestDao.saveRequestFile(requestId, content);
                 // Changes the status to 'EXPORTED'

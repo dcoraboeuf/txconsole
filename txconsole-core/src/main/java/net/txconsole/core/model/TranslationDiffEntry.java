@@ -35,7 +35,7 @@ public class TranslationDiffEntry implements Comparable<TranslationDiffEntry> {
                 .toComparison();
     }
 
-    public TranslationDiffEntry forEdition(List<Locale> locales) {
+    public TranslationDiffEntry forEdition(Collection<Locale> locales) {
         if (type == TranslationDiffType.ADDED) {
             // Added ==> editable if some locales are missing
             Set<Locale> missingLocales = new HashSet<>(locales);
