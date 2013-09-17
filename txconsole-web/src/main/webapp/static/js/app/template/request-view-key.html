@@ -1,17 +1,20 @@
 <table class="table table-condensed">
     <tbody>
-        {{#data.diff.entries}}
-            <tr class="{{cls}} translation-diff-{{type}}">
+        {{#entry.entries}}
+            <tr>
                 <td>
-                    <span class="translation-bundle">{{bundle}}</span>
-                    <i class="icon-arrow-right muted"></i>
-                    <span class="translation-section">{{section}}</span>
-                    <i class="icon-arrow-right muted"></i>
-                    <span class="translation-key">{{key}}</span>
-                    <i class="{{icon}} translation-key-load action action-optional action-inline" data-request-entry-id="{{entryId}}"></i>
-                    <div id="translation-key-{{entryId}}" class="hidden translation-key-content"></div>
+                    {{locale}}
+                </td>
+                <td>
+                    <input type="text" readonly="readonly" class="span5" value="{{oldValue}}" />
+                    {{#if toUpdate}}
+                        <input type="text" class="span5" value="{{newValue}}" />
+                        <i class="icon-ok action"></i>
+                    {{else}}
+                        <input type="text" readonly="readonly" class="span5" value="{{newValue}}" />
+                    {{/if}}
                 </td>
             </tr>
-        {{/data.diff.entries}}
+        {{/entry.entries}}
     </tbody>
 </table>

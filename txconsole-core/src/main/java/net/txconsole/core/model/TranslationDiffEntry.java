@@ -1,9 +1,9 @@
 package net.txconsole.core.model;
 
 import lombok.Data;
-import org.apache.commons.lang3.tuple.Pair;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 
@@ -17,4 +17,12 @@ public class TranslationDiffEntry {
     private final TranslationDiffType type;
     private final Map<Locale, TranslationDiffEntryValue> values;
 
+    @JsonIgnore
+    public Map<Locale, TranslationDiffEntryValue> getValues() {
+        return values;
+    }
+
+    public Collection<TranslationDiffEntryValue> getEntries() {
+        return values.values();
+    }
 }

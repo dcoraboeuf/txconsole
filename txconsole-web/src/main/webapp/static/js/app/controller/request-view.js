@@ -7,12 +7,16 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                 el: header
             },
             successFn: function (entry) {
-                var container = $(header).find('.translation-key-content');
+                var container = $('#translation-key-content-{0}'.format(entryId));
                 render.renderInto(
                     container,
                     'request-view-key',
                     {
                         entry: entry
+                    },
+                    function () {
+                        $(header).hide();
+                        $(container).removeClass('hidden');
                     }
                 )
             }
