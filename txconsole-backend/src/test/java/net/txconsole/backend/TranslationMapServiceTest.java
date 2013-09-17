@@ -109,12 +109,46 @@ public class TranslationMapServiceTest {
                         .build()
         );
         // Computes the diff
-        TranslationDiff diff = service.diff(Locale.ENGLISH, oldMap, newMap);
+        TranslationDiff diff = service.diff(Locale.ENGLISH, oldMap, newMap).sorted();
         // Checks
-        assertNotNull(diff);
-        List<TranslationDiffEntry> entries = new ArrayList<>(diff.getEntries());
-        Collections.sort(entries);
+        assertEquals(referenceDiff(), diff);
+    }
+
+    @Test
+    public void diff_to_edit() {
+        TranslationDiff diff = referenceDiff();
+        diff = diff.forEdition(Arrays.asList(Locale.ENGLISH, Locale.FRENCH));
         assertEquals(
+                Arrays.asList(
+                        new TranslationDiffEntry(
+                                0,
+                                "common",
+                                "default",
+                                "added.default-only",
+                                TranslationDiffType.ADDED,
+                                MapBuilder.dual(
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, null, "Added default only"),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, true, null, null)
+                                )
+                        ),
+                        new TranslationDiffEntry(
+                                0,
+                                "common",
+                                "default",
+                                "updated.default-only",
+                                TranslationDiffType.UPDATED,
+                                MapBuilder.dual(
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, "Initial value", "Updated default only"),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, true, "Valeur initiale", "Valeur initiale")
+                                )
+                        )
+                ),
+                diff.getEntries()
+        );
+    }
+
+    private TranslationDiff referenceDiff() {
+        return new TranslationDiff(
                 Arrays.asList(
                         new TranslationDiffEntry(
                                 0,
@@ -179,8 +213,7 @@ public class TranslationMapServiceTest {
                                         Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, true, "Valeur initiale", "Valeur initiale")
                                 )
                         )
-                ),
-                entries
+                )
         );
     }
 
