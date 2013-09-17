@@ -162,13 +162,8 @@ public class TranslationMapServiceImpl implements TranslationMapService {
                     for (Locale locale : locales) {
                         String oldValue = getValue(oldMap, locale);
                         String newValue = getValue(newMap, locale);
-                        // For any non-default locale, add the diff (and therefore the request for translation)
-                        // only if NO difference is detected between the old and the new value
-                        if (!referenceLocale.equals(locale) && StringUtils.equals(oldValue, newValue)) {
-                            entry.withDiff(locale, oldValue, newValue); // old & new are here the same
-                        }
-                        // Adds the diff for the default locale
-                        entry.withDiff(referenceLocale, oldLabel, newLabel);
+                        // Adds the diff for all locales
+                        entry.withDiff(locale, oldValue, newValue);
                     }
                 }
             }
