@@ -1,10 +1,7 @@
 package net.txconsole.service;
 
 import net.txconsole.core.Content;
-import net.txconsole.core.model.RequestConfigurationData;
-import net.txconsole.core.model.RequestCreationForm;
-import net.txconsole.core.model.RequestSummary;
-import net.txconsole.core.model.RequestView;
+import net.txconsole.core.model.*;
 
 import java.util.List;
 
@@ -25,4 +22,6 @@ public interface RequestService {
     RequestSummary deleteRequest(int id);
 
     RequestView getRequestView(int id);
+
+    TranslationDiffEntry getRequestEntryDetails(int entryId);
 }

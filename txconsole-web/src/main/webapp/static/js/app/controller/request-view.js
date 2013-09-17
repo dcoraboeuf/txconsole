@@ -1,13 +1,20 @@
 define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, ajax) {
 
-    function loadEntry (header, entryId) {
+    function loadEntry(header, entryId) {
         ajax.get({
             url: 'ui/request/entry/{0}'.format(entryId),
             loading: {
                 el: header
             },
-            successFn: function () {
-                alert('TODO')
+            successFn: function (entry) {
+                var container = $(header).find('.translation-key-content');
+                render.renderInto(
+                    container,
+                    'request-view-key',
+                    {
+                        entry: entry
+                    }
+                )
             }
         })
     }

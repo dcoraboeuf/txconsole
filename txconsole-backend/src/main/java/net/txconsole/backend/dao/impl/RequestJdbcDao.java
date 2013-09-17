@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
@@ -206,41 +207,68 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
     @Transactional(readOnly = true)
     public TranslationDiff loadDiff(int id) {
         // Builder
-        final TranslationDiffBuilder builder = TranslationDiffBuilder.create();
+        TranslationDiffBuilder builder = TranslationDiffBuilder.create();
         // Gets all the entries (and only them)
         getNamedParameterJdbcTemplate().query(
                 SQL.REQUEST_ENTRY_BY_REQUEST,
                 params("request", id),
-                new RowCallbackHandler() {
-                    @Override
-                    public void processRow(ResultSet rs) throws SQLException {
-                        int entryId = rs.getInt("id");
-                        String bundle = rs.getString("bundle");
-                        String section = rs.getString("section");
-                        String key = rs.getString("name");
-                        TranslationDiffType type = SQLUtils.getEnum(TranslationDiffType.class, rs, "type");
-                        // Adds the entry
-                        /* final TranslationDiffEntryBuilder entry = */ builder.entry(entryId, bundle, section, key, type);
-                        /**
-                         // TODO Gets all values
-                         getNamedParameterJdbcTemplate().query(
-                         SQL.REQUEST_ENTRY_VALUE_BY_REQUEST_ENTRY,
-                         params("entryId", entryId),
-                         new RowCallbackHandler() {
-                        @Override public void processRow(ResultSet rs) throws SQLException {
-                        Locale locale = SQLUtils.toLocale(rs, "locale");
-                        boolean toUpdate = rs.getBoolean("toUpdate");
-                        String oldValue = rs.getString("oldValue");
-                        String newValue = rs.getString("newValue");
-                        entry.withDiff(locale, toUpdate, oldValue, newValue);
-                        }
-                        }
-                         );
-                         */
-                    }
-                }
+                new TranslationDiffEntryBuilderRowMapper(builder, false)
         );
         // OK
         return builder.build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TranslationDiffEntry getRequestEntryDetails(int entryId) {
+        // Builder
+        TranslationDiffBuilder builder = TranslationDiffBuilder.create();
+        // Gets the entry
+        return getNamedParameterJdbcTemplate().queryForObject(
+                SQL.REQUEST_ENTRY_BY_ID,
+                params("id", entryId),
+                new TranslationDiffEntryBuilderRowMapper(builder, true)
+        ).build();
+    }
+
+    protected class TranslationDiffEntryBuilderRowMapper implements RowMapper<TranslationDiffEntryBuilder> {
+
+        private final TranslationDiffBuilder builder;
+        private final boolean collectValues;
+
+        public TranslationDiffEntryBuilderRowMapper(TranslationDiffBuilder builder, boolean collectValues) {
+            this.builder = builder;
+            this.collectValues = collectValues;
+        }
+
+        @Override
+        public TranslationDiffEntryBuilder mapRow(ResultSet rs, int rowNum) throws SQLException {
+            int entryId = rs.getInt("id");
+            String bundle = rs.getString("bundle");
+            String section = rs.getString("section");
+            String key = rs.getString("name");
+            TranslationDiffType type = SQLUtils.getEnum(TranslationDiffType.class, rs, "type");
+            // Adds the entry
+            final TranslationDiffEntryBuilder entry = builder.entry(entryId, bundle, section, key, type);
+            // Gets all values
+            if (collectValues) {
+                getNamedParameterJdbcTemplate().query(
+                        SQL.REQUEST_ENTRY_VALUE_BY_REQUEST_ENTRY,
+                        params("entryId", entryId),
+                        new RowCallbackHandler() {
+                            @Override
+                            public void processRow(ResultSet rs) throws SQLException {
+                                Locale locale = SQLUtils.toLocale(rs, "locale");
+                                boolean toUpdate = rs.getBoolean("toUpdate");
+                                String oldValue = rs.getString("oldValue");
+                                String newValue = rs.getString("newValue");
+                                entry.withDiff(locale, toUpdate, oldValue, newValue);
+                            }
+                        }
+                );
+            }
+            // OK
+            return entry;
+        }
     }
 }

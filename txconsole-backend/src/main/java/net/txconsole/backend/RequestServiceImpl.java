@@ -210,4 +210,10 @@ public class RequestServiceImpl implements RequestService {
         // OK
         return new RequestView(summary, diff);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TranslationDiffEntry getRequestEntryDetails(int entryId) {
+        return requestDao.getRequestEntryDetails(entryId);
+    }
 }

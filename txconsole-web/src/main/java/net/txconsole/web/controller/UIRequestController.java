@@ -185,6 +185,16 @@ public class UIRequestController extends AbstractUIController implements UIReque
     }
 
     /**
+     * Gets the details for a translation request entry
+     */
+    @RequestMapping(value = "/request/entry/{entryId}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    TranslationDiffEntry getRequestEntryDetails(Locale locale, @PathVariable int entryId) {
+        return requestService.getRequestEntryDetails(entryId);
+    }
+
+    /**
      * Deletes a request
      */
     @RequestMapping(value = "/request/{id}", method = RequestMethod.DELETE)

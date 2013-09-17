@@ -5,6 +5,7 @@ import net.txconsole.core.Content;
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.core.model.RequestStatus;
 import net.txconsole.core.model.TranslationDiff;
+import net.txconsole.core.model.TranslationDiffEntry;
 
 import java.util.List;
 
@@ -33,4 +34,6 @@ public interface RequestDao {
     void delete(int id);
 
     TranslationDiff loadDiff(int id);
+
+    TranslationDiffEntry getRequestEntryDetails(int entryId);
 }
