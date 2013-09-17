@@ -1,4 +1,17 @@
-define(['jquery', 'render', 'component/request'], function ($, render) {
+define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, ajax) {
+
+    function loadEntry (header, entryId) {
+        ajax.get({
+            url: 'ui/request/entry/{0}'.format(entryId),
+            loading: {
+                el: header
+            },
+            successFn: function () {
+                alert('TODO')
+            }
+        })
+    }
+
     return {
         url: function (config) {
             return 'ui/request/{0}/view'.format(config.requestId)
@@ -22,6 +35,12 @@ define(['jquery', 'render', 'component/request'], function ($, render) {
             });
             return resource;
         },
-        render: render.asSimpleTemplate('request-view')
+        render: render.asSimpleTemplate('request-view', render.sameDataFn, function (config) {
+            $('.translation-key-load').each(function (index, e) {
+                $(e).click(function () {
+                    loadEntry($(e), $(e).attr('data-request-entry-id'))
+                })
+            })
+        })
     }
 })
