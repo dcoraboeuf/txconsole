@@ -185,4 +185,13 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                 }
         );
     }
+
+    @Override
+    @Transactional
+    public void delete(int id) {
+        getNamedParameterJdbcTemplate().update(
+                SQL.REQUEST_DELETE,
+                params("id", id)
+        );
+    }
 }

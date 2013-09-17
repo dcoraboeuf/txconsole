@@ -21,4 +21,5 @@ public interface RequestService {
 
     Content getRequestFile(int requestId);
 
+    RequestSummary deleteRequest(int id);
 }

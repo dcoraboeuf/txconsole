@@ -30,6 +30,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequestMapping("/ui")
 public class UIRequestController extends AbstractUIController implements UIRequest {
 
+    private final UI ui;
     private final RequestService requestService;
     private final StructureService structureService;
     private final GUIEventService guiEventService;
@@ -82,8 +83,9 @@ public class UIRequestController extends AbstractUIController implements UIReque
      */
 
     @Autowired
-    public UIRequestController(ErrorHandler errorHandler, Strings strings, RequestService requestService, StructureService structureService, GUIEventService guiEventService, SecurityUtils securityUtils) {
+    public UIRequestController(ErrorHandler errorHandler, Strings strings, UI ui, RequestService requestService, StructureService structureService, GUIEventService guiEventService, SecurityUtils securityUtils) {
         super(errorHandler, strings);
+        this.ui = ui;
         this.requestService = requestService;
         this.structureService = structureService;
         this.guiEventService = guiEventService;
@@ -162,6 +164,17 @@ public class UIRequestController extends AbstractUIController implements UIReque
     @ResponseBody
     Resource<RequestSummary> getRequest(Locale locale, @PathVariable int id) {
         return requestSummaryResourceFn.apply(locale).apply(requestService.getRequest(id));
+    }
+
+    /**
+     * Deletes a request
+     */
+    @RequestMapping(value = "/request/{id}", method = RequestMethod.DELETE)
+    public
+    @ResponseBody
+    Resource<BranchSummary> deleteRequest(Locale locale, @PathVariable int id) {
+        RequestSummary request = requestService.deleteRequest(id);
+        return ui.getBranch(locale, request.getBranchId());
     }
 
 }

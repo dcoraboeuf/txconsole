@@ -184,4 +184,19 @@ public class RequestServiceImpl implements RequestService {
     public Content getRequestFile(int requestId) {
         return requestDao.getRequestFile(requestId);
     }
+
+    @Override
+    @Transactional
+    public RequestSummary deleteRequest(int id) {
+        // Loads the request
+        RequestSummary request = getRequest(id);
+        // Loads the branch
+        BranchSummary branch = structureService.getBranch(request.getBranchId());
+        // Checks the rights
+        securityUtils.checkGrant(ProjectFunction.REQUEST_DELETE, branch.getProjectId());
+        // Deletion
+        requestDao.delete(id);
+        // OK
+        return request;
+    }
 }

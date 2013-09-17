@@ -29,4 +29,6 @@ public interface RequestDao {
     void setToVersion(int requestId, String version);
 
     Content getRequestFile(int requestId);
+
+    void delete(int id);
 }
