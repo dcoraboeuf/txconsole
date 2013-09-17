@@ -7,7 +7,11 @@ import net.txconsole.test.DirTestIOContextFactory;
 import net.txconsole.test.Helper;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -15,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
 public class PropertiesTxFileExchangeTest {
 
     @Test
-    public void export() {
+    public void export() throws IOException {
         PropertiesTxFileExchange exchange = new PropertiesTxFileExchange(
                 ObjectMapperFactory.createObjectMapper(),
                 new DirTestIOContextFactory(),
@@ -29,6 +33,7 @@ public class PropertiesTxFileExchangeTest {
         );
         assertNotNull(content);
         assertEquals("application/zip", content.getType());
+        // TODO Unzips the content
     }
 
 }
