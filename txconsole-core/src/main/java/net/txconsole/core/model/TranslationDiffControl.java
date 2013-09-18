@@ -2,6 +2,9 @@ package net.txconsole.core.model;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 public class TranslationDiffControl {
 
@@ -9,6 +12,11 @@ public class TranslationDiffControl {
     private final String bundle;
     private final String section;
     private final String key;
-    private final String message;
+    private final List<String> messages = new ArrayList<>();
+
+    public TranslationDiffControl add(String message) {
+        messages.add(message);
+        return this;
+    }
 
 }

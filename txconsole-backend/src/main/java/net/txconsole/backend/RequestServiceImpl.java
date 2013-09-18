@@ -26,10 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 @Service
@@ -304,7 +301,7 @@ public class RequestServiceImpl implements RequestService {
 
     protected List<TranslationDiffControl> controlEntry(Locale outputLocale, TranslationDiffEntry entry, Set<Locale> supportedLocales) {
         // Result
-        List<TranslationDiffControl> controls = new ArrayList<>();
+        Map<Integer, TranslationDiffControl> controls = new TreeMap<>();
         // According to the type
         switch (entry.getType()) {
             case ADDED:
@@ -312,7 +309,7 @@ public class RequestServiceImpl implements RequestService {
                 for (Locale supportedLocale : supportedLocales) {
                     String suppliedValue = entry.getNewValue(supportedLocale);
                     if (StringUtils.isBlank(suppliedValue)) {
-                        controls.add(entry.control(strings, outputLocale, RequestService.MISSING_LOCALE_IN_KEY, supportedLocale));
+                        addControl(controls, entry, outputLocale, RequestService.MISSING_LOCALE_IN_KEY, supportedLocale);
                     }
                 }
                 break;
@@ -322,9 +319,9 @@ public class RequestServiceImpl implements RequestService {
                     String oldValue = entry.getOldValue(supportedLocale);
                     String newValue = entry.getNewValue(supportedLocale);
                     if (StringUtils.isBlank(newValue)) {
-                        controls.add(entry.control(strings, outputLocale, RequestService.MISSING_LOCALE_IN_KEY, supportedLocale));
+                        addControl(controls, entry, outputLocale, RequestService.MISSING_LOCALE_IN_KEY, supportedLocale);
                     } else if (StringUtils.equals(oldValue, newValue)) {
-                        controls.add(entry.control(strings, outputLocale, RequestService.UNCHANGED_LOCALE_IN_KEY, supportedLocale));
+                        addControl(controls, entry, outputLocale, RequestService.UNCHANGED_LOCALE_IN_KEY, supportedLocale);
                     }
                 }
                 break;
@@ -333,6 +330,15 @@ public class RequestServiceImpl implements RequestService {
                 break;
         }
         // OK
-        return controls;
+        return new ArrayList<>(controls.values());
+    }
+
+    protected void addControl(Map<Integer, TranslationDiffControl> controls, TranslationDiffEntry entry, Locale outputLocale, String code, Object... parameters) {
+        TranslationDiffControl control = controls.get(entry.getEntryId());
+        if (control == null) {
+            control = new TranslationDiffControl(entry.getEntryId(), entry.getBundle(), entry.getSection(), entry.getKey());
+            controls.put(entry.getEntryId(), control);
+        }
+        control.add(strings.get(outputLocale, code, parameters));
     }
 }
