@@ -206,8 +206,12 @@ public class RequestServiceImpl implements RequestService {
     public RequestView getRequestView(int id) {
         // Gets the request summary
         RequestSummary summary = getRequest(id);
+        // Gets the branch configuration
+        Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(summary.getBranchId());
+        // Gets the list of supported locales
+        Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
         // Loads the diff for this request
-        TranslationDiff diff = requestDao.loadDiff(id);
+        TranslationDiff diff = requestDao.loadDiff(id).forEdition(supportedLocales);
         // OK
         return new RequestView(summary, diff);
     }

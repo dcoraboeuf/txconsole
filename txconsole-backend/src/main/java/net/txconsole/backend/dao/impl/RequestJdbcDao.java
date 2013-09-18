@@ -259,7 +259,7 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                             @Override
                             public void processRow(ResultSet rs) throws SQLException {
                                 Locale locale = SQLUtils.toLocale(rs, "locale");
-                                boolean editable = rs.getBoolean("toUpdate");
+                                boolean editable = rs.getBoolean("editable");
                                 String oldValue = rs.getString("oldValue");
                                 String newValue = rs.getString("newValue");
                                 entry.withDiff(locale, editable, oldValue, newValue);
