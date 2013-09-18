@@ -114,3 +114,8 @@ input.success {
 .translation-diff-DELETED {
     text-decoration: line-through;
 }
+
+.translation-diff-invalid {
+    color: red;
+    font-weight: bold;
+}

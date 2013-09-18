@@ -104,6 +104,9 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
         },
         preProcessingFn: function (config, resource) {
             $.each(resource.data.diff.entries, function (index, entry) {
+                // Controls (may be null)
+                entry.controls = resource.data.controls[entry.entryId];
+                // CSS decoration
                 switch (entry.type) {
                     case 'ADDED':
                         entry.cls = 'success';
@@ -117,6 +120,10 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                         entry.cls = 'error';
                         entry.icon = 'icon-minus';
                         break;
+                }
+                // Mark for controls
+                if (entry.controls) {
+                    entry.cls += ' translation-diff-invalid';
                 }
             });
             return resource;
