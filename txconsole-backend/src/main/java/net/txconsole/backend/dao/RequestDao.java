@@ -2,6 +2,7 @@ package net.txconsole.backend.dao;
 
 import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.core.model.*;
+import net.txconsole.core.support.SimpleMessage;
 
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +22,8 @@ public interface RequestDao {
     void saveDiff(int requestId, TranslationDiff diff);
 
     void setStatus(int requestId, RequestStatus status);
+
+    void setStatus(int requestId, RequestStatus status, SimpleMessage message);
 
     void setToVersion(int requestId, String version);
 

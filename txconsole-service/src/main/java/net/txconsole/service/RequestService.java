@@ -11,6 +11,7 @@ public interface RequestService {
 
     String MISSING_LOCALE_IN_KEY = "RequestService.control.missingLocaleInKey";
     String UNCHANGED_LOCALE_IN_KEY = "RequestService.control.unchangedLocaleInKey";
+    String GENERAL_ERROR = "RequestService.generalError";
 
     RequestConfigurationData getRequestConfigurationData(int branchId);
 

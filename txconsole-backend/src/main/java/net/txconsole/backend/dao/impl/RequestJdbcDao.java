@@ -3,6 +3,7 @@ package net.txconsole.backend.dao.impl;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.core.model.*;
+import net.txconsole.core.support.SimpleMessage;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -143,9 +144,18 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
     @Override
     @Transactional
     public void setStatus(int requestId, RequestStatus status) {
+        setStatus(requestId, status, null);
+    }
+
+    @Override
+    @Transactional
+    public void setStatus(int requestId, RequestStatus status, SimpleMessage message) {
         getNamedParameterJdbcTemplate().update(
                 SQL.REQUEST_SET_STATUS,
-                params("id", requestId).addValue("status", status.name())
+                params("id", requestId)
+                        .addValue("status", status.name())
+                        .addValue("messageCode", SQLUtils.getMessageCode(message))
+                        .addValue("messageParameters", SQLUtils.getMessageParameters(message))
         );
     }
 

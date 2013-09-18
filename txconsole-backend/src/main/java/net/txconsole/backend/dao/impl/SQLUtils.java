@@ -76,4 +76,25 @@ public final class SQLUtils {
             return null;
         }
     }
+
+    public static String getMessageCode(SimpleMessage message) {
+        if (message == null) {
+            return null;
+        } else {
+            return message.getCode();
+        }
+    }
+
+    public static String getMessageParameters(SimpleMessage message) {
+        if (message == null) {
+            return null;
+        } else {
+            String[] parameters = message.getParameters();
+            if (parameters == null) {
+                return null;
+            } else {
+                return StringUtils.join(parameters, PARAMETERS_SEPARATOR);
+            }
+        }
+    }
 }

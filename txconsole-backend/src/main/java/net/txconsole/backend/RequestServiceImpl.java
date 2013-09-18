@@ -2,15 +2,18 @@ package net.txconsole.backend;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import net.sf.jstring.LocalizableException;
 import net.sf.jstring.Strings;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
+import net.txconsole.backend.exceptions.RequestCreationException;
 import net.txconsole.backend.exceptions.TranslationDiffEntryNotEditableException;
 import net.txconsole.backend.exceptions.TranslationDiffEntryValueNotEditableException;
 import net.txconsole.core.Content;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
+import net.txconsole.core.support.SimpleMessage;
 import net.txconsole.service.EventService;
 import net.txconsole.service.RequestService;
 import net.txconsole.service.StructureService;
@@ -165,7 +168,22 @@ public class RequestServiceImpl implements RequestService {
                 requestDao.setStatus(requestId, RequestStatus.REQUEST_EXPORTED);
                 // Saves the last version with the new status
                 requestDao.setToVersion(requestId, newMap.getVersion());
-                // TODO In case of error, sets the request status as 'ERROR', and resends the error
+            } catch (Exception ex) {
+                // Gets the message
+                SimpleMessage message;
+                if (ex instanceof LocalizableException) {
+                    LocalizableException lex = (LocalizableException) ex;
+                    message = new SimpleMessage(
+                            lex.getCode(),
+                            lex.getParameters()
+                    );
+                } else {
+                    message = new SimpleMessage(RequestService.GENERAL_ERROR);
+                }
+                // Sets the status to error
+                requestDao.setStatus(requestId, RequestStatus.ERROR, message);
+                // Resends the error
+                throw new RequestCreationException(requestId, ex);
             } finally {
                 inGenerationRequests.remove(requestId);
             }
