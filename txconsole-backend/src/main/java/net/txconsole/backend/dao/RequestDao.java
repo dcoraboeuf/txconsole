@@ -1,7 +1,6 @@
 package net.txconsole.backend.dao;
 
 import net.txconsole.backend.dao.model.TRequest;
-import net.txconsole.core.Content;
 import net.txconsole.core.model.*;
 
 import java.util.List;
@@ -21,13 +20,9 @@ public interface RequestDao {
 
     void saveDiff(int requestId, TranslationDiff diff);
 
-    void saveRequestFile(int requestId, Content content);
-
     void setStatus(int requestId, RequestStatus status);
 
     void setToVersion(int requestId, String version);
-
-    Content getRequestFile(int requestId);
 
     void delete(int id);
 

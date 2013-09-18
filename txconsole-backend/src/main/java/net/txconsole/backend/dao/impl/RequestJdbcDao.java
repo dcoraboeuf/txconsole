@@ -2,8 +2,6 @@ package net.txconsole.backend.dao.impl;
 
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
-import net.txconsole.backend.exceptions.RequestNoRequestFileException;
-import net.txconsole.core.Content;
 import net.txconsole.core.model.*;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,18 +141,6 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
 
     @Override
     @Transactional
-    public void saveRequestFile(int requestId, Content content) {
-        getNamedParameterJdbcTemplate().update(
-                SQL.REQUEST_SET_REQUEST_FILE,
-                params("id", requestId)
-                        .addValue("type", content.getType())
-                        .addValue("length", content.getBytes().length)
-                        .addValue("content", content.getBytes())
-        );
-    }
-
-    @Override
-    @Transactional
     public void setStatus(int requestId, RequestStatus status) {
         getNamedParameterJdbcTemplate().update(
                 SQL.REQUEST_SET_STATUS,
@@ -168,29 +154,6 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
         getNamedParameterJdbcTemplate().update(
                 SQL.REQUEST_SET_TOVERSION,
                 params("id", requestId).addValue("version", version)
-        );
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Content getRequestFile(final int requestId) {
-        return getNamedParameterJdbcTemplate().queryForObject(
-                SQL.REQUEST_GET_REQUEST_FILE,
-                params("id", requestId),
-                new RowMapper<Content>() {
-                    @Override
-                    public Content mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        int length = rs.getInt("REQUEST_FILE_LENGTH");
-                        if (rs.wasNull() || length == 0) {
-                            throw new RequestNoRequestFileException(requestId);
-                        } else {
-                            return new Content(
-                                    rs.getString("REQUEST_FILE_TYPE"),
-                                    rs.getBytes("REQUEST_FILE_CONTENT")
-                            );
-                        }
-                    }
-                }
         );
     }
 

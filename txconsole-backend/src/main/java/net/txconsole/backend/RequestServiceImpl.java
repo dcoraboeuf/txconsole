@@ -150,10 +150,6 @@ public class RequestServiceImpl implements RequestService {
                 Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
                 // Default locale
                 Locale defaultLocale = configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration());
-                // Gets the configuration for the file exchange
-                JsonConfiguration jsonConfiguration = requestDao.getTxFileExchangeConfiguration(requestId);
-                // Gets the configured TxFileExchange from the JSON configuration
-                Configured<Object, TxFileExchange<Object>> configuredTxFileExchange = translationSourceService.getConfiguredTxFileExchange(jsonConfiguration);
                 // Gets the translation map for the given version
                 TranslationMap oldMap = translationMapService.map(branchId, version);
                 // Gets the translation map for the last version
@@ -162,15 +158,6 @@ public class RequestServiceImpl implements RequestService {
                 TranslationDiff diff = translationMapService.diff(defaultLocale, oldMap, newMap);
                 // Saves the diff into the database
                 requestDao.saveDiff(requestId, diff);
-                // Export the diff as a file
-                Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
-                Content content = configuredTxFileExchange.getConfigurable().export(
-                        configuredTxFileExchange.getConfiguration(),
-                        defaultLocale,
-                        supportedLocales,
-                        diff.forEdition(supportedLocales));
-                // Saves the diff file into the database
-                requestDao.saveRequestFile(requestId, content);
                 // Changes the status to 'EXPORTED'
                 requestDao.setStatus(requestId, RequestStatus.REQUEST_EXPORTED);
                 // Saves the last version with the new status
@@ -185,7 +172,26 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional(readOnly = true)
     public Content getRequestFile(int requestId) {
-        return requestDao.getRequestFile(requestId);
+        // Gets the request
+        TRequest request = requestDao.getById(requestId);
+        int branchId = request.getBranchId();
+        // Loads the diff
+        TranslationDiff diff = requestDao.loadDiff(requestId);
+        // Gets the configuration for the branch
+        Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
+        // Default locale & supported locales
+        Locale defaultLocale = configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration());
+        Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
+        // Gets the configuration for the file exchange
+        JsonConfiguration jsonConfiguration = requestDao.getTxFileExchangeConfiguration(requestId);
+        // Gets the configured TxFileExchange from the JSON configuration
+        Configured<Object, TxFileExchange<Object>> configuredTxFileExchange = translationSourceService.getConfiguredTxFileExchange(jsonConfiguration);
+        // Export the diff as a file
+        return configuredTxFileExchange.getConfigurable().export(
+                configuredTxFileExchange.getConfiguration(),
+                defaultLocale,
+                supportedLocales,
+                diff.forEdition(supportedLocales));
     }
 
     @Override
