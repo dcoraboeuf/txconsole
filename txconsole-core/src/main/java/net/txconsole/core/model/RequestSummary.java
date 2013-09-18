@@ -1,6 +1,7 @@
 package net.txconsole.core.model;
 
 import lombok.Data;
+import net.txconsole.core.support.SimpleMessage;
 
 @Data
 public class RequestSummary {
@@ -9,6 +10,7 @@ public class RequestSummary {
     private final int branchId;
     private final String version;
     private final RequestStatus status;
+    private final SimpleMessage message;
 
     public boolean isDownloadable() {
         return status == RequestStatus.REQUEST_EXPORTED;

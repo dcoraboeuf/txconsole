@@ -27,7 +27,8 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                     rs.getInt("id"),
                     rs.getInt("branch"),
                     rs.getString("version"),
-                    SQLUtils.getEnum(RequestStatus.class, rs, "status")
+                    SQLUtils.getEnum(RequestStatus.class, rs, "status"),
+                    SQLUtils.getMessage(rs, "message_code", "message_parameters")
             );
         }
     };

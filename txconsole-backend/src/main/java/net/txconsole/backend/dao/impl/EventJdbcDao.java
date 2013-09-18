@@ -23,7 +23,7 @@ import java.util.Map;
 @Component
 public class EventJdbcDao extends AbstractJdbcDao implements EventDao {
 
-    public static final String EVENT_PARAMETER_SEPARATOR = "||||";
+    public static final String EVENT_PARAMETER_SEPARATOR = SQLUtils.PARAMETERS_SEPARATOR;
 
     @Autowired
     public EventJdbcDao(DataSource dataSource, ObjectMapper objectMapper) {

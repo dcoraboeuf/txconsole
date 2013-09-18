@@ -58,6 +58,10 @@ request.status.REQUEST_EXPORTED
     en -> Request generated
     fr -> Demande générée
 
+request.status.ERROR
+    en -> Error in request
+    fr -> Demande en erreur
+
 translation.bundle
     en -> Bundle
     fr -> Bundle
