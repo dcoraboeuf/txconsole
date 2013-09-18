@@ -128,8 +128,8 @@ public class TranslationMapServiceTest {
                                 "added.default-only",
                                 TranslationDiffType.ADDED,
                                 MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, null, "Added default only"),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, true, null, null)
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, null, "Added default only"),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, true, null, null)
                                 )
                         ),
                         new TranslationDiffEntry(
@@ -139,8 +139,8 @@ public class TranslationMapServiceTest {
                                 "updated.default-only",
                                 TranslationDiffType.UPDATED,
                                 MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, "Initial value", "Updated default only"),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, true, "Valeur initiale", "Valeur initiale")
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, "Initial value", "Updated default only"),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, true, "Valeur initiale", "Valeur initiale")
                                 )
                         )
                 ),

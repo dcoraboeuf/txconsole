@@ -24,4 +24,6 @@ public interface RequestService {
     RequestView getRequestView(int id);
 
     TranslationDiffEntry getRequestEntryDetails(int entryId);
+
+    TranslationDiffEntryValue editRequestEntry(int entryId, RequestEntryInput input);
 }

@@ -2,12 +2,10 @@ package net.txconsole.backend.dao;
 
 import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.core.Content;
-import net.txconsole.core.model.JsonConfiguration;
-import net.txconsole.core.model.RequestStatus;
-import net.txconsole.core.model.TranslationDiff;
-import net.txconsole.core.model.TranslationDiffEntry;
+import net.txconsole.core.model.*;
 
 import java.util.List;
+import java.util.Locale;
 
 public interface RequestDao {
 
@@ -38,4 +36,8 @@ public interface RequestDao {
     TranslationDiffEntry getRequestEntryDetails(int entryId);
 
     int getBranchIdForRequestEntry(int entryId);
+
+    TranslationDiffEntryValue addValue(int entryId, Locale locale, String value);
+
+    void editValue(int entryValueId, String value);
 }

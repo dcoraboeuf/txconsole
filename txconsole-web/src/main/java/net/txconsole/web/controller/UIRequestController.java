@@ -198,6 +198,16 @@ public class UIRequestController extends AbstractUIController implements UIReque
     }
 
     /**
+     * Edits an entry
+     */
+    @RequestMapping(value = "/request/entry/{entryId}", method = RequestMethod.PUT)
+    public
+    @ResponseBody
+    TranslationDiffEntryValue editRequestEntry(@PathVariable int entryId, @RequestBody RequestEntryInput input) {
+        return requestService.editRequestEntry(entryId, input);
+    }
+
+    /**
      * Deletes a request
      */
     @RequestMapping(value = "/request/{id}", method = RequestMethod.DELETE)

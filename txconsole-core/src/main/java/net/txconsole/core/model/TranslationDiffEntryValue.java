@@ -16,6 +16,7 @@ public class TranslationDiffEntryValue {
             return entryValue.isEditable();
         }
     };
+    private final int entryValueId;
     private final Locale locale;
     private final boolean editable;
     private final String oldValue;

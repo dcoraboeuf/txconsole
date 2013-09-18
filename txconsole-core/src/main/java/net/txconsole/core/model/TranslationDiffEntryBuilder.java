@@ -30,7 +30,7 @@ public class TranslationDiffEntryBuilder {
             // Deleted key, no update needed
             toUpdate = false;
         }
-        return withDiff(locale, toUpdate, oldValue, newValue);
+        return withDiff(0, locale, toUpdate, oldValue, newValue);
     }
 
     public TranslationDiffEntry build() {
@@ -44,8 +44,8 @@ public class TranslationDiffEntryBuilder {
         );
     }
 
-    public TranslationDiffEntryBuilder withDiff(Locale locale, boolean toUpdate, String oldValue, String newValue) {
-        values.put(locale, new TranslationDiffEntryValue(locale, toUpdate, oldValue, newValue));
+    public TranslationDiffEntryBuilder withDiff(int entryValueId, Locale locale, boolean toUpdate, String oldValue, String newValue) {
+        values.put(locale, new TranslationDiffEntryValue(entryValueId, locale, toUpdate, oldValue, newValue));
         return this;
     }
 }

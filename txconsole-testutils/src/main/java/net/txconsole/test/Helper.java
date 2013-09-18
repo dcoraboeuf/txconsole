@@ -40,8 +40,8 @@ public final class Helper {
                                 "added.both",
                                 TranslationDiffType.ADDED,
                                 MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, null, "Added both"),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, false, null, "Ajout des deux")
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, null, "Added both"),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, false, null, "Ajout des deux")
                                 )
                         ),
                         new TranslationDiffEntry(
@@ -50,7 +50,7 @@ public final class Helper {
                                 "default",
                                 "added.default-only",
                                 TranslationDiffType.ADDED,
-                                MapBuilder.singleton(Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, null, "Added default only"))
+                                MapBuilder.singleton(Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, null, "Added default only"))
                         ),
                         new TranslationDiffEntry(
                                 0,
@@ -59,8 +59,8 @@ public final class Helper {
                                 "deleted.both",
                                 TranslationDiffType.DELETED,
                                 MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, "Initial value", null),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, false, "Valeur initiale", null)
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, "Initial value", null),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, false, "Valeur initiale", null)
                                 )
                         ),
                         new TranslationDiffEntry(
@@ -70,8 +70,8 @@ public final class Helper {
                                 "deleted.default-only",
                                 TranslationDiffType.DELETED,
                                 MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, "Initial value", null),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, false, "Valeur initiale", null)
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, "Initial value", null),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, false, "Valeur initiale", null)
                                 )
                         ),
                         new TranslationDiffEntry(
@@ -81,8 +81,8 @@ public final class Helper {
                                 "updated.both",
                                 TranslationDiffType.UPDATED,
                                 MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, "Initial value", "Updated both"),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, false, "Valeur initiale", "Les deux sont modifiés")
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, "Initial value", "Updated both"),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, false, "Valeur initiale", "Les deux sont modifiés")
                                 )
                         ),
                         new TranslationDiffEntry(
@@ -92,8 +92,8 @@ public final class Helper {
                                 "updated.default-only",
                                 TranslationDiffType.UPDATED,
                                 MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(Locale.ENGLISH, false, "Initial value", "Updated default only"),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(Locale.FRENCH, true, "Valeur initiale", "Valeur initiale")
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, "Initial value", "Updated default only"),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, true, "Valeur initiale", "Valeur initiale")
                                 )
                         )
                 )

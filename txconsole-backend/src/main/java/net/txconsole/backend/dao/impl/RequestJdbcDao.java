@@ -241,6 +241,33 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
         );
     }
 
+    @Override
+    @Transactional
+    public TranslationDiffEntryValue addValue(int entryId, Locale locale, String value) {
+        int id = dbCreate(
+                SQL.REQUEST_ENTRY_NEW_VALUE,
+                params("entryId", entryId)
+                        .addValue("locale", locale)
+                        .addValue("value", value)
+        );
+        return new TranslationDiffEntryValue(
+                id,
+                locale,
+                true,
+                null,
+                value
+        );
+    }
+
+    @Override
+    @Transactional
+    public void editValue(int entryValueId, String value) {
+        getNamedParameterJdbcTemplate().update(
+                SQL.REQUEST_ENTRY_EDIT_VALUE,
+                params("id", entryValueId).addValue("value", value)
+        );
+    }
+
     protected class TranslationDiffEntryBuilderRowMapper implements RowMapper<TranslationDiffEntryBuilder> {
 
         private final TranslationDiffBuilder builder;
@@ -265,11 +292,12 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                     new RowCallbackHandler() {
                         @Override
                         public void processRow(ResultSet rs) throws SQLException {
+                            int entryValueId = rs.getInt("id");
                             Locale locale = SQLUtils.toLocale(rs, "locale");
                             boolean editable = rs.getBoolean("editable");
                             String oldValue = rs.getString("oldValue");
                             String newValue = rs.getString("newValue");
-                            entry.withDiff(locale, editable, oldValue, newValue);
+                            entry.withDiff(entryValueId, locale, editable, oldValue, newValue);
                         }
                     }
             );

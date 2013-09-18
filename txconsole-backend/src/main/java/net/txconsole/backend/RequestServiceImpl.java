@@ -4,6 +4,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
+import net.txconsole.backend.exceptions.TranslationDiffEntryNotEditableException;
+import net.txconsole.backend.exceptions.TranslationDiffEntryValueNotEditableException;
 import net.txconsole.core.Content;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
@@ -229,5 +231,35 @@ public class RequestServiceImpl implements RequestService {
         TranslationDiffEntry rawEntry = requestDao.getRequestEntryDetails(entryId);
         TranslationDiffEntry entry = rawEntry.forEdition(supportedLocales);
         return entry != null ? entry : rawEntry;
+    }
+
+    @Override
+    @Transactional
+    public TranslationDiffEntryValue editRequestEntry(int entryId, RequestEntryInput input) {
+        // Loads the branch for this entry
+        BranchSummary branch = structureService.getBranch(requestDao.getBranchIdForRequestEntry(entryId));
+        // Checks the rights
+        securityUtils.checkGrant(ProjectFunction.REQUEST_EDIT, branch.getProjectId());
+        // Gets the details for this entry
+        TranslationDiffEntry entry = getRequestEntryDetails(entryId);
+        // If not editable, rejects the changes
+        if (!entry.isEditable()) {
+            throw new TranslationDiffEntryNotEditableException(entry.getKey());
+        }
+        // Gets the entry value for the locale
+        TranslationDiffEntryValue entryValue = entry.getEntryValue(input.getLocale());
+        // Not existing
+        if (entryValue == null) {
+            // Creates the entry
+            return requestDao.addValue(entryId, input.getLocale(), input.getValue());
+        } else if (!entryValue.isEditable()) {
+            // If not editable, rejects the changes
+            throw new TranslationDiffEntryValueNotEditableException(entry.getKey(), input.getLocale());
+        } else {
+            // Edits it
+            requestDao.editValue(entryValue.getEntryValueId(), input.getValue());
+            // OK
+            return entryValue;
+        }
     }
 }

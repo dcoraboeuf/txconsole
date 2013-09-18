@@ -11,7 +11,7 @@ import java.util.*;
 @Data
 public class TranslationDiffEntry implements Comparable<TranslationDiffEntry> {
 
-    public static final Function<TranslationDiffEntry,TranslationDiffEntry> entryTrimFn = new Function<TranslationDiffEntry, TranslationDiffEntry>() {
+    public static final Function<TranslationDiffEntry, TranslationDiffEntry> entryTrimFn = new Function<TranslationDiffEntry, TranslationDiffEntry>() {
         @Override
         public TranslationDiffEntry apply(TranslationDiffEntry entry) {
             return entry.trimValues();
@@ -70,7 +70,8 @@ public class TranslationDiffEntry implements Comparable<TranslationDiffEntry> {
         }
     }
 
-    private boolean isEditable() {
+    @JsonIgnore
+    public boolean isEditable() {
         return Iterables.any(
                 values.values(),
                 TranslationDiffEntryValue.entryValueEditableFn
@@ -84,6 +85,7 @@ public class TranslationDiffEntry implements Comparable<TranslationDiffEntry> {
             newValues.put(
                     missingLocale,
                     new TranslationDiffEntryValue(
+                            0,
                             missingLocale,
                             true,
                             null,
@@ -115,5 +117,9 @@ public class TranslationDiffEntry implements Comparable<TranslationDiffEntry> {
                 type,
                 Collections.<Locale, TranslationDiffEntryValue>emptyMap()
         );
+    }
+
+    public TranslationDiffEntryValue getEntryValue(Locale locale) {
+        return values.get(locale);
     }
 }
