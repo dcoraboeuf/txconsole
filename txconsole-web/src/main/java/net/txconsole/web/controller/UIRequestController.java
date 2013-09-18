@@ -172,14 +172,21 @@ public class UIRequestController extends AbstractUIController implements UIReque
     @RequestMapping(value = "/request/{id}/view", method = RequestMethod.GET)
     public
     @ResponseBody
-    Resource<RequestView> getRequestView(Locale locale, @PathVariable int id) {
+    Resource<RequestControlledView> getRequestView(Locale locale, @PathVariable int id) {
         // Gets the view
         RequestView view = requestService.getRequestView(id);
+        // Gets the controls
+        List<TranslationDiffControl> controls = requestService.controlRequest(locale, id);
+        // Controlled view
+        RequestControlledView controlledView = new RequestControlledView(
+                view,
+                controls
+        );
         // Gets the branch
-        BranchSummary branch = structureService.getBranch(view.getSummary().getBranchId());
+        BranchSummary branch = structureService.getBranch(controlledView.getSummary().getBranchId());
         int projectId = branch.getProjectId();
         // View resource
-        Resource<RequestView> r = new Resource<>(view)
+        Resource<RequestControlledView> r = new Resource<>(controlledView)
                 // TODO Links
                 // ACL
                 .withActions(securityUtils, projectId, ProjectFunction.REQUEST_DELETE, ProjectFunction.REQUEST_EDIT, ProjectFunction.REQUEST_UPLOAD);
