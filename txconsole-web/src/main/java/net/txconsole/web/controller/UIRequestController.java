@@ -208,6 +208,16 @@ public class UIRequestController extends AbstractUIController implements UIReque
     }
 
     /**
+     * Controls a request
+     */
+    @RequestMapping(value = "/request/{id}/control", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<TranslationDiffControl> controlRequest(Locale locale, @PathVariable int id) {
+        return requestService.controlRequest(locale, id);
+    }
+
+    /**
      * Deletes a request
      */
     @RequestMapping(value = "/request/{id}", method = RequestMethod.DELETE)

@@ -220,9 +220,7 @@ public class RequestServiceImpl implements RequestService {
         // Gets the request summary
         RequestSummary summary = getRequest(id);
         // Gets the branch configuration
-        Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(summary.getBranchId());
-        // Gets the list of supported locales
-        Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
+        Set<Locale> supportedLocales = getSupportedLocalesForBranch(summary.getBranchId());
         // Loads the diff for this request
         TranslationDiff diff = requestDao.loadDiff(id).forEdition(supportedLocales).trimValues().sorted();
         // OK
@@ -234,14 +232,19 @@ public class RequestServiceImpl implements RequestService {
     public TranslationDiffEntry getRequestEntryDetails(int entryId) {
         // Gets the branch ID from the entry ID
         int branchId = requestDao.getBranchIdForRequestEntry(entryId);
-        // Gets the branch configuration
-        Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
-        // Gets the list of supported locales
-        Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
+        Set<Locale> supportedLocales = getSupportedLocalesForBranch(branchId);
+
         // Gets the details for edition
         TranslationDiffEntry rawEntry = requestDao.getRequestEntryDetails(entryId);
         TranslationDiffEntry entry = rawEntry.forEdition(supportedLocales);
         return entry != null ? entry : rawEntry;
+    }
+
+    protected Set<Locale> getSupportedLocalesForBranch(int branchId) {
+        // Gets the branch configuration
+        Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
+        // Gets the list of supported locales
+        return configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
     }
 
     @Override
@@ -282,7 +285,11 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TranslationDiffControl> controlRequest(Locale outputLocale, int requestId, Set<Locale> supportedLocales) {
+    public List<TranslationDiffControl> controlRequest(Locale outputLocale, int requestId) {
+        // Gets the request summary
+        RequestSummary summary = getRequest(requestId);
+        // Gets the branch configuration
+        Set<Locale> supportedLocales = getSupportedLocalesForBranch(summary.getBranchId());
         // Result
         List<TranslationDiffControl> controls = new ArrayList<>();
         // Loads the diff
