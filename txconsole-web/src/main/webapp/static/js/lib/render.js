@@ -4,6 +4,10 @@ define(['common', 'application', 'handlebars'], function (common, application, h
         return key.loc();
     });
 
+    Handlebars.registerHelper('json', function (context) {
+        return JSON.stringify(context ? context : this);
+    });
+
     Handlebars.registerHelper('link', function (rel, options) {
         for (var i = 0; i < this.links.length; i++) {
             if (rel == this.links[i].rel) {
