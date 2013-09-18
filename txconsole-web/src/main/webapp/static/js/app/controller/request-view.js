@@ -37,6 +37,22 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                     function () {
                         $(header).hide();
                         $(container).removeClass('hidden');
+                        // Input ENTER
+                        $(container).find('.translation-edit-input').each(function (index, input) {
+                            // Entry ID & locale
+                            var entryId = $(input).attr('data-entry-id');
+                            var locale = $(input).attr('data-locale');
+                            // On ENTER
+                            $(input).keydown(function (e) {
+                                if (e.which == 13) {
+                                    // Gets the new value & old value
+                                    var newValue = $(input).val();
+                                    var oldValue = $(input).attr('data-old-value');
+                                    // Sends the changes
+                                    saveEntryForLocale($(input), entryId, locale, newValue, oldValue);
+                                }
+                            });
+                        });
                         // Submit buttons
                         $(container).find('.translation-edit-submit').each(function (index, btn) {
                             $(btn).click(function () {
