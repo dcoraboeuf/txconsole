@@ -20,6 +20,14 @@ public enum ProjectFunction implements SecurityFunction {
      */
     REQUEST_CREATE,
     /**
+     * Editing the content of a request
+     */
+    REQUEST_EDIT,
+    /**
+     * Uploading the content of a request
+     */
+    REQUEST_UPLOAD,
+    /**
      * Deleting an existing translation request
      */
     REQUEST_DELETE;

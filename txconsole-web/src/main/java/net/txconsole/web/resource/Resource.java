@@ -3,6 +3,7 @@ package net.txconsole.web.resource;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.txconsole.core.security.SecurityFunction;
+import net.txconsole.core.security.SecurityUtils;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 
@@ -50,4 +51,11 @@ public class Resource<T> extends ResourceSupport {
         return this;
     }
 
+    public Resource<T> withActions(SecurityUtils securityUtils, int id, SecurityFunction... fns) {
+        Resource<T> r = this;
+        for (SecurityFunction fn : fns) {
+            r = r.withAction(fn, securityUtils.isGranted(fn, id));
+        }
+        return r;
+    }
 }

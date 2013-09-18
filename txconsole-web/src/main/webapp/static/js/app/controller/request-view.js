@@ -1,6 +1,6 @@
 define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, ajax) {
 
-    function loadEntry(header, entryId) {
+    function loadEntry(header, entryId, viewResource) {
         ajax.get({
             url: 'ui/request/entry/{0}'.format(entryId),
             loading: {
@@ -8,6 +8,11 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
             },
             successFn: function (entry) {
                 var container = $('#translation-key-content-{0}'.format(entryId));
+                // Adapt editable status according to the ACL
+                $.each(entry.entries, function (index, diff) {
+                    diff.editableAllowed = diff.editable && viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0;
+                });
+                // Rendering
                 render.renderInto(
                     container,
                     'request-view-key',
@@ -46,10 +51,11 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
             });
             return resource;
         },
-        render: render.asSimpleTemplate('request-view', render.sameDataFn, function (config) {
+        render: render.asSimpleTemplate('request-view', render.sameDataFn, function (config, resource) {
+            // Activates each key to gets its content
             $('.translation-key-load').each(function (index, e) {
                 $(e).click(function () {
-                    loadEntry($(e), $(e).attr('data-request-entry-id'))
+                    loadEntry($(e), $(e).attr('data-request-entry-id'), resource)
                 })
             })
         })

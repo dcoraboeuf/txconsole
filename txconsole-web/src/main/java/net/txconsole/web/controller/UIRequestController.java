@@ -175,11 +175,14 @@ public class UIRequestController extends AbstractUIController implements UIReque
     Resource<RequestView> getRequestView(Locale locale, @PathVariable int id) {
         // Gets the view
         RequestView view = requestService.getRequestView(id);
+        // Gets the branch
+        BranchSummary branch = structureService.getBranch(view.getSummary().getBranchId());
+        int projectId = branch.getProjectId();
         // View resource
-        Resource<RequestView> r = new Resource<>(view);
-        // TODO Links
-        // TODO ACL: edition of the request
-        // TODO ACL: upload of the request
+        Resource<RequestView> r = new Resource<>(view)
+                // TODO Links
+                // ACL
+                .withActions(securityUtils, projectId, ProjectFunction.REQUEST_DELETE, ProjectFunction.REQUEST_EDIT, ProjectFunction.REQUEST_UPLOAD);
         // OK
         return r;
     }
