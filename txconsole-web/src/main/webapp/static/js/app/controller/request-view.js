@@ -22,6 +22,19 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                     function () {
                         $(header).hide();
                         $(container).removeClass('hidden');
+                        // TODO Submit buttons
+                        // Cancel buttons
+                        $(container).find('.translation-edit-cancel').each(function (index, btn) {
+                            $(btn).click(function () {
+                                // Entry ID & locale
+                                var entryId = $(btn).attr('data-entry-id');
+                                var locale = $(btn).attr('data-locale');
+                                // Input
+                                var input = $(container).find('#translation-edit-input-{0}-{1}'.format(entryId, locale));
+                                // Restores the old value
+                                input.val(input.attr('data-old-value'));
+                            })
+                        });
                     }
                 )
             }

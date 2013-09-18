@@ -8,8 +8,21 @@
                 <td>
                     <input type="text" readonly="readonly" class="span5" value="{{oldValue}}" />
                     {{#if editableAllowed}}
-                        <input id="translation-edit-input-{{../../entry/entryId}}" type="text" class="span5 translation-edit-input" value="{{newValue}}" />
-                        <i class="icon-ok action translation-edit-submit" data-entry-id="{{../../entry/entryId}}" data-locale="{{locale}}"></i>
+                        <input
+                                id="translation-edit-input-{{../../entry/entryId}}-{{locale}}"
+                                type="text"
+                                class="span5 translation-edit-input"
+                                value="{{newValue}}"
+                                data-old-value="{{newValue}}"
+                                />
+                        <i
+                                class="icon-ok action action-optional action-inline translation-edit-submit"
+                                data-entry-id="{{../../entry/entryId}}"
+                                data-locale="{{locale}}"></i>
+                        <i
+                                class="icon-remove action action-optional action-inline translation-edit-cancel"
+                                data-entry-id="{{../../entry/entryId}}"
+                                data-locale="{{locale}}"></i>
                     {{else}}
                         <input type="text" readonly="readonly" class="span5" value="{{newValue}}" />
                     {{/if}}
