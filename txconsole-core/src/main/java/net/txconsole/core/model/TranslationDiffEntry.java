@@ -3,6 +3,7 @@ package net.txconsole.core.model;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import lombok.Data;
+import net.sf.jstring.Strings;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -121,5 +122,25 @@ public class TranslationDiffEntry implements Comparable<TranslationDiffEntry> {
 
     public TranslationDiffEntryValue getEntryValue(Locale locale) {
         return values.get(locale);
+    }
+
+    public String getNewValue(Locale locale) {
+        TranslationDiffEntryValue entryValue = getEntryValue(locale);
+        return entryValue != null ? entryValue.getNewValue() : null;
+    }
+
+    public String getOldValue(Locale locale) {
+        TranslationDiffEntryValue entryValue = getEntryValue(locale);
+        return entryValue != null ? entryValue.getOldValue() : null;
+    }
+
+    public TranslationDiffControl control(Strings strings, Locale outputLocale, String code, Object... parameters) {
+        return new TranslationDiffControl(
+                entryId,
+                bundle,
+                section,
+                key,
+                strings.get(outputLocale, code, parameters)
+        );
     }
 }

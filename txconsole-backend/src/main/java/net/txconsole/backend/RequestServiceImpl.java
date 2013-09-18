@@ -2,6 +2,7 @@ package net.txconsole.backend;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import net.sf.jstring.Strings;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.backend.exceptions.TranslationDiffEntryNotEditableException;
@@ -18,12 +19,14 @@ import net.txconsole.service.support.Configured;
 import net.txconsole.service.support.TranslationSource;
 import net.txconsole.service.support.TranslationSourceService;
 import net.txconsole.service.support.TxFileExchange;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -39,6 +42,7 @@ public class RequestServiceImpl implements RequestService {
     private final EventService eventService;
     private final RequestDao requestDao;
     private final SecurityUtils securityUtils;
+    private final Strings strings;
     /**
      * Requests being generated
      */
@@ -63,13 +67,14 @@ public class RequestServiceImpl implements RequestService {
     };
 
     @Autowired
-    public RequestServiceImpl(StructureService structureService, TranslationMapService translationMapService, TranslationSourceService translationSourceService, EventService eventService, RequestDao requestDao, SecurityUtils securityUtils) {
+    public RequestServiceImpl(StructureService structureService, TranslationMapService translationMapService, TranslationSourceService translationSourceService, EventService eventService, RequestDao requestDao, SecurityUtils securityUtils, Strings strings) {
         this.structureService = structureService;
         this.translationMapService = translationMapService;
         this.translationSourceService = translationSourceService;
         this.eventService = eventService;
         this.requestDao = requestDao;
         this.securityUtils = securityUtils;
+        this.strings = strings;
     }
 
     @Override
@@ -273,5 +278,54 @@ public class RequestServiceImpl implements RequestService {
                 return requestDao.addValue(entryId, input.getLocale(), input.getValue());
             }
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TranslationDiffControl> controlRequest(Locale outputLocale, int requestId, Set<Locale> supportedLocales) {
+        // Result
+        List<TranslationDiffControl> controls = new ArrayList<>();
+        // Loads the diff
+        TranslationDiff diff = requestDao.loadDiff(requestId);
+        // Loops over the entries
+        for (TranslationDiffEntry entry : diff.getEntries()) {
+            controls.addAll(controlEntry(outputLocale, entry, supportedLocales));
+        }
+        // OK
+        return controls;
+    }
+
+    protected List<TranslationDiffControl> controlEntry(Locale outputLocale, TranslationDiffEntry entry, Set<Locale> supportedLocales) {
+        // Result
+        List<TranslationDiffControl> controls = new ArrayList<>();
+        // According to the type
+        switch (entry.getType()) {
+            case ADDED:
+                // Checks that all values are filled in
+                for (Locale supportedLocale : supportedLocales) {
+                    String suppliedValue = entry.getNewValue(supportedLocale);
+                    if (StringUtils.isBlank(suppliedValue)) {
+                        controls.add(entry.control(strings, outputLocale, RequestService.MISSING_LOCALE_IN_KEY, supportedLocale));
+                    }
+                }
+                break;
+            case UPDATED:
+                // Checks that all values are filled in and different from the old value
+                for (Locale supportedLocale : supportedLocales) {
+                    String oldValue = entry.getOldValue(supportedLocale);
+                    String newValue = entry.getNewValue(supportedLocale);
+                    if (StringUtils.isBlank(newValue)) {
+                        controls.add(entry.control(strings, outputLocale, RequestService.MISSING_LOCALE_IN_KEY, supportedLocale));
+                    } else if (StringUtils.equals(oldValue, newValue)) {
+                        controls.add(entry.control(strings, outputLocale, RequestService.UNCHANGED_LOCALE_IN_KEY, supportedLocale));
+                    }
+                }
+                break;
+            case DELETED:
+                // No control is needed
+                break;
+        }
+        // OK
+        return controls;
     }
 }

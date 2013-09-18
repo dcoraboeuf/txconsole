@@ -4,8 +4,13 @@ import net.txconsole.core.Content;
 import net.txconsole.core.model.*;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public interface RequestService {
+
+    String MISSING_LOCALE_IN_KEY = "RequestService.control.missingLocaleInKey";
+    String UNCHANGED_LOCALE_IN_KEY = "RequestService.control.unchangedLocaleInKey";
 
     RequestConfigurationData getRequestConfigurationData(int branchId);
 
@@ -26,4 +31,6 @@ public interface RequestService {
     TranslationDiffEntry getRequestEntryDetails(int entryId);
 
     TranslationDiffEntryValue editRequestEntry(int entryId, RequestEntryInput input);
+
+    List<TranslationDiffControl> controlRequest(Locale outputLocale, int requestId, Set<Locale> supportedLocales);
 }
