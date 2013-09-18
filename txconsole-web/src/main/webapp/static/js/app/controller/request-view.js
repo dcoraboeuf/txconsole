@@ -1,5 +1,20 @@
 define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, ajax) {
 
+    function saveEntryForLocale(input, entryId, locale, newValue, oldValue) {
+        if (newValue != oldValue) {
+            ajax.put({
+                url: 'ui/request/entry/{0}'.format(entryId),
+                data: {
+                    locale: locale,
+                    value: newValue
+                },
+                loading: {
+                    el: input
+                }
+            })
+        }
+    }
+
     function loadEntry(header, entryId, viewResource) {
         ajax.get({
             url: 'ui/request/entry/{0}'.format(entryId),
@@ -22,7 +37,21 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                     function () {
                         $(header).hide();
                         $(container).removeClass('hidden');
-                        // TODO Submit buttons
+                        // Submit buttons
+                        $(container).find('.translation-edit-submit').each(function (index, btn) {
+                            $(btn).click(function () {
+                                // Entry ID & locale
+                                var entryId = $(btn).attr('data-entry-id');
+                                var locale = $(btn).attr('data-locale');
+                                // Input
+                                var input = $(container).find('#translation-edit-input-{0}-{1}'.format(entryId, locale));
+                                // Gets the new value & old value
+                                var newValue = input.val();
+                                var oldValue = input.attr('data-old-value');
+                                // Sends the changes
+                                saveEntryForLocale(input, entryId, locale, newValue, oldValue);
+                            })
+                        });
                         // Cancel buttons
                         $(container).find('.translation-edit-cancel').each(function (index, btn) {
                             $(btn).click(function () {
