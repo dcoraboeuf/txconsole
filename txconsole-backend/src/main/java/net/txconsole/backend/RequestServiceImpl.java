@@ -211,7 +211,7 @@ public class RequestServiceImpl implements RequestService {
         // Gets the list of supported locales
         Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
         // Loads the diff for this request
-        TranslationDiff diff = requestDao.loadDiff(id).forEdition(supportedLocales);
+        TranslationDiff diff = requestDao.loadDiff(id).forEdition(supportedLocales).trimValues().sorted();
         // OK
         return new RequestView(summary, diff);
     }

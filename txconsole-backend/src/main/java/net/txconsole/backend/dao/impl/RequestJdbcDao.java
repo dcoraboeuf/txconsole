@@ -212,7 +212,7 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
         getNamedParameterJdbcTemplate().query(
                 SQL.REQUEST_ENTRY_BY_REQUEST,
                 params("request", id),
-                new TranslationDiffEntryBuilderRowMapper(builder, false)
+                new TranslationDiffEntryBuilderRowMapper(builder)
         );
         // OK
         return builder.build();
@@ -227,18 +227,16 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
         return getNamedParameterJdbcTemplate().queryForObject(
                 SQL.REQUEST_ENTRY_BY_ID,
                 params("id", entryId),
-                new TranslationDiffEntryBuilderRowMapper(builder, true)
+                new TranslationDiffEntryBuilderRowMapper(builder)
         ).build();
     }
 
     protected class TranslationDiffEntryBuilderRowMapper implements RowMapper<TranslationDiffEntryBuilder> {
 
         private final TranslationDiffBuilder builder;
-        private final boolean collectValues;
 
-        public TranslationDiffEntryBuilderRowMapper(TranslationDiffBuilder builder, boolean collectValues) {
+        public TranslationDiffEntryBuilderRowMapper(TranslationDiffBuilder builder) {
             this.builder = builder;
-            this.collectValues = collectValues;
         }
 
         @Override
@@ -251,22 +249,20 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
             // Adds the entry
             final TranslationDiffEntryBuilder entry = builder.entry(entryId, bundle, section, key, type);
             // Gets all values
-            if (collectValues) {
-                getNamedParameterJdbcTemplate().query(
-                        SQL.REQUEST_ENTRY_VALUE_BY_REQUEST_ENTRY,
-                        params("entryId", entryId),
-                        new RowCallbackHandler() {
-                            @Override
-                            public void processRow(ResultSet rs) throws SQLException {
-                                Locale locale = SQLUtils.toLocale(rs, "locale");
-                                boolean editable = rs.getBoolean("editable");
-                                String oldValue = rs.getString("oldValue");
-                                String newValue = rs.getString("newValue");
-                                entry.withDiff(locale, editable, oldValue, newValue);
-                            }
+            getNamedParameterJdbcTemplate().query(
+                    SQL.REQUEST_ENTRY_VALUE_BY_REQUEST_ENTRY,
+                    params("entryId", entryId),
+                    new RowCallbackHandler() {
+                        @Override
+                        public void processRow(ResultSet rs) throws SQLException {
+                            Locale locale = SQLUtils.toLocale(rs, "locale");
+                            boolean editable = rs.getBoolean("editable");
+                            String oldValue = rs.getString("oldValue");
+                            String newValue = rs.getString("newValue");
+                            entry.withDiff(locale, editable, oldValue, newValue);
                         }
-                );
-            }
+                    }
+            );
             // OK
             return entry;
         }

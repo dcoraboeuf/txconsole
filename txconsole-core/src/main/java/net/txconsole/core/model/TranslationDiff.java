@@ -32,6 +32,15 @@ public class TranslationDiff {
         );
     }
 
+    public TranslationDiff trimValues() {
+        return new TranslationDiff(
+                Lists.transform(
+                        entries,
+                        TranslationDiffEntry.entryTrimFn
+                )
+        );
+    }
+
     public TranslationDiff sorted() {
         List<TranslationDiffEntry> newEntries = new ArrayList<>(entries);
         Collections.sort(newEntries);

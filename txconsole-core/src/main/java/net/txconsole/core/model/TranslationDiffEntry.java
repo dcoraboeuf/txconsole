@@ -1,5 +1,6 @@
 package net.txconsole.core.model;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import lombok.Data;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -10,6 +11,12 @@ import java.util.*;
 @Data
 public class TranslationDiffEntry implements Comparable<TranslationDiffEntry> {
 
+    public static final Function<TranslationDiffEntry,TranslationDiffEntry> entryTrimFn = new Function<TranslationDiffEntry, TranslationDiffEntry>() {
+        @Override
+        public TranslationDiffEntry apply(TranslationDiffEntry entry) {
+            return entry.trimValues();
+        }
+    };
     private final int entryId;
     private final String bundle;
     private final String section;
@@ -96,6 +103,17 @@ public class TranslationDiffEntry implements Comparable<TranslationDiffEntry> {
                 key,
                 type,
                 newValues
+        );
+    }
+
+    public TranslationDiffEntry trimValues() {
+        return new TranslationDiffEntry(
+                entryId,
+                bundle,
+                section,
+                key,
+                type,
+                Collections.<Locale, TranslationDiffEntryValue>emptyMap()
         );
     }
 }
