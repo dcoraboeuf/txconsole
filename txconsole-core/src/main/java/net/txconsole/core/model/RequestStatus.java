@@ -9,6 +9,8 @@ public enum RequestStatus {
 
     REQUEST_GENERATION,
 
-    REQUEST_EXPORTED
+    REQUEST_EXPORTED,
+
+    ERROR
 
 }

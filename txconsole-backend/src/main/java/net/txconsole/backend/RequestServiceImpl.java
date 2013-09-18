@@ -57,7 +57,8 @@ public class RequestServiceImpl implements RequestService {
                     t.getId(),
                     t.getBranchId(),
                     t.getVersion(),
-                    status
+                    status,
+                    t.getMessage()
             );
         }
     };
