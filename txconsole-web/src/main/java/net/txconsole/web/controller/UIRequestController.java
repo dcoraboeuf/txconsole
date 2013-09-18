@@ -200,8 +200,11 @@ public class UIRequestController extends AbstractUIController implements UIReque
     @RequestMapping(value = "/request/entry/{entryId}", method = RequestMethod.GET)
     public
     @ResponseBody
-    TranslationDiffEntry getRequestEntryDetails(Locale locale, @PathVariable int entryId) {
-        return requestService.getRequestEntryDetails(entryId);
+    RequestControlledEntry getRequestEntryDetails(Locale locale, @PathVariable int entryId) {
+        return new RequestControlledEntry(
+                requestService.getRequestEntryDetails(entryId),
+                requestService.controlRequestEntry(locale, entryId)
+        );
     }
 
     /**

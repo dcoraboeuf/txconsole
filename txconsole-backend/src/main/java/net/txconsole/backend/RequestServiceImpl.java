@@ -299,6 +299,30 @@ public class RequestServiceImpl implements RequestService {
         return controls;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public TranslationDiffControl controlRequestEntry(Locale outputLocale, int entryId) {
+        // Entry & values
+        TranslationDiffEntry entry = getRequestEntryDetails(entryId);
+        // Branch from the entry
+        int branchId = requestDao.getBranchIdForRequestEntry(entryId);
+        // Gets the branch configuration
+        Set<Locale> supportedLocales = getSupportedLocalesForBranch(branchId);
+        // Controls
+        List<TranslationDiffControl> controls = controlEntry(outputLocale, entry, supportedLocales);
+        // OK
+        if (controls.isEmpty()) {
+            return new TranslationDiffControl(
+                    entryId,
+                    entry.getBundle(),
+                    entry.getSection(),
+                    entry.getKey()
+            );
+        } else {
+            return controls.get(0);
+        }
+    }
+
     protected List<TranslationDiffControl> controlEntry(Locale outputLocale, TranslationDiffEntry entry, Set<Locale> supportedLocales) {
         // Result
         Map<Integer, TranslationDiffControl> controls = new TreeMap<>();

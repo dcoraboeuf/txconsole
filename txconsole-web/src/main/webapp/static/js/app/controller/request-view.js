@@ -24,10 +24,10 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
             loading: {
                 el: header
             },
-            successFn: function (entry) {
+            successFn: function (controlledEntry) {
                 var container = $('#translation-key-content-{0}'.format(entryId));
                 // Adapt editable status according to the ACL
-                $.each(entry.entries, function (index, diff) {
+                $.each(controlledEntry.diffEntry.entries, function (index, diff) {
                     diff.editableAllowed = diff.editable && viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0;
                 });
                 // Rendering
@@ -35,7 +35,7 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                     container,
                     'request-view-key',
                     {
-                        entry: entry
+                        entry: controlledEntry
                     },
                     function () {
                         $(header).hide();

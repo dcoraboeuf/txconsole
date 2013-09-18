@@ -4,8 +4,8 @@ define(['common', 'application', 'handlebars'], function (common, application, h
         return key.loc();
     });
 
-    Handlebars.registerHelper('json', function (context) {
-        return JSON.stringify(context ? context : this);
+    Handlebars.registerHelper('json', function (o) {
+        return JSON.stringify(o);
     });
 
     Handlebars.registerHelper('link', function (rel, options) {

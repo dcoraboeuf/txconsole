@@ -33,4 +33,6 @@ public interface RequestService {
     TranslationDiffEntryValue editRequestEntry(int entryId, RequestEntryInput input);
 
     List<TranslationDiffControl> controlRequest(Locale outputLocale, int requestId);
+
+    TranslationDiffControl controlRequestEntry(Locale outputLocale, int entryId);
 }

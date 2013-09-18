@@ -1,6 +1,6 @@
 <table class="table table-condensed">
     <tbody>
-        {{#entry.entries}}
+        {{#entry.diffEntry.entries}}
             <tr>
                 <td>
                     {{locale}}
@@ -9,27 +9,27 @@
                     <input type="text" readonly="readonly" class="span5" value="{{oldValue}}" />
                     {{#if editableAllowed}}
                         <input
-                                id="translation-edit-input-{{../../entry/entryId}}-{{locale}}"
+                                id="translation-edit-input-{{../../entry.diffEntry.entryId}}-{{locale}}"
                                 type="text"
                                 class="span5 translation-edit-input"
                                 value="{{newValue}}"
                                 data-old-value="{{newValue}}"
-                                data-entry-id="{{../../entry/entryId}}"
+                                data-entry-id="{{../../entry.diffEntry.entryId}}"
                                 data-locale="{{locale}}"
                                 />
                         <i
                                 class="icon-ok action action-optional action-inline translation-edit-submit"
-                                data-entry-id="{{../../entry/entryId}}"
+                                data-entry-id="{{../../entry.diffEntry.entryId}}"
                                 data-locale="{{locale}}"></i>
                         <i
                                 class="icon-remove action action-optional action-inline translation-edit-cancel"
-                                data-entry-id="{{../../entry/entryId}}"
+                                data-entry-id="{{../../entry.diffEntry.entryId}}"
                                 data-locale="{{locale}}"></i>
                     {{else}}
                         <input type="text" readonly="readonly" class="span5" value="{{newValue}}" />
                     {{/if}}
                 </td>
             </tr>
-        {{/entry.entries}}
+        {{/entry.diffEntry.entries}}
     </tbody>
 </table>
