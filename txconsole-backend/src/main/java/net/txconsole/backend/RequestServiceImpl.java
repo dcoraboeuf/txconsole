@@ -219,6 +219,15 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional(readOnly = true)
     public TranslationDiffEntry getRequestEntryDetails(int entryId) {
-        return requestDao.getRequestEntryDetails(entryId);
+        // Gets the branch ID from the entry ID
+        int branchId = requestDao.getBranchIdForRequestEntry(entryId);
+        // Gets the branch configuration
+        Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
+        // Gets the list of supported locales
+        Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
+        // Gets the details for edition
+        TranslationDiffEntry rawEntry = requestDao.getRequestEntryDetails(entryId);
+        TranslationDiffEntry entry = rawEntry.forEdition(supportedLocales);
+        return entry != null ? entry : rawEntry;
     }
 }

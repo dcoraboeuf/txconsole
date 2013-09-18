@@ -36,4 +36,6 @@ public interface RequestDao {
     TranslationDiff loadDiff(int id);
 
     TranslationDiffEntry getRequestEntryDetails(int entryId);
+
+    int getBranchIdForRequestEntry(int entryId);
 }
