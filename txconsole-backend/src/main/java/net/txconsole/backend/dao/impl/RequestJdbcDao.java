@@ -210,7 +210,7 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
         int id = dbCreate(
                 SQL.REQUEST_ENTRY_NEW_VALUE,
                 params("entryId", entryId)
-                        .addValue("locale", locale)
+                        .addValue("locale", locale.toString())
                         .addValue("value", value)
         );
         return new TranslationDiffEntryValue(

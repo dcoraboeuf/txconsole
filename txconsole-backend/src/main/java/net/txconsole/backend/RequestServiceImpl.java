@@ -262,10 +262,16 @@ public class RequestServiceImpl implements RequestService {
             // If not editable, rejects the changes
             throw new TranslationDiffEntryValueNotEditableException(entry.getKey(), input.getLocale());
         } else {
-            // Edits it
-            requestDao.editValue(entryValue.getEntryValueId(), input.getValue());
-            // OK
-            return entryValue;
+            int entryValueId = entryValue.getEntryValueId();
+            if (entryValueId > 0) {
+                // Edits it
+                requestDao.editValue(entryValueId, input.getValue());
+                // OK
+                return entryValue;
+            } else {
+                // Creates the entry
+                return requestDao.addValue(entryId, input.getLocale(), input.getValue());
+            }
         }
     }
 }
