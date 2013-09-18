@@ -44,6 +44,14 @@
     opacity: 0.5;
 }
 
+/* Input validations */
+input.warning {
+    background-color: lightsalmon;
+}
+input.success {
+    background-color: lightgreen;
+}
+
 /* Page title */
 
 .title {

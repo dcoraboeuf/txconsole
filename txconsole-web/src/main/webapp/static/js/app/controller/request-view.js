@@ -10,6 +10,9 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                 },
                 loading: {
                     el: input
+                },
+                successFn: function () {
+                    input.removeClass('warning').addClass('success');
                 }
             })
         }
@@ -37,13 +40,16 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                     function () {
                         $(header).hide();
                         $(container).removeClass('hidden');
-                        // Input ENTER
+                        // Inputs
                         $(container).find('.translation-edit-input').each(function (index, input) {
                             // Entry ID & locale
                             var entryId = $(input).attr('data-entry-id');
                             var locale = $(input).attr('data-locale');
-                            // On ENTER
+                            // Key pressed
                             $(input).keydown(function (e) {
+                                // On any key
+                                $(input).addClass('warning');
+                                // On Enter ==> submit
                                 if (e.which == 13) {
                                     // Gets the new value & old value
                                     var newValue = $(input).val();
@@ -78,6 +84,12 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                                 var input = $(container).find('#translation-edit-input-{0}-{1}'.format(entryId, locale));
                                 // Restores the old value
                                 input.val(input.attr('data-old-value'));
+                                // Removes any class
+                                if (input.hasClass('success')) {
+                                    input.removeClass('success').addClass('warning');
+                                } else {
+                                    input.removeClass('warning');
+                                }
                             })
                         });
                     }
