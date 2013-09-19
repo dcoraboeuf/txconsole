@@ -6,7 +6,6 @@ import net.sf.jstring.LocalizableException;
 import net.sf.jstring.Strings;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
-import net.txconsole.backend.exceptions.RequestCreationException;
 import net.txconsole.backend.exceptions.TranslationDiffEntryNotEditableException;
 import net.txconsole.backend.exceptions.TranslationDiffEntryValueNotEditableException;
 import net.txconsole.core.Content;
@@ -182,8 +181,8 @@ public class RequestServiceImpl implements RequestService {
                 }
                 // Sets the status to error
                 requestDao.setStatus(requestId, RequestStatus.ERROR, message);
-                // Resends the error
-                throw new RequestCreationException(requestId, ex);
+                // Logs the error
+                logger.error(String.format("[request] ID = %d", requestId), ex);
             } finally {
                 inGenerationRequests.remove(requestId);
             }
