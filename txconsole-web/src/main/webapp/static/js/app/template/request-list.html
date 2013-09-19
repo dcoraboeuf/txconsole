@@ -6,7 +6,7 @@
         <a href="{{link 'gui'}}">{{data.version}}</a>
     </td>
     <td class="request-status">
-        {{{requestStatus data.status}}}
+        {{{requestStatus data.status data.message}}}
     </td>
     <td class="request-timestamp">
         {{{eventTimestampAndElapsed 'REQUEST_CREATED'}}}

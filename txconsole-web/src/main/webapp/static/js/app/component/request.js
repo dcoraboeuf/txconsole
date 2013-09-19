@@ -2,10 +2,18 @@ define(
     ['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'common', 'component/keyfilter', 'render'],
     function (dialog, ajax, application, jcombo, jconfigurable, common) {
 
-        Handlebars.registerHelper('requestStatus', function (status) {
+        Handlebars.registerHelper('requestStatus', function (status, message) {
+            var statusName = 'request.status.{0}'.format(status).loc();
+            var title;
+            if (message && message.code) {
+                title = message.code.loc(message.parameters).html();
+            } else {
+                title = statusName;
+            }
+            // FIXME #9 Title as tooltip
             var html = '';
             html += '<img src="{0}"/> '.format(application.staticPathTo('images/request-status-{0}.png'.format(status)));
-            html += 'request.status.{0}'.format(status).loc();
+            html += statusName;
             return html;
         });
 
