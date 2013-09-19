@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.support.PeriodicTrigger;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -20,12 +24,14 @@ import java.util.concurrent.TimeUnit;
 public class RequestCreationBatch implements ScheduledService, Runnable {
 
     private final Logger logger = LoggerFactory.getLogger(RequestCreationBatch.class);
+    private final TransactionTemplate transactionTemplate;
     private final RequestDao requestDao;
     private final RequestService requestService;
     private final SecurityUtils securityUtils;
 
     @Autowired
-    public RequestCreationBatch(RequestDao requestDao, RequestService requestService, SecurityUtils securityUtils) {
+    public RequestCreationBatch(PlatformTransactionManager transactionManager, RequestDao requestDao, RequestService requestService, SecurityUtils securityUtils) {
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
         this.requestDao = requestDao;
         this.requestService = requestService;
         this.securityUtils = securityUtils;
@@ -43,13 +49,18 @@ public class RequestCreationBatch implements ScheduledService, Runnable {
             securityUtils.asAdmin(new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
-                    try {
-                        requestService.launchCreation(requestId);
-                    } catch (Exception ex) {
-                        // FIXME Error handling for batches (think: log & sending a message)
-                        ex.printStackTrace();
-                    }
-                    return null;
+                    return transactionTemplate.execute(new TransactionCallback<Void>() {
+                        @Override
+                        public Void doInTransaction(TransactionStatus transactionStatus) {
+                            try {
+                                requestService.launchCreation(requestId);
+                            } catch (Exception ex) {
+                                // FIXME Error handling for batches (think: log & sending a message)
+                                ex.printStackTrace();
+                            }
+                            return null;
+                        }
+                    });
                 }
                 //
             });
