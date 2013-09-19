@@ -357,12 +357,12 @@ public class RequestServiceImpl implements RequestService {
         return new ArrayList<>(controls.values());
     }
 
-    protected void addControl(Map<Integer, TranslationDiffControl> controls, TranslationDiffEntry entry, Locale outputLocale, String code, Object... parameters) {
+    protected void addControl(Map<Integer, TranslationDiffControl> controls, TranslationDiffEntry entry, Locale outputLocale, String code, Locale locale) {
         TranslationDiffControl control = controls.get(entry.getEntryId());
         if (control == null) {
             control = new TranslationDiffControl(entry.getEntryId(), entry.getBundle(), entry.getSection(), entry.getKey());
             controls.put(entry.getEntryId(), control);
         }
-        control.add(strings.get(outputLocale, code, parameters));
+        control.add(locale, strings.get(outputLocale, code, locale));
     }
 }

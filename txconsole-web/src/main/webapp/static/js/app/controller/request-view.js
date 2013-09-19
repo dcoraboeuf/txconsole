@@ -26,9 +26,16 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
             },
             successFn: function (controlledEntry) {
                 var container = $('#translation-key-content-{0}'.format(entryId));
-                // Adapt editable status according to the ACL
-                $.each(controlledEntry.diffEntry.entries, function (index, diff) {
-                    diff.editableAllowed = diff.editable && viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0;
+                $.each(controlledEntry.diffEntry.entries, function (index, entryValue) {
+                    // Adapt editable status according to the ACL
+                    entryValue.editableAllowed = entryValue.editable && viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0;
+                    // Collects the associated control if any
+                    if (controlledEntry.diffControl) {
+                        var message = controlledEntry.diffControl.messages[entryValue.locale];
+                        if (message) {
+                            entryValue.control = message;
+                        }
+                    }
                 });
                 // Rendering
                 render.renderInto(

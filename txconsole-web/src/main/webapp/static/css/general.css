@@ -119,3 +119,7 @@ input.success {
     color: red;
     font-weight: bold;
 }
+
+.translation-diff-input-invalid {
+    border-color: red !important;
+}
