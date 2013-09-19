@@ -2,8 +2,9 @@ package net.txconsole.core.model;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 @Data
 public class TranslationDiffControl {
@@ -12,10 +13,10 @@ public class TranslationDiffControl {
     private final String bundle;
     private final String section;
     private final String key;
-    private final List<String> messages = new ArrayList<>();
+    private final Map<Locale, String> messages = new HashMap<>();
 
-    public TranslationDiffControl add(String message) {
-        messages.add(message);
+    public TranslationDiffControl add(Locale locale, String message) {
+        messages.put(locale, message);
         return this;
     }
 

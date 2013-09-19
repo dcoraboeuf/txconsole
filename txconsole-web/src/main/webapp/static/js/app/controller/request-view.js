@@ -1,21 +1,31 @@
 define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, ajax) {
 
     function saveEntryForLocale(input, entryId, locale, newValue, oldValue) {
-        if (newValue != oldValue) {
-            ajax.put({
-                url: 'ui/request/entry/{0}'.format(entryId),
-                data: {
-                    locale: locale,
-                    value: newValue
-                },
-                loading: {
-                    el: input
-                },
-                successFn: function () {
-                    input.removeClass('warning').addClass('success');
+        ajax.put({
+            url: 'ui/request/entry/{0}'.format(entryId),
+            data: {
+                locale: locale,
+                value: newValue
+            },
+            loading: {
+                el: input
+            },
+            successFn: function (controlledEntryValue) {
+                // Change submitted
+                input.removeClass('warning').addClass('success');
+                // Updates the controls
+                var message = controlledEntryValue.messages[locale];
+                if (message) {
+                    input
+                        .addClass('translation-diff-input-invalid')
+                        .attr('title', message);
+                } else {
+                    input
+                        .removeClass('translation-diff-input-invalid')
+                        .removeAttr('title');
                 }
-            })
-        }
+            }
+        })
     }
 
     function loadEntry(header, entryId, viewResource) {
@@ -26,9 +36,16 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
             },
             successFn: function (controlledEntry) {
                 var container = $('#translation-key-content-{0}'.format(entryId));
-                // Adapt editable status according to the ACL
-                $.each(controlledEntry.diffEntry.entries, function (index, diff) {
-                    diff.editableAllowed = diff.editable && viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0;
+                $.each(controlledEntry.diffEntry.entries, function (index, entryValue) {
+                    // Adapt editable status according to the ACL
+                    entryValue.editableAllowed = entryValue.editable && viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0;
+                    // Collects the associated control if any
+                    if (controlledEntry.diffControl) {
+                        var message = controlledEntry.diffControl.messages[entryValue.locale];
+                        if (message) {
+                            entryValue.control = message;
+                        }
+                    }
                 });
                 // Rendering
                 render.renderInto(

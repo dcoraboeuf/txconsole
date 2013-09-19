@@ -247,7 +247,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public TranslationDiffEntryValue editRequestEntry(int entryId, RequestEntryInput input) {
+    public RequestControlledEntryValue editRequestEntry(Locale outputLocale, int entryId, RequestEntryInput input) {
         // Loads the branch for this entry
         BranchSummary branch = structureService.getBranch(requestDao.getBranchIdForRequestEntry(entryId));
         // Checks the rights
@@ -260,10 +260,12 @@ public class RequestServiceImpl implements RequestService {
         }
         // Gets the entry value for the locale
         TranslationDiffEntryValue entryValue = entry.getEntryValue(input.getLocale());
+        // Resulting entry value
+        TranslationDiffEntryValue resultingEntryValue;
         // Not existing
         if (entryValue == null) {
             // Creates the entry
-            return requestDao.addValue(entryId, input.getLocale(), input.getValue());
+            resultingEntryValue = requestDao.addValue(entryId, input.getLocale(), input.getValue());
         } else if (!entryValue.isEditable()) {
             // If not editable, rejects the changes
             throw new TranslationDiffEntryValueNotEditableException(entry.getKey(), input.getLocale());
@@ -273,12 +275,17 @@ public class RequestServiceImpl implements RequestService {
                 // Edits it
                 requestDao.editValue(entryValueId, input.getValue());
                 // OK
-                return entryValue;
+                resultingEntryValue = entryValue;
             } else {
                 // Creates the entry
-                return requestDao.addValue(entryId, input.getLocale(), input.getValue());
+                resultingEntryValue = requestDao.addValue(entryId, input.getLocale(), input.getValue());
             }
         }
+        // OK
+        return new RequestControlledEntryValue(
+                resultingEntryValue,
+                controlRequestEntry(outputLocale, entryId).getMessages()
+        );
     }
 
     @Override
@@ -358,12 +365,12 @@ public class RequestServiceImpl implements RequestService {
         return new ArrayList<>(controls.values());
     }
 
-    protected void addControl(Map<Integer, TranslationDiffControl> controls, TranslationDiffEntry entry, Locale outputLocale, String code, Object... parameters) {
+    protected void addControl(Map<Integer, TranslationDiffControl> controls, TranslationDiffEntry entry, Locale outputLocale, String code, Locale locale) {
         TranslationDiffControl control = controls.get(entry.getEntryId());
         if (control == null) {
             control = new TranslationDiffControl(entry.getEntryId(), entry.getBundle(), entry.getSection(), entry.getKey());
             controls.put(entry.getEntryId(), control);
         }
-        control.add(strings.get(outputLocale, code, parameters));
+        control.add(locale, strings.get(outputLocale, code, locale));
     }
 }

@@ -11,11 +11,12 @@
                         <input
                                 id="translation-edit-input-{{../../entry.diffEntry.entryId}}-{{locale}}"
                                 type="text"
-                                class="span5 translation-edit-input"
+                                class="span5 translation-edit-input  {{#if control}}translation-diff-input-invalid{{/if}}"
                                 value="{{newValue}}"
                                 data-old-value="{{newValue}}"
                                 data-entry-id="{{../../entry.diffEntry.entryId}}"
                                 data-locale="{{locale}}"
+                                {{#if control}}title="{{control}}"{{/if}}
                                 />
                         <i
                                 class="icon-ok action action-optional action-inline translation-edit-submit"
@@ -26,7 +27,12 @@
                                 data-entry-id="{{../../entry.diffEntry.entryId}}"
                                 data-locale="{{locale}}"></i>
                     {{else}}
-                        <input type="text" readonly="readonly" class="span5" value="{{newValue}}" />
+                        <input
+                                type="text"
+                                readonly="readonly"
+                                class="span5 {{#if control}}translation-diff-input-invalid{{/if}}"
+                                value="{{newValue}}"
+                                {{#if control}}title="{{control}}"{{/if}} />
                     {{/if}}
                 </td>
             </tr>

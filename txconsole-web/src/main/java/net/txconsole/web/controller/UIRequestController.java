@@ -213,8 +213,8 @@ public class UIRequestController extends AbstractUIController implements UIReque
     @RequestMapping(value = "/request/entry/{entryId}", method = RequestMethod.PUT)
     public
     @ResponseBody
-    TranslationDiffEntryValue editRequestEntry(@PathVariable int entryId, @RequestBody RequestEntryInput input) {
-        return requestService.editRequestEntry(entryId, input);
+    RequestControlledEntryValue editRequestEntry(Locale locale, @PathVariable int entryId, @RequestBody RequestEntryInput input) {
+        return requestService.editRequestEntry(locale, entryId, input);
     }
 
     /**
