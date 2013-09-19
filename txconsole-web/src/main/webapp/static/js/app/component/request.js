@@ -1,20 +1,23 @@
 define(
-    ['dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'common', 'component/keyfilter', 'render'],
-    function (dialog, ajax, application, jcombo, jconfigurable, common) {
+    ['jquery', 'dialog', 'ajax', 'application', 'jcombo', 'jconfigurable', 'common', 'component/keyfilter', 'render'],
+    function ($, dialog, ajax, application, jcombo, jconfigurable, common) {
 
         Handlebars.registerHelper('requestStatus', function (status, message) {
             var statusName = 'request.status.{0}'.format(status).loc();
             var title;
+            var status = $('<i></i>')
+                .append(
+                    $('<img/>').attr('src', application.staticPathTo('images/request-status-{0}.png'.format(status)))
+                )
+                .append('&nbsp;')
+                .append(statusName);
             if (message && message.code) {
-                title = message.code.loc(message.parameters).html();
-            } else {
-                title = statusName;
+                title = message.code.loc(message.parameters);
+                status.append(
+                    $('<div></div>').text(title).addClass('alert alert-error')
+                );
             }
-            // FIXME #9 Title as tooltip
-            var html = '';
-            html += '<img src="{0}"/> '.format(application.staticPathTo('images/request-status-{0}.png'.format(status)));
-            html += statusName;
-            return html;
+            return status.html();
         });
 
         /**
