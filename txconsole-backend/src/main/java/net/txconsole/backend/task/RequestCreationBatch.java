@@ -19,9 +19,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-// TODO Export as JMX
 @Component
-public class RequestCreationBatch implements ScheduledService, Runnable {
+public class RequestCreationBatch implements ScheduledService, IRequestCreationBatch {
 
     private final Logger logger = LoggerFactory.getLogger(RequestCreationBatch.class);
     private final TransactionTemplate transactionTemplate;
