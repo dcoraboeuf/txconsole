@@ -16,10 +16,12 @@ import net.txconsole.web.support.GUIEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -164,6 +166,20 @@ public class UIRequestController extends AbstractUIController implements UIReque
     @ResponseBody
     Resource<RequestSummary> getRequest(Locale locale, @PathVariable int id) {
         return requestSummaryResourceFn.apply(locale).apply(requestService.getRequest(id));
+    }
+
+    /**
+     * Uploads response files for a request
+     */
+    @Override
+    @RequestMapping(value = "/request/{id}/upload", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Resource<RequestControlledView> uploadRequest(Locale locale, @PathVariable int id, @RequestParam Collection<MultipartFile> files) {
+        // Performs the upload
+        requestService.uploadRequest(id, files);
+        // OK
+        return getRequestView(locale, id);
     }
 
     /**

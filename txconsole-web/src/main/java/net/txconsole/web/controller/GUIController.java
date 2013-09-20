@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.Locale;
 
 @Controller
@@ -88,13 +91,10 @@ public class GUIController extends AbstractGUIController {
     RedirectView uploadRequest(HttpServletRequest request, Locale locale, @PathVariable int id) {
         // Error handling
         errorHandlingMultipartResolver.checkForUploadError(request);
-        // FIXME Gets the image
-        //MultipartFile image = ((MultipartHttpServletRequest) request).get
-        // if (image == null) {
-        //    throw new IllegalStateException("Missing 'image' file parameter");
-        // }
-        // FIXME Upload
-        // manageUI.setImagePromotionLevel(project, branch, name, image);
+        // Gets the files
+        Collection<MultipartFile> files = ((MultipartHttpServletRequest) request).getFileMap().values();
+        // Upload
+        uiRequest.uploadRequest(locale, id, files);
         // Success, redirect to the request page
         // TODO Includes the upload feedback as redirection attributes
         return new RedirectView("/request/" + id, true);
