@@ -96,9 +96,21 @@ define(
             )
         }
 
+        /**
+         * Uploads a response for the request
+         */
+        function uploadRequest(requestId) {
+            dialog.show({
+                title: 'request.upload'.loc(),
+                width: 800,
+                templateId: 'request-upload'
+            })
+        }
+
         return {
             createRequest: createRequest,
-            deleteRequest: deleteRequest
+            deleteRequest: deleteRequest,
+            uploadRequest: uploadRequest
         }
 
     }

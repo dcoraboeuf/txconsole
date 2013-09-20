@@ -479,6 +479,14 @@ request.upload
     en -> Upload response
     fr -> Uploader réponse
 
+request.upload.file
+    en -> File
+    fr -> Fichier
+
+request.upload.file.add
+    en -> Add a file
+    fr -> Ajouter un fichier
+
 [keyfilter]
 
 keyfilter.go
