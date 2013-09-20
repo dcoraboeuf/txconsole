@@ -100,6 +100,7 @@ define(
          * Uploads a response for the request
          */
         function uploadRequest(requestId) {
+            var index = 1;
             dialog.show({
                 title: 'request.upload'.loc(),
                 width: 800,
@@ -126,7 +127,7 @@ define(
                                     .append(
                                         $('<input/>')
                                             .attr('type', 'file')
-                                            .attr('name', 'response')
+                                            .attr('name', 'response-{0}'.format(index++))
                                             .attr('required', 'required')
                                     )
                             )

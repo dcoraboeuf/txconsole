@@ -6,13 +6,17 @@ import net.txconsole.core.support.MapBuilder;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.AbstractGUIController;
 import net.txconsole.web.support.ErrorHandler;
+import net.txconsole.web.support.ErrorHandlingMultipartResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 @Controller
@@ -20,12 +24,14 @@ public class GUIController extends AbstractGUIController {
 
     private final UI ui;
     private final UIRequest uiRequest;
+    private final ErrorHandlingMultipartResolver errorHandlingMultipartResolver;
 
     @Autowired
-    public GUIController(ErrorHandler errorHandler, UI ui, UIRequest uiRequest) {
+    public GUIController(ErrorHandler errorHandler, UI ui, UIRequest uiRequest, ErrorHandlingMultipartResolver errorHandlingMultipartResolver) {
         super(errorHandler);
         this.ui = ui;
         this.uiRequest = uiRequest;
+        this.errorHandlingMultipartResolver = errorHandlingMultipartResolver;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -71,6 +77,27 @@ public class GUIController extends AbstractGUIController {
                         .with("project", ui.getProject(locale, branch.getData().getProjectId()))
                         .get()
         );
+    }
+
+    /**
+     * Uploads a response file to the request
+     */
+    @RequestMapping(value = "/request/{id}/upload", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RedirectView uploadRequest(HttpServletRequest request, Locale locale, @PathVariable int id) {
+        // Error handling
+        errorHandlingMultipartResolver.checkForUploadError(request);
+        // FIXME Gets the image
+        //MultipartFile image = ((MultipartHttpServletRequest) request).get
+        // if (image == null) {
+        //    throw new IllegalStateException("Missing 'image' file parameter");
+        // }
+        // FIXME Upload
+        // manageUI.setImagePromotionLevel(project, branch, name, image);
+        // Success, redirect to the request page
+        // TODO Includes the upload feedback as redirection attributes
+        return new RedirectView("/request/" + id, true);
     }
 
 }

@@ -2,7 +2,9 @@ package net.txconsole.service;
 
 import net.txconsole.core.Content;
 import net.txconsole.core.model.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -36,4 +38,6 @@ public interface RequestService {
     List<TranslationDiffControl> controlRequest(Locale outputLocale, int requestId);
 
     TranslationDiffControl controlRequestEntry(Locale outputLocale, int entryId);
+
+    void uploadRequest(int id, Collection<MultipartFile> responses);
 }

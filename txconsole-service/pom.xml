@@ -20,6 +20,11 @@
             <artifactId>txconsole-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- Needed for the MultipartFile class -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -346,6 +347,22 @@ public class RequestServiceImpl implements RequestService {
         } else {
             return controls.get(0);
         }
+    }
+
+    @Override
+    @Transactional
+    public void uploadRequest(int requestId, Collection<MultipartFile> responses) {
+        // No need to do anything if not response file is sent
+        if (responses == null || responses.isEmpty()) {
+            return;
+        }
+        // Loads the request
+        RequestSummary request = getRequest(requestId);
+        // Loads the branch
+        BranchSummary branch = structureService.getBranch(request.getBranchId());
+        // Checks the rights
+        securityUtils.checkGrant(ProjectFunction.REQUEST_UPLOAD, branch.getProjectId());
+        // FIXME Uploads each response file
     }
 
     protected List<TranslationDiffControl> controlEntry(Locale outputLocale, TranslationDiffEntry entry, Set<Locale> supportedLocales) {

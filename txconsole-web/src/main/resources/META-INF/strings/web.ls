@@ -87,6 +87,10 @@ error.back
 	en -> Go back to the portal
 	fr -> Revenir à l'acceuil
 
+net.txconsole.web.support.UploadTooBigException
+    en -> File too big. Maximum is {0}K.
+    fr -> Fichier trop gros. Le maximum est de {0} K.
+
 [login]
 
 login

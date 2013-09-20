@@ -1,10 +1,12 @@
 package net.txconsole.web.config;
 
+import net.sf.jstring.Strings;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.web.locale.LocaleInterceptor;
+import net.txconsole.web.support.DefaultErrorHandlingMultipartResolver;
+import net.txconsole.web.support.ErrorHandlingMultipartResolver;
 import net.txconsole.web.support.WebInterceptor;
 import net.txconsole.web.support.fm.*;
-import net.sf.jstring.Strings;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -120,6 +122,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         MappingJacksonJsonView o = new MappingJacksonJsonView();
         o.setObjectMapper(jacksonObjectMapper);
         return o;
+    }
+
+    @Bean
+    public ErrorHandlingMultipartResolver multipartResolver() {
+        return new DefaultErrorHandlingMultipartResolver(512); // Max size in K
     }
 
 }
