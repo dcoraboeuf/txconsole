@@ -16,6 +16,9 @@
     <@title value=request.data.version close="branch/${branch.data.id?c}">
         <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
         <@title_uplink name=branch.data.name href="branch/${branch.data.id?c}" />
+        <@acl resource=request action='PROJECT#REQUEST_UPLOAD'>
+            <@title_command id="request-upload" title=loc('request.upload') class="icon-upload" />
+        </@acl>
         <@acl resource=request action='PROJECT#REQUEST_DELETE'>
             <@title_command id="request-delete" title=loc('request.delete') class="icon-trash" />
         </@acl>

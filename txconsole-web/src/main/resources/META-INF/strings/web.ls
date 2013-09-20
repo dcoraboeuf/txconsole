@@ -475,6 +475,10 @@ request.delete.prompt
     en -> Do you really want to delete this request?
     fr -> Voulez-vous vraiment supprimer cette demande ?
 
+request.upload
+    en -> Upload response
+    fr -> Uploader réponse
+
 [keyfilter]
 
 keyfilter.go

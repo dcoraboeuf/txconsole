@@ -70,7 +70,7 @@ public class UIRequestController extends AbstractUIController implements UIReque
                             .withLink(linkTo(methodOn(UIRequestController.class).getRequest(locale, o.getId())).withSelfRel())
                             .withLink(linkTo(methodOn(GUIController.class).getRequest(locale, o.getId())).withRel("gui"))
                                     // ACL
-                            .withAction(ProjectFunction.REQUEST_DELETE, securityUtils.isGranted(ProjectFunction.REQUEST_DELETE, branch.getProjectId()))
+                            .withActions(securityUtils, branch.getProjectId(), ProjectFunction.values())
                                     // Events
                             .withEvent(guiEventService.getResourceEvent(locale, EventEntity.REQUEST, o.getId(), EventCode.REQUEST_CREATED));
                 }
@@ -189,7 +189,7 @@ public class UIRequestController extends AbstractUIController implements UIReque
         Resource<RequestControlledView> r = new Resource<>(controlledView)
                 // TODO Links
                 // ACL
-                .withActions(securityUtils, projectId, ProjectFunction.REQUEST_DELETE, ProjectFunction.REQUEST_EDIT, ProjectFunction.REQUEST_UPLOAD);
+                .withActions(securityUtils, projectId, ProjectFunction.values());
         // OK
         return r;
     }
