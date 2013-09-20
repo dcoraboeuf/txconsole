@@ -2,9 +2,11 @@
     <div class="control-group">
         <label class="control-label">{{loc 'request.upload.file'}}</label>
         <div class="controls">
-            <input type="file" name="response" required="required" />
+            <div id="request-upload-files">
+                <div><input type="file" name="response" required="required" /></div>
+            </div>
             <div>
-                <button type="button" class="btn btn-link">
+                <button id="request-upload-file-add" type="button" class="btn btn-link">
                     <i class="icon-plus" />
                     {{loc 'request.upload.file.add'}}
                 </button>

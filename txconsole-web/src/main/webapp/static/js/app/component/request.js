@@ -103,7 +103,21 @@ define(
             dialog.show({
                 title: 'request.upload'.loc(),
                 width: 800,
-                templateId: 'request-upload'
+                templateId: 'request-upload',
+                initFn: function (dialog) {
+                    dialog.get('#request-upload-file-add').click(function () {
+                        dialog.get('#request-upload-files')
+                            .append(
+                                $('<div></div>')
+                                    .append(
+                                        $('<input/>')
+                                            .attr('type', 'file')
+                                            .attr('name', 'response')
+                                            .attr('required', 'required')
+                                    )
+                            )
+                    })
+                }
             })
         }
 
