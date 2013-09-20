@@ -6,9 +6,11 @@ import net.sf.jstring.LocalizableException;
 import net.sf.jstring.Strings;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
+import net.txconsole.backend.exceptions.RequestUploadIOException;
 import net.txconsole.backend.exceptions.TranslationDiffEntryNotEditableException;
 import net.txconsole.backend.exceptions.TranslationDiffEntryValueNotEditableException;
 import net.txconsole.core.Content;
+import net.txconsole.core.NamedContent;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -204,15 +207,19 @@ public class RequestServiceImpl implements RequestService {
         Locale defaultLocale = configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration());
         Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
         // Gets the configuration for the file exchange
-        JsonConfiguration jsonConfiguration = requestDao.getTxFileExchangeConfiguration(requestId);
-        // Gets the configured TxFileExchange from the JSON configuration
-        Configured<Object, TxFileExchange<Object>> configuredTxFileExchange = translationSourceService.getConfiguredTxFileExchange(jsonConfiguration);
+        Configured<Object, TxFileExchange<Object>> configuredTxFileExchange = getConfiguredTxFileExchange(requestId);
         // Export the diff as a file
         return configuredTxFileExchange.getConfigurable().export(
                 configuredTxFileExchange.getConfiguration(),
                 defaultLocale,
                 supportedLocales,
                 diff.forEdition(supportedLocales));
+    }
+
+    protected Configured<Object, TxFileExchange<Object>> getConfiguredTxFileExchange(int requestId) {
+        JsonConfiguration jsonConfiguration = requestDao.getTxFileExchangeConfiguration(requestId);
+        // Gets the configured TxFileExchange from the JSON configuration
+        return translationSourceService.getConfiguredTxFileExchange(jsonConfiguration);
     }
 
     @Override
@@ -358,11 +365,43 @@ public class RequestServiceImpl implements RequestService {
         }
         // Loads the request
         RequestSummary request = getRequest(requestId);
+        int branchId = request.getBranchId();
+        // FIXME Checks the status of the request (must be GENERATED)
         // Loads the branch
-        BranchSummary branch = structureService.getBranch(request.getBranchId());
+        BranchSummary branch = structureService.getBranch(branchId);
         // Checks the rights
         securityUtils.checkGrant(ProjectFunction.REQUEST_UPLOAD, branch.getProjectId());
-        // FIXME Uploads each response file
+        // Gets the configuration for the request exchange
+        Configured<Object, TxFileExchange<Object>> configuredTxFileExchange = getConfiguredTxFileExchange(requestId);
+        // Default locale & support locales
+        Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
+        Locale defaultLocale = configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration());
+        Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
+        // Gets the translation map for the last version
+        TranslationMap lastMap = translationMapService.map(branchId, null);
+        // Uploads each response file
+        for (MultipartFile response : responses) {
+            // Reads the diff for this response
+            TranslationDiff diff = readResponse(configuredTxFileExchange, defaultLocale, supportedLocales, response);
+            // TODO Merges the map
+        }
+        // TODO Saves the map back
+    }
+
+    protected TranslationDiff readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {
+        // Content
+        NamedContent content;
+        try {
+            content = new NamedContent(
+                    response.getOriginalFilename(),
+                    response.getContentType(),
+                    response.getBytes()
+            );
+        } catch (IOException e) {
+            throw new RequestUploadIOException(e, response.getName());
+        }
+        // Reads the content
+        return configuredTxFileExchange.getConfigurable().read(configuredTxFileExchange.getConfiguration(), defaultLocale, supportedLocales, content);
     }
 
     protected List<TranslationDiffControl> controlEntry(Locale outputLocale, TranslationDiffEntry entry, Set<Locale> supportedLocales) {

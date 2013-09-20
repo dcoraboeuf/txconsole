@@ -30,7 +30,9 @@ net.txconsole.backend.exceptions.ProjectParameterNotDefinedException
     en -> [E-008] The parameter "{0}" has not been defined.
     fr -> [E-008] Le paramètre "{0}" n'est pas défini.
 
-# E-009
+net.txconsole.backend.exceptions.RequestUploadIOException
+    en -> [E-009] Cannot read file {0}.
+    fr -> [E-009] Impossible de lire le fichier {0}.
 
 net.txconsole.backend.exceptions.RequestNoRequestFileException
     en -> [E-010] Cannot find any request file for {0}.

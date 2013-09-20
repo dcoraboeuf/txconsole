@@ -1,12 +1,11 @@
 package net.txconsole.extension.exchange.properties;
 
 import net.txconsole.core.Content;
-import net.txconsole.core.model.TranslationDiff;
-import net.txconsole.core.model.TranslationDiffEntry;
-import net.txconsole.core.model.TranslationDiffEntryValue;
-import net.txconsole.core.model.TranslationDiffType;
-import net.txconsole.service.support.AbstractSimpleConfigurable;
+import net.txconsole.core.NamedContent;
+import net.txconsole.core.model.*;
 import net.txconsole.core.support.IOContextFactory;
+import net.txconsole.extension.format.properties.PropertiesUtils;
+import net.txconsole.service.support.AbstractSimpleConfigurable;
 import net.txconsole.service.support.TxFileExchange;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -23,6 +24,7 @@ import java.util.zip.ZipOutputStream;
 public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<PropertiesTxFileExchangeConfig> implements TxFileExchange<PropertiesTxFileExchangeConfig> {
 
     public static final String ID = "extension-txfileexchange-properties";
+    public static final String ENCODING = "UTF-8";
     private final IOContextFactory ioContextFactory;
     private final EscapingService escapingService;
 
@@ -72,6 +74,42 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
         }
     }
 
+    @Override
+    public TranslationDiff read(PropertiesTxFileExchangeConfig configuration, Locale defaultLocale, Set<Locale> locales, NamedContent content) {
+        // File name
+        String fileName = content.getName();
+        // TODO Checks the file is a property file
+        // TODO In case this is a ZIP file, unzips the content of the file and treats each entry separately
+        // Gets the bundle & locale from the file name
+        Matcher m = Pattern.compile("(.*)_(.*)\\.properties").matcher(fileName);
+        if (!m.matches()) {
+            throw new PropertiesTxFileExchangeIncorrectFileNameException(fileName);
+        }
+        String bundle = m.group(1);
+        Locale locale = new Locale(m.group(2));
+        // Checks the locale
+        if (!locales.contains(locale)) {
+            throw new PropertiesTxFileExchangeUnsupportedLocale(locale);
+        }
+        // Reads the property file as UTF-8
+        Map<String, String> properties = null;
+        try {
+            properties = PropertiesUtils.readProperties(new ByteArrayInputStream(content.getBytes()), ENCODING);
+        } catch (IOException e) {
+            throw new PropertiesTxFileExchangeIOException(fileName, e);
+        }
+        // Diff builder
+        TranslationDiffBuilder diff = TranslationDiffBuilder.create();
+        // For each property
+        for (Map.Entry<String, String> entry : properties.entrySet()) {
+            String key = entry.getKey();
+            String label = entry.getValue();
+            diff.entry(bundle, "default", key, TranslationDiffType.ADDED).withDiff(locale, null, label);
+        }
+        // OK
+        return diff.build();
+    }
+
     protected File zip(File dir) {
         try {
             // ZIP file to create
@@ -115,7 +153,7 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
         File file = new File(dir, fileName);
         // Opens the file
         try {
-            try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
+            try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), ENCODING))) {
                 // For all entries
                 for (TranslationDiffEntry entry : entries) {
                     String key = entry.getKey();

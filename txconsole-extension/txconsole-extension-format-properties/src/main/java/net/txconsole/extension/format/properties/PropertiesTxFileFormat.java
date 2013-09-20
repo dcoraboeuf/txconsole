@@ -1,23 +1,25 @@
 package net.txconsole.extension.format.properties;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import net.sf.jstring.builder.BundleBuilder;
 import net.sf.jstring.builder.BundleCollectionBuilder;
 import net.sf.jstring.builder.BundleKeyBuilder;
 import net.sf.jstring.builder.BundleSectionBuilder;
 import net.txconsole.core.model.TranslationMap;
-import net.txconsole.core.support.UnicodeReader;
-import net.txconsole.service.support.AbstractSimpleConfigurable;
 import net.txconsole.core.support.IOContext;
+import net.txconsole.service.support.AbstractSimpleConfigurable;
 import net.txconsole.service.support.TxFileFormat;
-import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import static net.txconsole.extension.format.properties.PropertiesUtils.readProperties;
 
 @Component
 public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<PropertiesTxFileFormatConfig> implements TxFileFormat<PropertiesTxFileFormatConfig> {
@@ -91,34 +93,6 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
             // Ok
             return ImmutableMap.copyOf(map);
         }
-    }
-
-    protected Map<String, String> readProperties(File file, String encoding) {
-        try {
-            try (FileInputStream in = new FileInputStream(file)) {
-                return readProperties(in, encoding);
-            }
-        } catch (IOException ex) {
-            throw new PropertyFileCannotReadException(file.getName(), ex);
-        }
-    }
-
-    protected Map<String, String> readProperties(InputStream input, String encoding) throws IOException {
-        BufferedReader in = new BufferedReader(new UnicodeReader(input, encoding));
-        Properties properties = new Properties();
-        properties.load(in);
-        Map<String, String> map = new TreeMap<>(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                if (StringUtils.equalsIgnoreCase(o1, o2)) {
-                    return o1.compareTo(o2);
-                } else {
-                    return o1.compareToIgnoreCase(o2);
-                }
-            }
-        });
-        map.putAll(Maps.fromProperties(properties));
-        return map;
     }
 
     @Override
