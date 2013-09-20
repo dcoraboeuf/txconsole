@@ -104,6 +104,20 @@ define(
                 title: 'request.upload'.loc(),
                 width: 800,
                 templateId: 'request-upload',
+                buttons:[{
+                    text: 'general.submit'.loc(),
+                    action: 'upload',
+                    cls: 'btn-primary',
+                    click: function (dialog) {
+                        dialog.form.submit();
+                    }
+                }, {
+                    text: 'general.cancel'.loc(),
+                    action: 'cancel'
+                }],
+                data: {
+                    requestId: requestId
+                },
                 initFn: function (dialog) {
                     dialog.get('#request-upload-file-add').click(function () {
                         dialog.get('#request-upload-files')
@@ -116,7 +130,7 @@ define(
                                             .attr('required', 'required')
                                     )
                             )
-                    })
+                    });
                 }
             })
         }

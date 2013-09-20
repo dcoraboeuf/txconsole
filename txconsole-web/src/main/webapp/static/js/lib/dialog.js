@@ -1,6 +1,11 @@
 define(['config', 'render', 'jquery', 'common'], function(config, render, $, common) {
 
     function createButton(dialog, button) {
+        // Defaults
+        button = $.extend({
+            type: 'button'
+        }, button);
+        // Creates a button
         var item = $('<button/>');
         item.addClass('btn');
         item.text(button.text);
@@ -22,7 +27,15 @@ define(['config', 'render', 'jquery', 'common'], function(config, render, $, com
             item.unbind('click');
             item.click(dialog.closeFn);
         } else {
-            item.attr('type', 'button');
+            item.attr('type', button.type);
+            if (button.click) {
+                item.click(function () {
+                    button.click(dialog);
+                });
+            }
+            if (button.cls) {
+                item.addClass(button.cls);
+            }
         }
         // Any ID?
         if (button.id) {
