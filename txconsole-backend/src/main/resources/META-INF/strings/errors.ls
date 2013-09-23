@@ -45,3 +45,7 @@ net.txconsole.backend.exceptions.TranslationDiffEntryValueNotEditableException
 net.txconsole.backend.exceptions.TranslationDiffEntryNotEditableException
     en -> [E-012] Value for key {0} cannot be edited.
     fr -> [E-012] La valeur pour la clef {0} ne peut pas être modifiée.
+
+net.txconsole.backend.exceptions.TranslationDiffEntryNotFoundException
+    en -> [E-013] Request entry for {0}:{1}:{2} not found.
+    fr -> [E-013] Entrée {0}:{1}:{2} non trouvée.

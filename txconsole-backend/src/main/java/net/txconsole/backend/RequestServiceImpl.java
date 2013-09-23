@@ -4,10 +4,12 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.sf.jstring.LocalizableException;
 import net.sf.jstring.Strings;
+import net.sf.jstring.model.*;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.backend.exceptions.RequestUploadIOException;
 import net.txconsole.backend.exceptions.TranslationDiffEntryNotEditableException;
+import net.txconsole.backend.exceptions.TranslationDiffEntryNotFoundException;
 import net.txconsole.backend.exceptions.TranslationDiffEntryValueNotEditableException;
 import net.txconsole.core.Content;
 import net.txconsole.core.NamedContent;
@@ -279,6 +281,16 @@ public class RequestServiceImpl implements RequestService {
         securityUtils.checkGrant(ProjectFunction.REQUEST_EDIT, branch.getProjectId());
         // Gets the details for this entry
         TranslationDiffEntry entry = getRequestEntryDetails(entryId);
+        // Edits the entry
+        TranslationDiffEntryValue resultingEntryValue = editRequestEntry(entry, input);
+        // OK
+        return new RequestControlledEntryValue(
+                resultingEntryValue,
+                controlRequestEntry(outputLocale, entryId).getMessages()
+        );
+    }
+
+    protected TranslationDiffEntryValue editRequestEntry(TranslationDiffEntry entry, RequestEntryInput input) {
         // If not editable, rejects the changes
         if (!entry.isEditable()) {
             throw new TranslationDiffEntryNotEditableException(entry.getKey());
@@ -290,7 +302,7 @@ public class RequestServiceImpl implements RequestService {
         // Not existing
         if (entryValue == null) {
             // Creates the entry
-            resultingEntryValue = requestDao.addValue(entryId, input.getLocale(), input.getValue());
+            resultingEntryValue = requestDao.addValue(entry.getEntryId(), input.getLocale(), input.getValue());
         } else if (!entryValue.isEditable()) {
             // If not editable, rejects the changes
             throw new TranslationDiffEntryValueNotEditableException(entry.getKey(), input.getLocale());
@@ -303,14 +315,10 @@ public class RequestServiceImpl implements RequestService {
                 resultingEntryValue = entryValue;
             } else {
                 // Creates the entry
-                resultingEntryValue = requestDao.addValue(entryId, input.getLocale(), input.getValue());
+                resultingEntryValue = requestDao.addValue(entry.getEntryId(), input.getLocale(), input.getValue());
             }
         }
-        // OK
-        return new RequestControlledEntryValue(
-                resultingEntryValue,
-                controlRequestEntry(outputLocale, entryId).getMessages()
-        );
+        return resultingEntryValue;
     }
 
     @Override
@@ -381,14 +389,45 @@ public class RequestServiceImpl implements RequestService {
         TranslationMap lastMap = translationMapService.map(branchId, null);
         // Uploads each response file
         for (MultipartFile response : responses) {
-            // Reads the diff for this response
-            TranslationDiff diff = readResponse(configuredTxFileExchange, defaultLocale, supportedLocales, response);
-            // TODO Merges the map
+            // Reads the map for this response
+            TranslationMap map = readResponse(configuredTxFileExchange, defaultLocale, supportedLocales, response);
+            // Writes the map in the stored diff
+            BundleCollection bundleCollection = map.getBundleCollection();
+            for (Bundle bundle : bundleCollection.getBundles()) {
+                String bundleName = bundle.getName();
+                for (BundleSection section : bundle.getSections()) {
+                    String sectionName = section.getName();
+                    for (BundleKey key : section.getKeys()) {
+                        // Gets the corresponding entry in the diff
+                        String keyName = key.getName();
+                        Integer entryId = requestDao.findRequestEntryId(requestId, bundleName, sectionName, keyName);
+                        if (entryId != null) {
+                            // Gets the details for this entry
+                            TranslationDiffEntry entry = getRequestEntryDetails(entryId);
+                            for (Map.Entry<Locale, BundleValue> bundleValueEntry : key.getValues().entrySet()) {
+                                Locale locale = bundleValueEntry.getKey();
+                                BundleValue bundleValue = bundleValueEntry.getValue();
+                                String value = bundleValue.getValue();
+                                // Edits this entry
+                                editRequestEntry(
+                                        entry,
+                                        new RequestEntryInput(
+                                                locale,
+                                                value
+                                        )
+                                );
+                            }
+                        } else {
+                            // No entry found, this is an error
+                            throw new TranslationDiffEntryNotFoundException(bundleName, sectionName, keyName);
+                        }
+                    }
+                }
+            }
         }
-        // TODO Saves the map back
     }
 
-    protected TranslationDiff readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {
+    protected TranslationMap readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {
         // Content
         NamedContent content;
         try {

@@ -38,4 +38,6 @@ public interface RequestDao {
     TranslationDiffEntryValue addValue(int entryId, Locale locale, String value);
 
     void editValue(int entryValueId, String value);
+
+    Integer findRequestEntryId(int requestId, String bundleName, String sectionName, String keyName);
 }

@@ -1,5 +1,8 @@
 package net.txconsole.extension.exchange.properties;
 
+import net.sf.jstring.builder.BundleBuilder;
+import net.sf.jstring.builder.BundleCollectionBuilder;
+import net.sf.jstring.builder.BundleSectionBuilder;
 import net.txconsole.core.Content;
 import net.txconsole.core.NamedContent;
 import net.txconsole.core.model.*;
@@ -75,7 +78,7 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
     }
 
     @Override
-    public TranslationDiff read(PropertiesTxFileExchangeConfig configuration, Locale defaultLocale, Set<Locale> locales, NamedContent content) {
+    public TranslationMap read(PropertiesTxFileExchangeConfig configuration, Locale defaultLocale, Set<Locale> locales, NamedContent content) {
         // File name
         String fileName = content.getName();
         // TODO Checks the file is a property file
@@ -92,22 +95,22 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
             throw new PropertiesTxFileExchangeUnsupportedLocale(locale);
         }
         // Reads the property file as UTF-8
-        Map<String, String> properties = null;
+        Map<String, String> properties;
         try {
             properties = PropertiesUtils.readProperties(new ByteArrayInputStream(content.getBytes()), ENCODING);
         } catch (IOException e) {
             throw new PropertiesTxFileExchangeIOException(fileName, e);
-        }
-        // Diff builder
-        TranslationDiffBuilder diff = TranslationDiffBuilder.create();
+        }// Builder
+        BundleBuilder bundleBuilder = BundleBuilder.create(bundle);
+        BundleSectionBuilder sectionBuilder = bundleBuilder.getDefaultSectionBuilder();
         // For each property
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             String key = entry.getKey();
             String label = entry.getValue();
-            diff.entry(bundle, "default", key, TranslationDiffType.ADDED).withDiff(locale, null, label);
+            sectionBuilder.key(key).addValue(locale, label);
         }
         // OK
-        return diff.build();
+        return new TranslationMap(null, BundleCollectionBuilder.create().bundle(bundleBuilder.build()).build());
     }
 
     protected File zip(File dir) {

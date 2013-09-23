@@ -242,6 +242,19 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
         );
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Integer findRequestEntryId(int requestId, String bundleName, String sectionName, String keyName) {
+        return getFirstItem(
+                SQL.REQUEST_ENTRY_BY_KEY_IDENTIFIER,
+                params("requestId", requestId)
+                        .addValue("bundle", bundleName)
+                        .addValue("section", sectionName)
+                        .addValue("key", keyName),
+                Integer.class
+        );
+    }
+
     protected class TranslationDiffEntryBuilderRowMapper implements RowMapper<TranslationDiffEntryBuilder> {
 
         private final TranslationDiffBuilder builder;
