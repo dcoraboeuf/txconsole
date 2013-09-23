@@ -3,7 +3,14 @@ package net.txconsole.core.model;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Table;
+import com.google.common.collect.Tables;
+import net.sf.jstring.builder.BundleBuilder;
+import net.sf.jstring.builder.BundleCollectionBuilder;
+import net.sf.jstring.builder.BundleKeyBuilder;
+import net.sf.jstring.builder.BundleSectionBuilder;
 import net.sf.jstring.model.*;
 import net.txconsole.core.support.LocaleComparator;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +38,63 @@ public class TranslationMap {
     public TranslationMap(String version, BundleCollection bundleCollection) {
         this.version = version;
         this.bundleCollection = bundleCollection;
+    }
+
+    public static TranslationMap asMap(TranslationDiff diff) {
+        // Map of bundles
+        Map<String, BundleBuilder> bundleBuilderMap = new HashMap<>();
+        // Map of sections per bundle x section
+        Table<String, String, BundleSectionBuilder> bundleSectionBuilderTable = Tables.newCustomTable(
+                new HashMap<String, Map<String, BundleSectionBuilder>>(),
+                new Supplier<Map<String, BundleSectionBuilder>>() {
+                    @Override
+                    public Map<String, BundleSectionBuilder> get() {
+                        return new HashMap<>();
+                    }
+                }
+        );
+        // For each entry
+        for (TranslationDiffEntry entry : diff.getEntries()) {
+            // Adds the diff new value if ADDED or UPDATED
+            if (entry.getType() == TranslationDiffType.UPDATED || entry.getType() == TranslationDiffType.ADDED) {
+                String bundle = entry.getBundle();
+                String section = entry.getSection();
+                String key = entry.getKey();
+                // Gets the bundle builder
+                BundleBuilder bundleBuilder = bundleBuilderMap.get(bundle);
+                if (bundleBuilder == null) {
+                    bundleBuilder = BundleBuilder.create(bundle);
+                    bundleBuilderMap.put(bundle, bundleBuilder);
+                }
+                // Gets the section builder
+                BundleSectionBuilder bundleSectionBuilder = bundleSectionBuilderTable.get(bundle, section);
+                if (bundleSectionBuilder == null) {
+                    bundleSectionBuilder = BundleSectionBuilder.create(section);
+                    bundleBuilder.section(bundleSectionBuilder);
+                    bundleSectionBuilderTable.put(bundle, section, bundleSectionBuilder);
+                }
+                // Key builder
+                BundleKeyBuilder bundleKeyBuilder = bundleSectionBuilder.key(key);
+                for (TranslationDiffEntryValue entryValue : entry.getEntries()) {
+                    Locale locale = entryValue.getLocale();
+                    String value = entryValue.getNewValue();
+                    if (StringUtils.isNotBlank(value)) {
+                        bundleKeyBuilder.addValue(locale, value);
+                    }
+                }
+            }
+        }
+        // Collection builder
+        BundleCollectionBuilder builder = BundleCollectionBuilder.create();
+        // Adds all the bundles
+        for (BundleBuilder bundleBuilder : bundleBuilderMap.values()) {
+            builder.bundle(bundleBuilder.build());
+        }
+        // OK
+        return new TranslationMap(
+                null,
+                builder.build()
+        );
     }
 
     public String getVersion() {
@@ -111,6 +175,29 @@ public class TranslationMap {
                 total,
                 new ArrayList<>(locales),
                 entries
+        );
+    }
+
+    public TranslationMap merge(TranslationDiff diff) {
+        // Diff as a map
+        TranslationMap diffMap = asMap(diff);
+        // Merge
+        return merge(diffMap);
+    }
+
+    public TranslationMap merge(TranslationMap map) {
+        // Builder
+        BundleCollectionBuilder builder = BundleCollectionBuilder.create();
+        // Adds the current bundles
+        for (Bundle bundle : bundleCollection.getBundles()) {
+            builder.bundle(bundle);
+        }
+        // Merges the other map
+        builder.merge(map.getBundleCollection());
+        // OK
+        return new TranslationMap(
+                version,
+                builder.build()
         );
     }
 

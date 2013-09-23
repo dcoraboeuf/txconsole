@@ -383,9 +383,10 @@ public class RequestServiceImpl implements RequestService {
         for (MultipartFile response : responses) {
             // Reads the diff for this response
             TranslationDiff diff = readResponse(configuredTxFileExchange, defaultLocale, supportedLocales, response);
-            // TODO Merges the map
+            // Merges the diff
+            lastMap = lastMap.merge(diff);
         }
-        // TODO Saves the map back
+        // FIXME Saves the map back
     }
 
     protected TranslationDiff readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {
