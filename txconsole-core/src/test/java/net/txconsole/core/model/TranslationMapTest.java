@@ -6,13 +6,10 @@ import net.sf.jstring.builder.BundleKeyBuilder;
 import net.sf.jstring.builder.BundleSectionBuilder;
 import net.sf.jstring.model.Bundle;
 import net.txconsole.core.config.JSONConfig;
-import net.txconsole.core.support.MapBuilder;
-import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -57,80 +54,78 @@ public class TranslationMapTest {
     }
 
     @Test
-    public void diffAsMap() throws IOException {
-        // Creates a diff
-        TranslationDiff diff = new TranslationDiff(
-                Arrays.asList(
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "added.both",
-                                TranslationDiffType.ADDED,
-                                MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, null, "Added both"),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, false, null, "Ajout des deux")
-                                )
-                        ),
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "added.default-only",
-                                TranslationDiffType.ADDED,
-                                MapBuilder.singleton(Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, null, "Added default only"))
-                        ),
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "deleted.both",
-                                TranslationDiffType.DELETED,
-                                MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, "Initial value", null),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, false, "Valeur initiale", null)
-                                )
-                        ),
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "deleted.default-only",
-                                TranslationDiffType.DELETED,
-                                MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, "Initial value", null),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, false, "Valeur initiale", null)
-                                )
-                        ),
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "updated.both",
-                                TranslationDiffType.UPDATED,
-                                MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, "Initial value", "Updated both"),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, false, "Valeur initiale", "Les deux sont modifiés")
-                                )
-                        ),
-                        new TranslationDiffEntry(
-                                0,
-                                "common",
-                                "default",
-                                "updated.default-only",
-                                TranslationDiffType.UPDATED,
-                                MapBuilder.dual(
-                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, "Initial value", "Updated default only"),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, true, "Valeur initiale", "Valeur initiale")
-                                )
+    public void merge() throws IOException {
+        // Old map
+        TranslationMap oldMap = new TranslationMap(
+                "1",
+                BundleCollectionBuilder.create()
+                        .bundle(
+                                BundleBuilder.create("common")
+                                        .section(
+                                                BundleSectionBuilder
+                                                        .create(Bundle.DEFAULT_SECTION)
+                                                        .key(
+                                                                BundleKeyBuilder.create("added.default-only")
+                                                                        .addValue(Locale.ENGLISH, "Added default only")
+                                                        )
+                                                        .key(
+                                                                BundleKeyBuilder.create("added.both")
+                                                                        .addValue(Locale.ENGLISH, "Added both")
+                                                                        .addValue(Locale.FRENCH, "Ajout des deux")
+                                                        )
+                                                        .key(
+                                                                BundleKeyBuilder.create("updated.default-only")
+                                                                        .addValue(Locale.ENGLISH, "Updated default only")
+                                                                        .addValue(Locale.FRENCH, "Valeur initiale")
+                                                        )
+                                                        .key(
+                                                                BundleKeyBuilder.create("updated.both")
+                                                                        .addValue(Locale.ENGLISH, "Updated both")
+                                                                        .addValue(Locale.FRENCH, "Les deux sont modifiés")
+                                                        )
+                                                        .key(
+                                                                BundleKeyBuilder.create("deleted.default-only")
+                                                                        .addValue(Locale.FRENCH, "Valeur initiale")
+                                                        )
+                                                                // .key(
+                                                                //        BundleKeyBuilder.create("deleted.both")
+                                                                // )
+                                                        .key(
+                                                                BundleKeyBuilder.create("unchanged")
+                                                                        .addValue(Locale.ENGLISH, "Unchanged")
+                                                                        .addValue(Locale.FRENCH, "Inchangé")
+                                                        )
+                                        )
+                                        .build()
                         )
-                )
+                        .build()
         );
-        // Diff as a map
-        TranslationMap map = TranslationMap.asMap(diff);
-        // Checks
+        TranslationMap newMap = new TranslationMap(
+                "1",
+                BundleCollectionBuilder.create()
+                        .bundle(
+                                BundleBuilder.create("common")
+                                        .section(
+                                                BundleSectionBuilder
+                                                        .create(Bundle.DEFAULT_SECTION)
+                                                        .key(
+                                                                BundleKeyBuilder.create("added.default-only")
+                                                                        .addValue(Locale.FRENCH, "Ajout du défaut")
+                                                        )
+                                                        .key(
+                                                                BundleKeyBuilder.create("updated.default-only")
+                                                                        .addValue(Locale.FRENCH, "Mise à jour du défaut")
+                                                        )
+                                        )
+                                        .build()
+                        )
+                        .build()
+        );
+        // Merge
+        TranslationMap map = oldMap.merge(newMap);
+        // Check
         String json = objectMapper.writeValueAsString(map);
-        assertEquals("{\"version\":null,\"bundleCollection\":{\"bundles\":[{\"name\":\"common\",\"comments\":[],\"sections\":[{\"name\":\"default\",\"comments\":[],\"keys\":[{\"name\":\"added.both\",\"comments\":[],\"values\":{\"en\":{\"comments\":[],\"value\":\"Added both\"},\"fr\":{\"comments\":[],\"value\":\"Ajout des deux\"}}},{\"name\":\"added.default-only\",\"comments\":[],\"values\":{\"en\":{\"comments\":[],\"value\":\"Added default only\"}}},{\"name\":\"updated.both\",\"comments\":[],\"values\":{\"en\":{\"comments\":[],\"value\":\"Updated both\"},\"fr\":{\"comments\":[],\"value\":\"Les deux sont modifiés\"}}},{\"name\":\"updated.default-only\",\"comments\":[],\"values\":{\"en\":{\"comments\":[],\"value\":\"Updated default only\"},\"fr\":{\"comments\":[],\"value\":\"Valeur initiale\"}}}]}]}]},\"supportedLocales\":[\"en\",\"fr\"]}", json);
+        assertEquals("{\"version\":\"1\",\"bundleCollection\":{\"bundles\":[{\"name\":\"common\",\"comments\":[],\"sections\":[{\"name\":\"default\",\"comments\":[],\"keys\":[{\"name\":\"added.default-only\",\"comments\":[],\"values\":{\"en\":{\"comments\":[],\"value\":\"Added default only\"},\"fr\":{\"comments\":[],\"value\":\"Ajout du défaut\"}}},{\"name\":\"added.both\",\"comments\":[],\"values\":{\"en\":{\"comments\":[],\"value\":\"Added both\"},\"fr\":{\"comments\":[],\"value\":\"Ajout des deux\"}}},{\"name\":\"updated.default-only\",\"comments\":[],\"values\":{\"en\":{\"comments\":[],\"value\":\"Updated default only\"},\"fr\":{\"comments\":[],\"value\":\"Mise à jour du défaut\"}}},{\"name\":\"updated.both\",\"comments\":[],\"values\":{\"en\":{\"comments\":[],\"value\":\"Updated both\"},\"fr\":{\"comments\":[],\"value\":\"Les deux sont modifiés\"}}},{\"name\":\"deleted.default-only\",\"comments\":[],\"values\":{\"fr\":{\"comments\":[],\"value\":\"Valeur initiale\"}}},{\"name\":\"unchanged\",\"comments\":[],\"values\":{\"en\":{\"comments\":[],\"value\":\"Unchanged\"},\"fr\":{\"comments\":[],\"value\":\"Inchangé\"}}}]}]}]},\"supportedLocales\":[\"en\",\"fr\"]}", json);
     }
 
 }

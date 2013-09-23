@@ -16,6 +16,6 @@ public interface TxFileExchange<C> extends Configurable<C> {
 
     Content export(C configuration, Locale defaultLocale, Set<Locale> locales, TranslationDiff diff);
 
-    TranslationDiff read(C configuration, Locale defaultLocale, Set<Locale> locales, NamedContent content);
+    TranslationMap read(C configuration, Locale defaultLocale, Set<Locale> locales, NamedContent content);
 
 }

@@ -382,14 +382,14 @@ public class RequestServiceImpl implements RequestService {
         // Uploads each response file
         for (MultipartFile response : responses) {
             // Reads the diff for this response
-            TranslationDiff diff = readResponse(configuredTxFileExchange, defaultLocale, supportedLocales, response);
+            TranslationMap map = readResponse(configuredTxFileExchange, defaultLocale, supportedLocales, response);
             // Merges the diff
-            lastMap = lastMap.merge(diff);
+            lastMap = lastMap.merge(map);
         }
         // FIXME Saves the map back
     }
 
-    protected TranslationDiff readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {
+    protected TranslationMap readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {
         // Content
         NamedContent content;
         try {
