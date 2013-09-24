@@ -8,8 +8,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import net.sf.jstring.builder.*;
 import net.sf.jstring.model.*;
+import net.sf.jstring.support.KeyIdentifier;
 import net.txconsole.core.support.LocaleComparator;
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,6 +25,8 @@ import java.util.regex.Pattern;
  * categories, groups and descriptions, and labels
  * are associated with different languages.
  */
+@ToString
+@EqualsAndHashCode
 public class TranslationMap {
 
     public static final Function<BundleValue, String> bundleValueFn = new Function<BundleValue, String>() {
@@ -36,6 +41,63 @@ public class TranslationMap {
     public TranslationMap(String version, BundleCollection bundleCollection) {
         this.version = version;
         this.bundleCollection = bundleCollection;
+    }
+
+    public static TranslationMap asMap(TranslationDiff diff) {
+        // Map of bundles
+        Map<String, BundleBuilder> bundleBuilderMap = new HashMap<>();
+        // Map of sections per bundle x section
+        Table<String, String, BundleSectionBuilder> bundleSectionBuilderTable = Tables.newCustomTable(
+                new HashMap<String, Map<String, BundleSectionBuilder>>(),
+                new Supplier<Map<String, BundleSectionBuilder>>() {
+                    @Override
+                    public Map<String, BundleSectionBuilder> get() {
+                        return new HashMap<>();
+                    }
+                }
+        );
+        // For each entry
+        for (TranslationDiffEntry entry : diff.getEntries()) {
+            // Adds the diff new value if ADDED or UPDATED
+            if (entry.getType() == TranslationDiffType.UPDATED || entry.getType() == TranslationDiffType.ADDED) {
+                String bundle = entry.getBundle();
+                String section = entry.getSection();
+                String key = entry.getKey();
+                // Gets the bundle builder
+                BundleBuilder bundleBuilder = bundleBuilderMap.get(bundle);
+                if (bundleBuilder == null) {
+                    bundleBuilder = BundleBuilder.create(bundle);
+                    bundleBuilderMap.put(bundle, bundleBuilder);
+                }
+                // Gets the section builder
+                BundleSectionBuilder bundleSectionBuilder = bundleSectionBuilderTable.get(bundle, section);
+                if (bundleSectionBuilder == null) {
+                    bundleSectionBuilder = BundleSectionBuilder.create(section);
+                    bundleBuilder.section(bundleSectionBuilder);
+                    bundleSectionBuilderTable.put(bundle, section, bundleSectionBuilder);
+                }
+                // Key builder
+                BundleKeyBuilder bundleKeyBuilder = bundleSectionBuilder.key(key);
+                for (TranslationDiffEntryValue entryValue : entry.getEntries()) {
+                    Locale locale = entryValue.getLocale();
+                    String value = entryValue.getNewValue();
+                    if (StringUtils.isNotBlank(value)) {
+                        bundleKeyBuilder.addValue(locale, value);
+                    }
+                }
+            }
+        }
+        // Collection builder
+        BundleCollectionBuilder builder = BundleCollectionBuilder.create();
+        // Adds all the bundles
+        for (BundleBuilder bundleBuilder : bundleBuilderMap.values()) {
+            builder.bundle(bundleBuilder.build());
+        }
+        // OK
+        return new TranslationMap(
+                null,
+                builder.build()
+        );
     }
 
     public String getVersion() {
@@ -96,7 +158,7 @@ public class TranslationMap {
                     if (count < limit) {
                         // Creates the entry
                         TranslationEntry entry = new TranslationEntry(
-                                new TranslationKey(bundle.getName(), bundleSection.getName(), bundleKey.getName()),
+                                new KeyIdentifier(bundle.getName(), bundleSection.getName(), bundleKey.getName()),
                                 Maps.transformValues(
                                         bundleKey.getValues(),
                                         bundleValueFn
@@ -120,46 +182,39 @@ public class TranslationMap {
     }
 
     public TranslationMap applyDiff(TranslationDiff diff) {
-        // Catalogue of keys for this translation map
-        Set<TranslationKey> keys = new HashSet<>();
-        for (Bundle bundle : bundleCollection.getBundles()) {
-            for (BundleSection section : bundle.getSections()) {
-                for (BundleKey bundleKey : section.getKeys()) {
-                    keys.add(
-                            new TranslationKey(
-                                    bundle.getName(),
-                                    section.getName(),
-                                    bundleKey.getName()
-                            )
-                    );
-                }
-            }
-        }
 
         // Deletion of keys
+        final Set<KeyIdentifier> keysToDelete = new HashSet<>();
         for (TranslationDiffEntry entry : diff.getEntries()) {
-            TranslationKey tkey = new TranslationKey(
+            KeyIdentifier tkey = new KeyIdentifier(
                     entry.getBundle(),
                     entry.getSection(),
                     entry.getKey()
             );
-            keys.remove(tkey);
+            keysToDelete.add(tkey);
         }
 
-        // TODO Removes all deleted keys from the bundle collection
+        // Removes all deleted keys from the bundle collection
+        BundleCollection collection = bundleCollection.filter(new Predicate<KeyIdentifier>() {
+            @Override
+            public boolean apply(KeyIdentifier i) {
+                return !keysToDelete.contains(i);
+            }
+        });
+        TranslationMap map = new TranslationMap(version, collection);
 
         // For the added & updated keys, we can just create a map and merge it
         TranslationMap diffMap = asMap(diff);
 
-        // TODO Returns the merged map
-        return merge(diffMap);
+        // Returns the merged map
+        return map.merge(diffMap);
     }
 
     public TranslationMap merge(TranslationMap map) {
         // Indexes the source bundles
-        ImmutableMap<String,Bundle> sourceBundleIndex = Maps.uniqueIndex(map.getBundleCollection().getBundles(), Bundle.bundleNameFn);
+        ImmutableMap<String, Bundle> sourceBundleIndex = Maps.uniqueIndex(map.getBundleCollection().getBundles(), Bundle.bundleNameFn);
         // Indexes the target bundles
-        ImmutableMap<String,Bundle> targetBundleIndex = Maps.uniqueIndex(this.getBundleCollection().getBundles(), Bundle.bundleNameFn);
+        ImmutableMap<String, Bundle> targetBundleIndex = Maps.uniqueIndex(this.getBundleCollection().getBundles(), Bundle.bundleNameFn);
         // Builder for the result
         BundleCollectionBuilder resultBuilder = BundleCollectionBuilder.create();
         // Set of all bundle keys
@@ -196,64 +251,6 @@ public class TranslationMap {
         );
     }
 
-    public static TranslationMap asMap(TranslationDiff diff) {
-        // Map of bundles
-        Map<String, BundleBuilder> bundleBuilderMap = new HashMap<>();
-        // Map of sections per bundle x section
-        Table<String, String, BundleSectionBuilder> bundleSectionBuilderTable = Tables.newCustomTable(
-                new HashMap<String, Map<String, BundleSectionBuilder>>(),
-                new Supplier<Map<String, BundleSectionBuilder>>() {
-                    @Override
-                    public Map<String, BundleSectionBuilder> get() {
-                        return new HashMap<>();
-                    }
-                }
-        );
-        // For each entry
-        for (TranslationDiffEntry entry : diff.getEntries()) {
-            // Adds the diff new value if ADDED or UPDATED
-            if (entry.getType() == TranslationDiffType.UPDATED || entry.getType() == TranslationDiffType.ADDED) {
-                String bundle = entry.getBundle();
-                String section = entry.getSection();
-                String key = entry.getKey();
-                // Gets the bundle builder
-                BundleBuilder bundleBuilder = bundleBuilderMap.get(bundle);
-                if (bundleBuilder == null) {
-                    bundleBuilder = BundleBuilder.create(bundle);
-                    bundleBuilderMap.put(bundle, bundleBuilder);
-                }
-                // Gets the section builder
-                BundleSectionBuilder bundleSectionBuilder = bundleSectionBuilderTable.get(bundle, section);
-                if (bundleSectionBuilder == null) {
-                    bundleSectionBuilder = BundleSectionBuilder.create(section);
-                    bundleBuilder.section(bundleSectionBuilder);
-                    bundleSectionBuilderTable.put(bundle, section, bundleSectionBuilder);
-                }
-                // Key builder
-                BundleKeyBuilder bundleKeyBuilder = bundleSectionBuilder.key(key);
-                for (TranslationDiffEntryValue entryValue : entry.getEntries()) {
-                    Locale locale = entryValue.getLocale();
-                    String value = entryValue.getNewValue();
-                    if (StringUtils.isNotBlank(value)) {
-                        bundleKeyBuilder.addValue(locale, value);
-                    }
-                }
-            }
-        }
-        // Collection builder
-        BundleCollectionBuilder builder = BundleCollectionBuilder.create();
-        // Adds all the bundles
-        for (BundleBuilder bundleBuilder : bundleBuilderMap.values()) {
-            builder.bundle(bundleBuilder.build());
-        }
-        // OK
-        return new TranslationMap(
-                null,
-                builder.build()
-        );
-    }
-
-
     public static class FilterPredicate implements Predicate<TranslationEntry> {
 
         private final Pattern filter;
@@ -264,7 +261,7 @@ public class TranslationMap {
 
         @Override
         public boolean apply(TranslationEntry entry) {
-            String key = entry.getKey().getName();
+            String key = entry.getKey().getKey();
             if (StringUtils.isNotBlank(key) && filter.matcher(key).find()) {
                 return true;
             } else {
