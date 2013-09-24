@@ -425,6 +425,34 @@ public class RequestServiceImpl implements RequestService {
         }
     }
 
+    @Override
+    @Transactional
+    public void mergeRequest(int requestId, RequestMergeForm form) {
+        // Loads the request
+        RequestSummary request = getRequest(requestId);
+        int branchId = request.getBranchId();
+        // Checks the status of the request (must be REQUEST_EXPORTED)
+        if (request.getStatus() != RequestStatus.REQUEST_EXPORTED) {
+            throw new RequestCannotMergeBecauseOfStatusException(request.getStatus(), RequestStatus.REQUEST_EXPORTED);
+        }
+        // Loads the branch
+        BranchSummary branch = structureService.getBranch(branchId);
+        // Checks the rights
+        securityUtils.checkGrant(ProjectFunction.REQUEST_MERGE, branch.getProjectId());
+        // Default locale & support locales
+        Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
+        Locale defaultLocale = configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration());
+        Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
+        // Reads the latest version of the translation map
+        TranslationMap map = configuredTranslationSource.getConfigurable().read(configuredTranslationSource.getConfiguration(), null);
+        // Gets the stored diff for this request
+        TranslationDiff diff = requestDao.loadDiff(requestId);
+        // Applies the diff to the map
+        map = map.applyDiff(diff);
+        // Writes back the map to the store
+        configuredTranslationSource.getConfigurable().write(configuredTranslationSource.getConfiguration(), map);
+    }
+
     protected TranslationMap readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {
         // Content
         NamedContent content;

@@ -186,6 +186,19 @@ public class UIRequestController extends AbstractUIController implements UIReque
     }
 
     /**
+     * Merges the request
+     */
+    @RequestMapping(value = "/request/{id}/merge", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Resource<RequestSummary> mergeRequest(Locale locale, @PathVariable int id, @RequestBody RequestMergeForm form) {
+        // Performs the merge
+        requestService.mergeRequest(id, form);
+        // OK
+        return getRequest(locale, id);
+    }
+
+    /**
      * Gets the view for a request
      */
     @RequestMapping(value = "/request/{id}/view", method = RequestMethod.GET)

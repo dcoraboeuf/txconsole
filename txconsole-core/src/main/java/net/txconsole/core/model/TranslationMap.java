@@ -114,6 +114,11 @@ public class TranslationMap {
         );
     }
 
+    public TranslationMap applyDiff(TranslationDiff diff) {
+        // FIXME TranslationMap applyDiff(TranslationDiff diff) {
+        throw new RuntimeException("NYI");
+    }
+
     public static class FilterPredicate implements Predicate<TranslationEntry> {
 
         private final Pattern filter;

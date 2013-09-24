@@ -40,4 +40,6 @@ public interface RequestService {
     TranslationDiffControl controlRequestEntry(Locale outputLocale, int entryId);
 
     void uploadRequest(int id, Collection<MultipartFile> responses);
+
+    void mergeRequest(int id, RequestMergeForm form);
 }

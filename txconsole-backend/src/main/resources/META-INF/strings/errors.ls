@@ -53,3 +53,7 @@ net.txconsole.backend.exceptions.TranslationDiffEntryNotFoundException
 net.txconsole.backend.exceptions.RequestCannotUploadBecauseOfStatusException
     en -> [E-014] Cannot upload response file for a request with status = {0}. Status {1} was expected.
     fr -> [E-014] Impossible d'uploader un fichier de réponse pour une demande de statut {0}. Le statut {1} est attendu.
+
+net.txconsole.backend.exceptions.RequestCannotMergeBecauseOfStatusException
+    en -> [E-015] Cannot merge a request with status = {0}. Status {1} was expected.
+    fr -> [E-015] Impossible de réintégrer une demande avec le statut {0}. Le statut {1} est attendu.
