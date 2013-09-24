@@ -28,6 +28,10 @@ public enum ProjectFunction implements SecurityFunction {
      */
     REQUEST_UPLOAD,
     /**
+     * merging a request back into the source
+     */
+    REQUEST_MERGE,
+    /**
      * Deleting an existing translation request
      */
     REQUEST_DELETE;
