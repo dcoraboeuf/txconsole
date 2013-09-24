@@ -495,6 +495,10 @@ request.merge
     en -> Merge
     fr -> Réintégrer
 
+request.merge.message
+    en -> Message associated with the merge
+    fr -> Message associé à la réintégration
+
 request.merge.force
     en -> ...
         There remains unfilled entries in the request. You can still force the merge to take place but

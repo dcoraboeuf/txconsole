@@ -144,31 +144,30 @@ define(
             ajax.get({
                 url: 'ui/request/{0}/view'.format(requestId),
                 successFn: function (resource) {
-                    if (resource.data.invalid) {
-                        // Force the merge?
-                        common.confirmAndCall(
-                            'request.merge.force'.loc(),
-                            function () {
-                                doMergeRequest(requestId, true);
-                            }
-                        )
-                    } else {
-                        // Direct all
-                        doMergeRequest(requestId, false);
-                    }
-                }
-            })
-        }
-
-        function doMergeRequest(requestId, force) {
-            ajax.post({
-                url: 'ui/request/{0}/merge'.format(requestId),
-                data: {
-                    force: force
-                },
-                successFn: function (resource) {
-                    // Reloading the request page
-                    application.gui(resource);
+                    // Confirmation for forcing the merge if there are still invalid entries
+                    var force = resource.data.invalid;
+                    // Dialog to enter the merge parameters
+                    dialog.show({
+                        title: 'request.merge'.loc(),
+                        templateId: 'request-merge',
+                        data: {
+                            force: force
+                        },
+                        submitFn: function (dialog) {
+                            dialog.closeFn();
+                            ajax.post({
+                                url: 'ui/request/{0}/merge'.format(requestId),
+                                data: {
+                                    force: force,
+                                    message: dialog.get('#request-merge-message').val()
+                                },
+                                successFn: function (resource) {
+                                    // Reloading the request page
+                                    application.gui(resource);
+                                }
+                            })
+                        }
+                    });
                 }
             })
         }

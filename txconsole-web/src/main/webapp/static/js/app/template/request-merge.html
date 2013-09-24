@@ -1,0 +1,13 @@
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="request-merge-message">{{loc 'request.merge.message'}}</label>
+        <div class="controls">
+            <textarea id="request-merge-message" columns="40" maxlength="1000" rows="4" required="required"></textarea>
+        </div>
+    </div>
+    {{#if force}}
+        <div class="alert alert-warning">
+            {{loc 'request.merge.force'}}
+        </div>
+    {{/if}}
+</form>
