@@ -136,10 +136,48 @@ define(
             })
         }
 
+        /**
+         * Merges the request
+         */
+        function mergeRequest(requestId) {
+            // Gets the last view status
+            ajax.get({
+                url: 'ui/request/{0}/view'.format(requestId),
+                successFn: function (resource) {
+                    if (resource.data.invalid) {
+                        // Force the merge?
+                        common.confirmAndCall(
+                            'request.merge.force'.loc(),
+                            function () {
+                                doMergeRequest(requestId, true);
+                            }
+                        )
+                    } else {
+                        // Direct all
+                        doMergeRequest(requestId, false);
+                    }
+                }
+            })
+        }
+
+        function doMergeRequest(requestId, force) {
+            ajax.post({
+                url: 'ui/request/{0}/merge'.format(requestId),
+                data: {
+                    force: force
+                },
+                successFn: function (resource) {
+                    // Reloading the request page
+                    application.gui(resource);
+                }
+            })
+        }
+
         return {
             createRequest: createRequest,
             deleteRequest: deleteRequest,
-            uploadRequest: uploadRequest
+            uploadRequest: uploadRequest,
+            mergeRequest: mergeRequest
         }
 
     }

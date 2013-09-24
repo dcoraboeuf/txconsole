@@ -28,4 +28,12 @@ public class RequestControlledView {
                 }
         ));
     }
+
+    /**
+     * Exported for JSON
+     */
+    @SuppressWarnings("unused")
+    public boolean isInvalid() {
+        return controls.size() > 0;
+    }
 }

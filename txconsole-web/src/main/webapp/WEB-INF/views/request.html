@@ -19,6 +19,9 @@
         <#if request.data.downloadable>
             <@title_command id="request-download" title=loc('request.request.download') class="icon-download-alt" link="ui/request/${request.data.id?c}/download" />
         </#if>
+        <@acl resource=request action='PROJECT#REQUEST_MERGE'>
+            <@title_command id="request-merge" title=loc('request.merge') class="icon-check" />
+        </@acl>
         <@acl resource=request action='PROJECT#REQUEST_UPLOAD'>
             <@title_command id="request-upload" title=loc('request.upload') class="icon-upload" />
         </@acl>

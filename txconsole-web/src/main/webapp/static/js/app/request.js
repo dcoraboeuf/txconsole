@@ -4,6 +4,9 @@ define(['jquery', 'component/request'], function ($, request) {
     var branchId = $('#branch').val();
     var requestId = $('#request').val();
 
+    $('#request-merge').click(function () {
+        request.mergeRequest(requestId)
+    });
     $('#request-upload').click(function () {
         request.uploadRequest(requestId)
     });

@@ -491,6 +491,21 @@ request.upload.file.add
     en -> Add a file
     fr -> Ajouter un fichier
 
+request.merge
+    en -> Merge
+    fr -> Réintégrer
+
+request.merge.force
+    en -> ...
+        There remains unfilled entries in the request. You can still force the merge to take place but
+        this may lead to some keys not correctly filled in. Do you want to go on with the merge?
+        ...
+    fr -> ...
+        Il y a encore des clefs qui ne sont pas correctement renseignées. Vous pouvez toujours forcer
+        la réintégration mais cela pourrait conduire à une situation où des clefs ne sont pas
+        correctement renseignées. Voulez-vous continuer avec la réintégration ?
+        ...
+
 [keyfilter]
 
 keyfilter.go
