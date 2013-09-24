@@ -385,8 +385,6 @@ public class RequestServiceImpl implements RequestService {
         Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
         Locale defaultLocale = configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration());
         Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
-        // Gets the translation map for the last version
-        TranslationMap lastMap = translationMapService.map(branchId, null);
         // Uploads each response file
         for (MultipartFile response : responses) {
             // Reads the map for this response
