@@ -113,7 +113,7 @@ public class TranslationMapTest {
         diff.added("common", "default", "added.default-only").withDiff(Locale.FRENCH, null, "Ajout du défaut"); // Edited
         diff.updated("common", "default", "updated.default-only").withDiff(Locale.ENGLISH, "Initial valeur", "Updated default only"); // Computed
         diff.updated("common", "default", "updated.default-only").withDiff(Locale.FRENCH, "Valeur initiale", "Modification du défaut"); // Edited
-        diff.deleted("common", "default", "deleted.default-only").withDiff(Locale.ENGLISH, "Initial valeur", null); // Computed
+        diff.deleted("common", "default", "deleted.default-only").withDiff(Locale.ENGLISH, "Initial value", null); // Computed
         // diff.deleted("common", "default", "deleted.default-only").withDiff(Locale.FRENCH, "Valeur initiale", null); // No edition allowed
         diff.added("common", "default", "added.both").withDiff(Locale.ENGLISH, null, "Added both"); // Computed
         diff.added("common", "default", "added.both").withDiff(Locale.FRENCH, null, "Ajout des deux"); // Computed
@@ -136,8 +136,8 @@ public class TranslationMapTest {
                                                         .key(
                                                                 BundleKeyBuilder
                                                                         .create("added.default-only")
-                                                                        .addValue(Locale.ENGLISH, "Added default only")
-                                                                        .addValue(Locale.ENGLISH, "Ajout du défaut")
+                                                                        .addValue(Locale.ENGLISH, "Added default")
+                                                                        .addValue(Locale.FRENCH, "Ajout du défaut")
                                                         )
                                                         .key(
                                                                 BundleKeyBuilder
