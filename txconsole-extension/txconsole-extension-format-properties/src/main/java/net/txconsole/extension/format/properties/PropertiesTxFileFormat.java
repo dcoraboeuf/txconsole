@@ -1,10 +1,17 @@
 package net.txconsole.extension.format.properties;
 
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Table;
+import com.google.common.collect.Tables;
 import net.sf.jstring.builder.BundleBuilder;
 import net.sf.jstring.builder.BundleCollectionBuilder;
 import net.sf.jstring.builder.BundleKeyBuilder;
 import net.sf.jstring.builder.BundleSectionBuilder;
+import net.sf.jstring.model.Bundle;
+import net.sf.jstring.model.BundleKey;
+import net.sf.jstring.model.BundleSection;
+import net.sf.jstring.model.BundleValue;
 import net.txconsole.core.model.TranslationMap;
 import net.txconsole.core.support.IOContext;
 import net.txconsole.service.support.AbstractSimpleConfigurable;
@@ -13,11 +20,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 import static net.txconsole.extension.format.properties.PropertiesUtils.readProperties;
 
@@ -97,6 +104,58 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
 
     @Override
     public void writeTo(PropertiesTxFileFormatConfig config, TranslationMap map, IOContext context) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // Index of values for bundle x locale
+        Table<String, Locale, Map<String, String>> index = Tables.newCustomTable(
+                new HashMap<String, Map<Locale, Map<String, String>>>(),
+                new Supplier<Map<Locale, Map<String, String>>>() {
+                    @Override
+                    public Map<Locale, Map<String, String>> get() {
+                        return new HashMap<>();
+                    }
+                }
+        );
+        for (Bundle bundle : map.getBundleCollection().getBundles()) {
+            String bundleName = bundle.getName();
+            for (BundleSection bundleSection : bundle.getSections()) {
+                // Ignoring any section other than 'default'
+                if (Bundle.DEFAULT_SECTION.equals(bundleSection.getName())) {
+                    for (BundleKey bundleKey : bundleSection.getKeys()) {
+                        for (Map.Entry<Locale, BundleValue> keyEntry : bundleKey.getValues().entrySet()) {
+                            Locale locale = keyEntry.getKey();
+                            String value = keyEntry.getValue().getValue();
+                            Map<String, String> values = index.get(bundleName, locale);
+                            if (values == null) {
+                                // FIXME Uses a locale dependent comparator
+                                values = new TreeMap<>();
+                                index.put(bundleName, locale, values);
+                            }
+                            values.put(bundleKey.getName(), value);
+                        }
+                    }
+                }
+            }
+        }
+        // Root dir
+        File dir = context.getDir();
+        // For all groups
+        for (PropertyGroup propertyGroup : config.getGroups()) {
+            String groupName = propertyGroup.getName();
+            // For each supported locale
+            for (Locale locale : propertyGroup.getLocales()) {
+                // Gets the set of values for this group & locale
+                Map<String, String> values = index.get(groupName, locale);
+                if (values != null) {
+                    // Target file
+                    String fileName = String.format("%s_%s.properties", groupName, locale);
+                    File file = new File(dir, fileName);
+                    // Writes the properties into this file
+                    try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
+                        PropertiesUtils.writeProperties(out, values);
+                    } catch (IOException e) {
+                        throw new PropertiesTxFileFormatIOException(fileName, e);
+                    }
+                }
+            }
+        }
     }
 }

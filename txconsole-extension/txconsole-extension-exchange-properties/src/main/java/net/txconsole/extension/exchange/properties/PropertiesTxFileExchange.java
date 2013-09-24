@@ -7,6 +7,7 @@ import net.txconsole.core.Content;
 import net.txconsole.core.NamedContent;
 import net.txconsole.core.model.*;
 import net.txconsole.core.support.IOContextFactory;
+import net.txconsole.extension.format.properties.EscapingService;
 import net.txconsole.extension.format.properties.PropertiesUtils;
 import net.txconsole.service.support.AbstractSimpleConfigurable;
 import net.txconsole.service.support.TxFileExchange;

@@ -1,4 +1,4 @@
-package net.txconsole.extension.exchange.properties;
+package net.txconsole.extension.format.properties;
 
 public interface EscapingService {
 

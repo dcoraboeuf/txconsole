@@ -35,3 +35,7 @@ net.txconsole.extension.format.properties.PropertyFileNotFoundException
 net.txconsole.extension.format.properties.PropertyFileCannotReadException
     en -> [PF-002] Property file "{0}" cannot be read.
     fr -> [PF-002] Fichier de propriétés "{0}" impossible à lire.
+
+net.txconsole.extension.format.properties.PropertiesTxFileFormatIOException
+    en -> [PF-003] Error while writing {0}.
+    fr -> [PF-003] Erreur lors de l'écriture de {0}.

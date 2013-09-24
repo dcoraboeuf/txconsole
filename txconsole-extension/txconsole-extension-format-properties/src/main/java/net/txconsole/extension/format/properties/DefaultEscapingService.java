@@ -1,4 +1,4 @@
-package net.txconsole.extension.exchange.properties;
+package net.txconsole.extension.format.properties;
 
 import org.springframework.stereotype.Component;
 

@@ -3,15 +3,13 @@ package net.txconsole.extension.exchange.properties;
 import com.google.common.collect.Sets;
 import com.netbeetle.jackson.ObjectMapperFactory;
 import net.txconsole.core.Content;
+import net.txconsole.extension.format.properties.DefaultEscapingService;
 import net.txconsole.test.DirTestIOContextFactory;
 import net.txconsole.test.Helper;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
