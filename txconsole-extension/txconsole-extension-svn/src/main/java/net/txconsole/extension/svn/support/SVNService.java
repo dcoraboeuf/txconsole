@@ -11,4 +11,6 @@ public interface SVNService {
     long update(File dir, String user, String password);
 
     boolean isWorkingCopy(File wc);
+
+    long commit(File dir, String message, String user, String password);
 }

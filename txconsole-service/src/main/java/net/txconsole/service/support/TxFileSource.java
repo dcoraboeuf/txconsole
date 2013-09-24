@@ -1,5 +1,6 @@
 package net.txconsole.service.support;
 
+import com.google.common.base.Function;
 import net.txconsole.core.model.VersionFormat;
 import net.txconsole.core.support.IOContext;
 
@@ -30,8 +31,16 @@ public interface TxFileSource<C> extends Configurable<C> {
      */
     VersionFormat getVersionSemantics();
 
-    // TODO Method to check the sync
-    // TODO Method to sync down
-    // TODO Method to sync up
+    /**
+     * Performs an action in a given context and synchronizes the updated source with the initial source.
+     *
+     * @param config  The configuration to use
+     * @param version The version of the file source to get. See {@link #getSource(Object, String)} for details.
+     * @param message The message associated with the action
+     * @param action  The action to execute in this context
+     * @param <T>     The type of value returned by the action
+     * @return The value returned by the action
+     */
+    <T> T withSource(C config, String version, String message, Function<IOContext, T> action);
 
 }

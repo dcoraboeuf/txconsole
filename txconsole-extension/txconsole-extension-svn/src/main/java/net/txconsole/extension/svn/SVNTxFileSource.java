@@ -1,5 +1,6 @@
 package net.txconsole.extension.svn;
 
+import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.txconsole.core.model.VersionFormat;
@@ -80,6 +81,18 @@ public class SVNTxFileSource
             SVNRevision revision = SVNRevision.parse(version);
             return checkout(config, context, revision);
         }
+    }
+
+    @Override
+    public <T> T withSource(SVNTxFileSourceConfig config, String version, String message, Function<IOContext, T> action) {
+        // Gets the context for this version
+        IOContext context = getSource(config, version);
+        // Executes the action
+        T result = action.apply(context);
+        // Commits the resulting context using the given message
+        svnService.commit(context.getDir(), message, config.getUser(), config.getPassword());
+        // OK
+        return result;
     }
 
     protected IOContext checkout(SVNTxFileSourceConfig config, IOContext context, SVNRevision revision) {

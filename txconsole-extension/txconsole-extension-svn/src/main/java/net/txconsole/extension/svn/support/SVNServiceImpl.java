@@ -4,14 +4,12 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.tmatesoft.svn.core.SVNCommitInfo;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
-import org.tmatesoft.svn.core.wc2.SvnCheckout;
-import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
-import org.tmatesoft.svn.core.wc2.SvnTarget;
-import org.tmatesoft.svn.core.wc2.SvnUpdate;
+import org.tmatesoft.svn.core.wc2.*;
 
 import java.io.File;
 
@@ -49,6 +47,20 @@ public class SVNServiceImpl implements SVNService {
     @Override
     public boolean isWorkingCopy(File wc) {
         return SvnOperationFactory.isVersionedDirectory(wc);
+    }
+
+    @Override
+    public long commit(File dir, String message, String user, String password) {
+        logger.debug("[svn] CI in {}", dir);
+        try (SVNOp ops = ops(user, password)) {
+            SvnCommit ci = ops.getOperationFactory().createCommit();
+            ci.setSingleTarget(SvnTarget.fromFile(dir));
+            ci.setCommitMessage(message);
+            SVNCommitInfo info = ci.run();
+            return info.getNewRevision();
+        } catch (SVNException ex) {
+            throw new CoreSVNException(ex);
+        }
     }
 
     protected SVNOp ops(String user, String password) {
