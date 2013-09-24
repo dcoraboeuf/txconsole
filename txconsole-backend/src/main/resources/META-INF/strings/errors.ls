@@ -49,3 +49,7 @@ net.txconsole.backend.exceptions.TranslationDiffEntryNotEditableException
 net.txconsole.backend.exceptions.TranslationDiffEntryNotFoundException
     en -> [E-013] Request entry for {0}:{1}:{2} not found.
     fr -> [E-013] Entrée {0}:{1}:{2} non trouvée.
+
+net.txconsole.backend.exceptions.RequestCannotUploadBecauseOfStatusException
+    en -> [E-014] Cannot upload response file for a request with status = {0}. Status {1} was expected.
+    fr -> [E-014] Impossible d'uploader un fichier de réponse pour une demande de statut {0}. Le statut {1} est attendu.

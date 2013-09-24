@@ -7,10 +7,7 @@ import net.sf.jstring.Strings;
 import net.sf.jstring.model.*;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
-import net.txconsole.backend.exceptions.RequestUploadIOException;
-import net.txconsole.backend.exceptions.TranslationDiffEntryNotEditableException;
-import net.txconsole.backend.exceptions.TranslationDiffEntryNotFoundException;
-import net.txconsole.backend.exceptions.TranslationDiffEntryValueNotEditableException;
+import net.txconsole.backend.exceptions.*;
 import net.txconsole.core.Content;
 import net.txconsole.core.NamedContent;
 import net.txconsole.core.model.*;
@@ -374,7 +371,10 @@ public class RequestServiceImpl implements RequestService {
         // Loads the request
         RequestSummary request = getRequest(requestId);
         int branchId = request.getBranchId();
-        // FIXME Checks the status of the request (must be GENERATED)
+        // Checks the status of the request (must be REQUEST_EXPORTED)
+        if (request.getStatus() != RequestStatus.REQUEST_EXPORTED) {
+            throw new RequestCannotUploadBecauseOfStatusException(request.getStatus(), RequestStatus.REQUEST_EXPORTED);
+        }
         // Loads the branch
         BranchSummary branch = structureService.getBranch(branchId);
         // Checks the rights
