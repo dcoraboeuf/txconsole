@@ -10,7 +10,7 @@ define(
                     $('<img/>').attr('src', application.staticPathTo('images/request-status-{0}.png'.format(status)))
                 )
                 .append('&nbsp;')
-                .append(statusName);
+                .append($('<b></b>').text(statusName));
             if (message && message.code) {
                 title = message.code.loc(message.parameters);
                 status.append(

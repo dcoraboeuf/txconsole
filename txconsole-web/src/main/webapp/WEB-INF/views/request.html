@@ -16,6 +16,7 @@
     <@title value=request.data.version close="branch/${branch.data.id?c}">
         <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
         <@title_uplink name=branch.data.name href="branch/${branch.data.id?c}" />
+        <@title_command id="request-download" title=loc('request.request.download') class="icon-download-alt" link="ui/request/${request.data.id?c}/download" />
         <@acl resource=request action='PROJECT#REQUEST_UPLOAD'>
             <@title_command id="request-upload" title=loc('request.upload') class="icon-upload" />
         </@acl>

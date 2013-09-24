@@ -3,15 +3,5 @@
         <tr>
             <td>{{{requestStatus data.status data.message}}}</td>
         </tr>
-        {{#if data.downloadable}}
-            <tr>
-                <td>
-                    <a href="ui/request/{{data.id}}/download">
-                        <i class="icon-download-alt"></i>
-                        {{loc 'request.request.download'}}
-                    </a>
-                </td>
-            </tr>
-        {{/if}}
     </tbody>
 </table>
