@@ -37,10 +37,11 @@ public interface TranslationSource<C> extends Configurable<C> {
      * Writes the translation map using a given configuration. The translation map
      * is written back into the <i>latest</i> version of the translation source.
      *
-     * @param config The configuration to use
-     * @param map    The translation map to write back
+     * @param config  The configuration to use
+     * @param map     The translation map to write back
+     * @param message The message to associate with this operation
      */
-    void write(C config, TranslationMap map);
+    void write(C config, TranslationMap map, String message);
 
     Locale getDefaultLocale(C configuration);
 

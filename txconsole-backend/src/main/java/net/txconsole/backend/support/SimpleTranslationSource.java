@@ -1,13 +1,12 @@
 package net.txconsole.backend.support;
 
+import com.google.common.base.Function;
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.core.model.TranslationMap;
 import net.txconsole.core.model.VersionFormat;
 import net.txconsole.core.support.MapBuilder;
-import net.txconsole.service.support.AbstractConfigurable;
+import net.txconsole.service.support.*;
 import net.txconsole.core.support.IOContext;
-import net.txconsole.service.support.TranslationSource;
-import net.txconsole.service.support.TranslationSourceService;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,14 +49,28 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
     }
 
     @Override
-    public void write(SimpleTranslationSourceConfig<S, F> config, TranslationMap map) {
-        // Gets the file source
-        IOContext s = config.getTxFileSourceConfigured().getConfigurable().getSource(config.getTxFileSourceConfigured().getConfiguration(), null);
-        // Writes the map
-        config.getTxFileFormatConfigured().getConfigurable().writeTo(
-                config.getTxFileFormatConfigured().getConfiguration(),
-                map,
-                s
+    public void write(SimpleTranslationSourceConfig<S, F> config, final TranslationMap map, String message) {
+        // Gets the configuration
+        TxFileSource<S> fileSource = config.getTxFileSourceConfigured().getConfigurable();
+        S fileSourceConfig = config.getTxFileSourceConfigured().getConfiguration();
+        final TxFileFormat<F> fileFormat = config.getTxFileFormatConfigured().getConfigurable();
+        final F fileFormatConfig = config.getTxFileFormatConfigured().getConfiguration();
+        // Writes
+        fileSource.withSource(
+                fileSourceConfig,
+                null,
+                message,
+                new Function<IOContext, Void>() {
+                    @Override
+                    public Void apply(IOContext ioContext) {
+                        fileFormat.writeTo(
+                                fileFormatConfig,
+                                map,
+                                ioContext
+                        );
+                        return null;
+                    }
+                }
         );
     }
 

@@ -441,8 +441,6 @@ public class RequestServiceImpl implements RequestService {
         securityUtils.checkGrant(ProjectFunction.REQUEST_MERGE, branch.getProjectId());
         // Default locale & support locales
         Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
-        Locale defaultLocale = configuredTranslationSource.getConfigurable().getDefaultLocale(configuredTranslationSource.getConfiguration());
-        Set<Locale> supportedLocales = configuredTranslationSource.getConfigurable().getSupportedLocales(configuredTranslationSource.getConfiguration());
         // Reads the latest version of the translation map
         TranslationMap map = configuredTranslationSource.getConfigurable().read(configuredTranslationSource.getConfiguration(), null);
         // Gets the stored diff for this request
@@ -450,7 +448,7 @@ public class RequestServiceImpl implements RequestService {
         // Applies the diff to the map
         map = map.applyDiff(diff);
         // Writes back the map to the store
-        configuredTranslationSource.getConfigurable().write(configuredTranslationSource.getConfiguration(), map);
+        configuredTranslationSource.getConfigurable().write(configuredTranslationSource.getConfiguration(), map, form.getMessage());
     }
 
     protected TranslationMap readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {
