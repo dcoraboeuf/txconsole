@@ -72,7 +72,10 @@ public class UIRequestController extends AbstractUIController implements UIReque
                             .withLink(linkTo(methodOn(UIRequestController.class).getRequest(locale, o.getId())).withSelfRel())
                             .withLink(linkTo(methodOn(GUIController.class).getRequest(locale, o.getId())).withRel("gui"))
                                     // ACL
-                            .withActions(securityUtils, branch.getProjectId(), ProjectFunction.values())
+                            .withAction(ProjectFunction.REQUEST_UPLOAD, o.getStatus() == RequestStatus.REQUEST_EXPORTED && securityUtils.isGranted(ProjectFunction.REQUEST_UPLOAD, branch.getProjectId()))
+                            .withAction(ProjectFunction.REQUEST_MERGE, o.getStatus() == RequestStatus.REQUEST_EXPORTED && securityUtils.isGranted(ProjectFunction.REQUEST_MERGE, branch.getProjectId()))
+                            .withAction(ProjectFunction.REQUEST_EDIT, o.getStatus() == RequestStatus.REQUEST_EXPORTED && securityUtils.isGranted(ProjectFunction.REQUEST_EDIT, branch.getProjectId()))
+                            .withAction(ProjectFunction.REQUEST_DELETE, securityUtils.isGranted(ProjectFunction.REQUEST_DELETE, branch.getProjectId()))
                                     // Events
                             .withEvent(guiEventService.getResourceEvent(locale, EventEntity.REQUEST, o.getId(), EventCode.REQUEST_CREATED));
                 }
