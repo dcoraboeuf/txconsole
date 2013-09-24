@@ -300,6 +300,10 @@
                                         <name>spring.profiles.active</name>
                                         <value>dev</value>
                                     </systemProperty>
+                                    <systemProperty>
+                                        <name>txconsole.extension.svn.nocommit</name>
+                                        <value>true</value>
+                                    </systemProperty>
                                 </systemProperties>
                             </configuration>
                         </plugin>

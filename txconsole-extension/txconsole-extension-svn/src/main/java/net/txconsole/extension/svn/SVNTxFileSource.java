@@ -37,6 +37,10 @@ public class SVNTxFileSource
         implements TxFileSource<SVNTxFileSourceConfig>,
         ScheduledService, Runnable {
 
+    /**
+     * Set this system property to disable commits: {@value}.
+     */
+    public static final String TXCONSOLE_EXTENSION_SVN_NOCOMMIT = "txconsole.extension.svn.nocommit";
     private final Logger logger = LoggerFactory.getLogger(SVNTxFileSource.class);
     private final IOContextFactory ioContextFactory;
     private final SVNService svnService;
@@ -90,7 +94,9 @@ public class SVNTxFileSource
         // Executes the action
         T result = action.apply(context);
         // Commits the resulting context using the given message
-        svnService.commit(context.getDir(), message, config.getUser(), config.getPassword());
+        if (!Boolean.getBoolean(TXCONSOLE_EXTENSION_SVN_NOCOMMIT)) {
+            svnService.commit(context.getDir(), message, config.getUser(), config.getPassword());
+        }
         // OK
         return result;
     }
