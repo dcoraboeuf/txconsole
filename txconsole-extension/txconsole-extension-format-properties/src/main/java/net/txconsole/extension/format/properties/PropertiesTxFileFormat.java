@@ -16,6 +16,7 @@ import net.txconsole.core.model.TranslationMap;
 import net.txconsole.core.support.IOContext;
 import net.txconsole.service.support.AbstractSimpleConfigurable;
 import net.txconsole.service.support.TxFileFormat;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -125,8 +126,16 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
                             String value = keyEntry.getValue().getValue();
                             Map<String, String> values = index.get(bundleName, locale);
                             if (values == null) {
-                                // FIXME Uses a locale dependent comparator
-                                values = new TreeMap<>();
+                                values = new TreeMap<>(new Comparator<String>() {
+                                    @Override
+                                    public int compare(String o1, String o2) {
+                                        if (StringUtils.equalsIgnoreCase(o1, o2)) {
+                                            return o1.compareTo(o2);
+                                        } else {
+                                            return o1.compareToIgnoreCase(o2);
+                                        }
+                                    }
+                                });
                                 index.put(bundleName, locale, values);
                             }
                             values.put(bundleKey.getName(), value);
