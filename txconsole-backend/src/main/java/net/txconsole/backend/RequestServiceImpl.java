@@ -276,6 +276,7 @@ public class RequestServiceImpl implements RequestService {
         BranchSummary branch = structureService.getBranch(requestDao.getBranchIdForRequestEntry(entryId));
         // Checks the rights
         securityUtils.checkGrant(ProjectFunction.REQUEST_EDIT, branch.getProjectId());
+        // FIXME Checks the status of the request itself (#27)
         // Gets the details for this entry
         TranslationDiffEntry entry = getRequestEntryDetails(entryId);
         // Edits the entry
