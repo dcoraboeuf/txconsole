@@ -13,6 +13,6 @@ public class RequestSummary {
     private final SimpleMessage message;
 
     public boolean isDownloadable() {
-        return status == RequestStatus.REQUEST_EXPORTED;
+        return status == RequestStatus.EXPORTED;
     }
 }

@@ -50,13 +50,17 @@ request.status.CREATED
     en -> Created
     fr -> Créée
 
-request.status.REQUEST_GENERATION
+request.status.GENERATION
     en -> Generating request...
     fr -> Génération de la demande...
 
-request.status.REQUEST_EXPORTED
+request.status.EXPORTED
     en -> Request generated
     fr -> Demande générée
+
+request.status.CLOSED
+    en -> Closed
+    fr -> Fermée
 
 request.status.ERROR
     en -> Error in request

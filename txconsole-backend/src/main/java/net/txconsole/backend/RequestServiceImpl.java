@@ -57,7 +57,7 @@ public class RequestServiceImpl implements RequestService {
         public RequestSummary apply(TRequest t) {
             RequestStatus status = t.getStatus();
             if (status == RequestStatus.CREATED && inGenerationRequests.contains(t.getId())) {
-                status = RequestStatus.REQUEST_GENERATION;
+                status = RequestStatus.GENERATION;
             }
             return new RequestSummary(
                     t.getId(),
@@ -167,7 +167,7 @@ public class RequestServiceImpl implements RequestService {
                 // Saves the diff into the database
                 requestDao.saveDiff(requestId, diff);
                 // Changes the status to 'EXPORTED'
-                requestDao.setStatus(requestId, RequestStatus.REQUEST_EXPORTED);
+                requestDao.setStatus(requestId, RequestStatus.EXPORTED);
                 // Saves the last version with the new status
                 requestDao.setToVersion(requestId, newMap.getVersion());
             } catch (Exception ex) {
@@ -371,9 +371,9 @@ public class RequestServiceImpl implements RequestService {
         // Loads the request
         RequestSummary request = getRequest(requestId);
         int branchId = request.getBranchId();
-        // Checks the status of the request (must be REQUEST_EXPORTED)
-        if (request.getStatus() != RequestStatus.REQUEST_EXPORTED) {
-            throw new RequestCannotUploadBecauseOfStatusException(request.getStatus(), RequestStatus.REQUEST_EXPORTED);
+        // Checks the status of the request (must be EXPORTED)
+        if (request.getStatus() != RequestStatus.EXPORTED) {
+            throw new RequestCannotUploadBecauseOfStatusException(request.getStatus(), RequestStatus.EXPORTED);
         }
         // Loads the branch
         BranchSummary branch = structureService.getBranch(branchId);
@@ -431,9 +431,9 @@ public class RequestServiceImpl implements RequestService {
         // Loads the request
         RequestSummary request = getRequest(requestId);
         int branchId = request.getBranchId();
-        // Checks the status of the request (must be REQUEST_EXPORTED)
-        if (request.getStatus() != RequestStatus.REQUEST_EXPORTED) {
-            throw new RequestCannotMergeBecauseOfStatusException(request.getStatus(), RequestStatus.REQUEST_EXPORTED);
+        // Checks the status of the request (must be EXPORTED)
+        if (request.getStatus() != RequestStatus.EXPORTED) {
+            throw new RequestCannotMergeBecauseOfStatusException(request.getStatus(), RequestStatus.EXPORTED);
         }
         // Loads the branch
         BranchSummary branch = structureService.getBranch(branchId);

@@ -7,9 +7,11 @@ public enum RequestStatus {
 
     CREATED,
 
-    REQUEST_GENERATION,
+    GENERATION,
 
-    REQUEST_EXPORTED,
+    EXPORTED,
+
+    CLOSED,
 
     ERROR
 
