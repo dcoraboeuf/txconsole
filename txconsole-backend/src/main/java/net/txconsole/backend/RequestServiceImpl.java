@@ -449,6 +449,8 @@ public class RequestServiceImpl implements RequestService {
         map = map.applyDiff(diff);
         // Writes back the map to the store
         configuredTranslationSource.getConfigurable().write(configuredTranslationSource.getConfiguration(), map, form.getMessage());
+        // Changes the status of the request
+        requestDao.setStatus(requestId, RequestStatus.CLOSED);
     }
 
     protected TranslationMap readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {
