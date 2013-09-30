@@ -71,7 +71,7 @@ public final class Helper {
                                 TranslationDiffType.DELETED,
                                 MapBuilder.dual(
                                         Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, false, "Initial value", null),
-                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, false, "Valeur initiale", null)
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, false, "Valeur initiale", "Valeur initiale")
                                 )
                         ),
                         new TranslationDiffEntry(
