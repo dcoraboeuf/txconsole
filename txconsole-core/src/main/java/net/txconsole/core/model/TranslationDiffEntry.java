@@ -1,7 +1,6 @@
 package net.txconsole.core.model;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import lombok.Data;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -58,39 +57,16 @@ public class TranslationDiffEntry implements Comparable<TranslationDiffEntry> {
     }
 
     public TranslationDiffEntry forEdition(Collection<Locale> locales) {
-        if (type == TranslationDiffType.ADDED) {
-            // Added ==> editable if some locales are missing
+        // Always editable for addition & updates
+        if (type == TranslationDiffType.ADDED || type == TranslationDiffType.UPDATED) {
+            // Adding the missing locales
             Set<Locale> missingLocales = new HashSet<>(locales);
             missingLocales.removeAll(values.keySet());
-            if (missingLocales.isEmpty()) {
-                // Nothing to edit
-                return null;
-            } else {
-                return withMissingLocales(missingLocales);
-            }
-        } else if (type == TranslationDiffType.UPDATED) {
-            // Updated ==> editable is some locales are missing OR if one value is editable
-            boolean editable = isEditable();
-            Set<Locale> missingLocales = new HashSet<>(locales);
-            missingLocales.removeAll(values.keySet());
-            if (editable || !missingLocales.isEmpty()) {
-                return withMissingLocales(missingLocales);
-            } else {
-                return null;
-            }
-
+            return withMissingLocales(missingLocales);
         } else {
-            // Deleted ==> not editable
-            return null;
+            // Deleted
+            return this;
         }
-    }
-
-    @JsonIgnore
-    public boolean isEditable() {
-        return Iterables.any(
-                values.values(),
-                TranslationDiffEntryValue.entryValueEditableFn
-        );
     }
 
     private TranslationDiffEntry withMissingLocales(Set<Locale> missingLocales) {
@@ -102,7 +78,6 @@ public class TranslationDiffEntry implements Comparable<TranslationDiffEntry> {
                     new TranslationDiffEntryValue(
                             0,
                             missingLocale,
-                            true,
                             null,
                             null
                     )

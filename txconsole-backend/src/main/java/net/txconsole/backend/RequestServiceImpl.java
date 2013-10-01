@@ -303,10 +303,6 @@ public class RequestServiceImpl implements RequestService {
     }
 
     protected TranslationDiffEntryValue editRequestEntry(TranslationDiffEntry entry, RequestEntryInput input) {
-        // If not editable, rejects the changes
-        if (!entry.isEditable()) {
-            throw new TranslationDiffEntryNotEditableException(entry.getKey());
-        }
         // Gets the entry value for the locale
         TranslationDiffEntryValue entryValue = entry.getEntryValue(input.getLocale());
         // Resulting entry value
@@ -315,9 +311,6 @@ public class RequestServiceImpl implements RequestService {
         if (entryValue == null) {
             // Creates the entry
             resultingEntryValue = requestDao.addValue(entry.getEntryId(), input.getLocale(), input.getValue());
-        } else if (!entryValue.isEditable()) {
-            // If not editable, rejects the changes
-            throw new TranslationDiffEntryValueNotEditableException(entry.getKey(), input.getLocale());
         } else {
             int entryValueId = entryValue.getEntryValueId();
             if (entryValueId > 0) {

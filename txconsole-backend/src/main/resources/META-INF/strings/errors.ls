@@ -38,13 +38,9 @@ net.txconsole.backend.exceptions.RequestNoRequestFileException
     en -> [E-010] Cannot find any request file for {0}.
     fr -> [E-010] Impossible de trouver un fichier pour la demande {0}.
 
-net.txconsole.backend.exceptions.TranslationDiffEntryValueNotEditableException
-    en -> [E-011] Value for key {0} and locale {1} cannot be edited.
-    fr -> [E-011] La valeur pour la clef {0} et le language {1} ne peut pas être modifiée.
+# E-011
 
-net.txconsole.backend.exceptions.TranslationDiffEntryNotEditableException
-    en -> [E-012] Value for key {0} cannot be edited.
-    fr -> [E-012] La valeur pour la clef {0} ne peut pas être modifiée.
+# E-012
 
 net.txconsole.backend.exceptions.TranslationDiffEntryNotFoundException
     en -> [E-013] Request entry for {0}:{1}:{2} not found.

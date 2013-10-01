@@ -1,0 +1,2 @@
+-- All values are editable
+ALTER TABLE REQUEST_ENTRY_VALUE DROP EDITABLE;

@@ -145,9 +145,8 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                         psev.setInt(1, requestEntryId);
                         for (TranslationDiffEntryValue v : diffEntry.getValues().values()) {
                             psev.setString(2, v.getLocale().toString());
-                            psev.setBoolean(3, v.isEditable());
-                            psev.setString(4, v.getOldValue());
-                            psev.setString(5, v.getNewValue());
+                            psev.setString(3, v.getOldValue());
+                            psev.setString(4, v.getNewValue());
                             psev.executeUpdate();
                         }
                     }
@@ -243,7 +242,6 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
         return new TranslationDiffEntryValue(
                 id,
                 locale,
-                true,
                 null,
                 value
         );
@@ -326,10 +324,9 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                         public void processRow(ResultSet rs) throws SQLException {
                             int entryValueId = rs.getInt("id");
                             Locale locale = SQLUtils.toLocale(rs, "locale");
-                            boolean editable = rs.getBoolean("editable");
                             String oldValue = rs.getString("oldValue");
                             String newValue = rs.getString("newValue");
-                            entry.withDiff(entryValueId, locale, editable, oldValue, newValue);
+                            entry.withDiff(entryValueId, locale, oldValue, newValue);
                         }
                     }
             );
