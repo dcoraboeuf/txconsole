@@ -266,6 +266,16 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
         );
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public String getLastVersion(int branchId) {
+        return getFirstItem(
+                SQL.REQUEST_LAST_VERSION,
+                params("branch", branchId),
+                String.class
+        );
+    }
+
     protected class TranslationDiffEntryBuilderRowMapper implements RowMapper<TranslationDiffEntryBuilder> {
 
         private final TranslationDiffBuilder builder;

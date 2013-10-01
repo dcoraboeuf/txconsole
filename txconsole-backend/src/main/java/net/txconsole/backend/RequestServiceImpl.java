@@ -91,9 +91,8 @@ public class RequestServiceImpl implements RequestService {
         Configured<Object, TranslationSource<Object>> configuredTranslationSource = structureService.getConfiguredTranslationSource(branchId);
         Object configuration = configuredTranslationSource.getConfiguration();
         TranslationSource<Object> translationSource = configuredTranslationSource.getConfigurable();
-        // Last version
-        // TODO Last version can be extracted from the list of past requests
-        String lastVersion = "";
+        // Last version can be extracted from the list of past requests
+        String lastVersion = requestDao.getLastVersion(branchId);
         // OK
         return new RequestConfigurationData(
                 projectSummary,

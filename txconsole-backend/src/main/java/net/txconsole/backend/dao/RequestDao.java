@@ -42,4 +42,6 @@ public interface RequestDao {
     Integer findRequestEntryId(int requestId, String bundleName, String sectionName, String keyName);
 
     void setMergeVersion(int requestId, String version);
+
+    String getLastVersion(int branchId);
 }
