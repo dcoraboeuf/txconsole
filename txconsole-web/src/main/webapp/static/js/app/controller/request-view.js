@@ -36,7 +36,7 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                 el: header
             },
             successFn: function (controlledEntry) {
-                var editableEntry = editable && controlledEntry.diffEntry.status != 'DELETED';
+                var editableEntry = editable && controlledEntry.diffEntry.type != 'DELETED';
                 var container = $('#translation-key-content-{0}'.format(entryId));
                 $.each(controlledEntry.diffEntry.entries, function (index, entryValue) {
                     // Adapt editable status according to the ACL
