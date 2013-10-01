@@ -14,10 +14,7 @@ import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.core.support.SimpleMessage;
-import net.txconsole.service.EventService;
-import net.txconsole.service.RequestService;
-import net.txconsole.service.StructureService;
-import net.txconsole.service.TranslationMapService;
+import net.txconsole.service.*;
 import net.txconsole.service.support.Configured;
 import net.txconsole.service.support.TranslationSource;
 import net.txconsole.service.support.TranslationSourceService;
@@ -44,6 +41,7 @@ public class RequestServiceImpl implements RequestService {
     private final EventService eventService;
     private final RequestDao requestDao;
     private final SecurityUtils securityUtils;
+    private final EscapingService escapingService;
     private final Strings strings;
     /**
      * Requests being generated
@@ -70,13 +68,14 @@ public class RequestServiceImpl implements RequestService {
     };
 
     @Autowired
-    public RequestServiceImpl(StructureService structureService, TranslationMapService translationMapService, TranslationSourceService translationSourceService, EventService eventService, RequestDao requestDao, SecurityUtils securityUtils, Strings strings) {
+    public RequestServiceImpl(StructureService structureService, TranslationMapService translationMapService, TranslationSourceService translationSourceService, EventService eventService, RequestDao requestDao, SecurityUtils securityUtils, EscapingService escapingService, Strings strings) {
         this.structureService = structureService;
         this.translationMapService = translationMapService;
         this.translationSourceService = translationSourceService;
         this.eventService = eventService;
         this.requestDao = requestDao;
         this.securityUtils = securityUtils;
+        this.escapingService = escapingService;
         this.strings = strings;
     }
 
@@ -256,9 +255,17 @@ public class RequestServiceImpl implements RequestService {
         int branchId = requestDao.getBranchIdForRequestEntry(entryId);
         Set<Locale> supportedLocales = getSupportedLocalesForBranch(branchId);
 
+        // Escaping function for the edition
+        Function<String, String> escapeFn = new Function<String, String>() {
+            @Override
+            public String apply(String value) {
+                return escapingService.escapeForEdition(value);
+            }
+        };
+
         // Gets the details for edition
         TranslationDiffEntry rawEntry = requestDao.getRequestEntryDetails(entryId);
-        TranslationDiffEntry entry = rawEntry.forEdition(supportedLocales);
+        TranslationDiffEntry entry = rawEntry.forEdition(supportedLocales).escape(escapeFn);
         return entry != null ? entry : rawEntry;
     }
 

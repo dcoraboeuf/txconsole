@@ -2,6 +2,7 @@ package net.txconsole.core.model;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import lombok.Data;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -40,6 +41,20 @@ public class TranslationDiffEntry implements Comparable<TranslationDiffEntry> {
                 .append(this.section, o.section)
                 .append(this.key, o.key)
                 .toComparison();
+    }
+
+    public TranslationDiffEntry escape(final Function<String, String> escapeFn) {
+        return withNewValues(
+                Maps.transformValues(
+                        values,
+                        new Function<TranslationDiffEntryValue, TranslationDiffEntryValue>() {
+                            @Override
+                            public TranslationDiffEntryValue apply(TranslationDiffEntryValue entryValue) {
+                                return entryValue.espace(escapeFn);
+                            }
+                        }
+                )
+        );
     }
 
     public TranslationDiffEntry forEdition(Collection<Locale> locales) {

@@ -1,11 +1,10 @@
 package net.txconsole.core.model;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import lombok.Data;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Locale;
-import java.util.Map;
 
 @Data
 public class TranslationDiffEntryValue {
@@ -22,4 +21,13 @@ public class TranslationDiffEntryValue {
     private final String oldValue;
     private final String newValue;
 
+    public TranslationDiffEntryValue espace(Function<String, String> escapeFn) {
+        return new TranslationDiffEntryValue(
+                entryValueId,
+                locale,
+                editable,
+                escapeFn.apply(oldValue),
+                escapeFn.apply(newValue)
+        );
+    }
 }

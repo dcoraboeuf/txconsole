@@ -32,6 +32,20 @@ public class TranslationDiff {
         );
     }
 
+    public TranslationDiff escape(final Function<String, String> escapeFn) {
+        return new TranslationDiff(
+                Lists.transform(
+                        entries,
+                        new Function<TranslationDiffEntry, TranslationDiffEntry>() {
+                            @Override
+                            public TranslationDiffEntry apply(TranslationDiffEntry entry) {
+                                return entry.escape(escapeFn);
+                            }
+                        }
+                )
+        );
+    }
+
     public TranslationDiff trimValues() {
         return new TranslationDiff(
                 Lists.transform(
