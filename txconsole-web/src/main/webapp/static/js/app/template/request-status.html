@@ -1,6 +1,24 @@
 <table>
     <tbody>
         <tr>
+            <td>
+                {{#if data.toVersion}}
+                    <i class="icon-arrow-right"></i>
+                    {{loc 'request.toVersion'}}:
+                    {{data.toVersion}}
+                {{/if}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{#if data.mergeVersion}}
+                    <i class="icon-ok"></i>
+                    {{loc 'request.mergeVersion'}}:
+                    {{data.mergeVersion}}
+                {{/if}}
+            </td>
+        </tr>
+        <tr>
             <td>{{{requestStatus data.status data.message}}}</td>
         </tr>
     </tbody>
