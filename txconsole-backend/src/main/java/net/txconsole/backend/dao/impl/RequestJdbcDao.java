@@ -28,6 +28,8 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                     rs.getInt("id"),
                     rs.getInt("branch"),
                     rs.getString("version"),
+                    rs.getString("toVersion"),
+                    rs.getString("mergeVersion"),
                     SQLUtils.getEnum(RequestStatus.class, rs, "status"),
                     SQLUtils.getMessage(rs, "message_code", "message_parameters")
             );
@@ -252,6 +254,15 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                         .addValue("section", sectionName)
                         .addValue("key", keyName),
                 Integer.class
+        );
+    }
+
+    @Override
+    @Transactional
+    public void setMergeVersion(int requestId, String version) {
+        getNamedParameterJdbcTemplate().update(
+                SQL.REQUEST_SET_MERGEVERSION,
+                params("id", requestId).addValue("version", version)
         );
     }
 

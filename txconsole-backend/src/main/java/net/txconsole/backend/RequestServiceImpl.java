@@ -61,6 +61,8 @@ public class RequestServiceImpl implements RequestService {
                     t.getId(),
                     t.getBranchId(),
                     t.getVersion(),
+                    t.getToVersion(),
+                    t.getMergeVersion(),
                     status,
                     t.getMessage()
             );
@@ -265,8 +267,8 @@ public class RequestServiceImpl implements RequestService {
 
         // Gets the details for edition
         TranslationDiffEntry rawEntry = requestDao.getRequestEntryDetails(entryId);
-        TranslationDiffEntry entry = rawEntry.forEdition(supportedLocales).escape(escapeFn);
-        return entry != null ? entry : rawEntry;
+        TranslationDiffEntry entry = rawEntry.forEdition(supportedLocales);
+        return entry != null ? entry.escape(escapeFn) : rawEntry.escape(escapeFn);
     }
 
     protected Set<Locale> getSupportedLocalesForBranch(int branchId) {
@@ -457,6 +459,8 @@ public class RequestServiceImpl implements RequestService {
         map = map.applyDiff(diff);
         // Writes back the map to the store
         String version = configuredTranslationSource.getConfigurable().write(configuredTranslationSource.getConfiguration(), map, form.getMessage());
+        // Sets the merge version
+        requestDao.setMergeVersion(requestId, version);
         // Changes the status of the request
         requestDao.setStatus(requestId, RequestStatus.CLOSED);
         // OK

@@ -9,6 +9,8 @@ public class RequestSummary {
     private final int id;
     private final int branchId;
     private final String version;
+    private final String toVersion;
+    private final String mergeVersion;
     private final RequestStatus status;
     private final SimpleMessage message;
 

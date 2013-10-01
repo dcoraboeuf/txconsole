@@ -38,6 +38,18 @@ request
     en -> Translation request
     fr -> Demande de traductions
 
+request.version
+    en -> Start version
+    fr -> Version initiale
+
+request.toVersion
+    en -> End revision
+    fr -> Version finale
+
+request.mergeVersion
+    en -> Merge version
+    fr -> Version de la réintégration
+
 request.txfileexchange
     en -> File exchange type
     fr -> Protocole d'échange

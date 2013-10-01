@@ -40,4 +40,6 @@ public interface RequestDao {
     void editValue(int entryValueId, String value);
 
     Integer findRequestEntryId(int requestId, String bundleName, String sectionName, String keyName);
+
+    void setMergeVersion(int requestId, String version);
 }
