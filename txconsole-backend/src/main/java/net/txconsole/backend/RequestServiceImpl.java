@@ -119,9 +119,10 @@ public class RequestServiceImpl implements RequestService {
                 branch,
                 structureService.getProject(branch.getProjectId())
         ));
-        // The request treatment is launched asynchronously (see )
+        // Launches the treatment
+        launchCreation(requestId);
         // Returns the request summary
-        return requestSummary;
+        return getRequest(requestId);
     }
 
     @Override
@@ -139,9 +140,7 @@ public class RequestServiceImpl implements RequestService {
         );
     }
 
-    @Override
-    @Transactional
-    public void launchCreation(int requestId) {
+    protected void launchCreation(int requestId) {
         // Admin account? (granted by the RequestCreationBatch class)
         securityUtils.checkIsAdmin();
         // Gets the request

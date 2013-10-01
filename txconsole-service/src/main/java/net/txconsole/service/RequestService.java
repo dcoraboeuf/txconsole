@@ -7,7 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 public interface RequestService {
 
@@ -22,8 +21,6 @@ public interface RequestService {
     RequestSummary getRequest(int requestId);
 
     List<RequestSummary> getRequestsForBranch(int branchId, int offset, int count);
-
-    void launchCreation(int requestId);
 
     Content getRequestFile(int requestId);
 
