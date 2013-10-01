@@ -4,9 +4,23 @@
     </td>
     <td class="request-version" width="10%">
         <a href="{{link 'gui'}}">{{data.version}}</a>
+        {{#if data.toVersion}}
+            <span title="{{loc 'request.toVersion'}}">
+                <i class="icon-arrow-right"></i>
+                {{data.toVersion}}
+            </span>
+        {{/if}}
     </td>
     <td class="request-status">
         {{{requestStatus data.status}}}
+    </td>
+    <td class="request-status">
+        {{#if data.mergeVersion}}
+            <span title="{{loc 'request.mergeVersion'}}">
+                <i class="icon-ok"></i>
+                {{data.mergeVersion}}
+            </span>
+        {{/if}}
     </td>
     <td class="request-timestamp">
         {{{eventTimestampAndElapsed 'REQUEST_CREATED'}}}
