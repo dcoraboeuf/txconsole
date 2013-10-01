@@ -2,6 +2,7 @@ package net.txconsole.backend.dao.impl;
 
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
+import net.txconsole.backend.dao.model.TRequestEntry;
 import net.txconsole.core.model.*;
 import net.txconsole.core.support.SimpleMessage;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -32,6 +33,19 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                     rs.getString("mergeVersion"),
                     SQLUtils.getEnum(RequestStatus.class, rs, "status"),
                     SQLUtils.getMessage(rs, "message_code", "message_parameters")
+            );
+        }
+    };
+    private final RowMapper<TRequestEntry> requestEntryRowMapper = new RowMapper<TRequestEntry>() {
+        @Override
+        public TRequestEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new TRequestEntry(
+                    rs.getInt("id"),
+                    rs.getInt("request"),
+                    rs.getString("bundle"),
+                    rs.getString("section"),
+                    rs.getString("name"),
+                    SQLUtils.getEnum(TranslationDiffType.class, rs, "type")
             );
         }
     };
@@ -273,6 +287,16 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
                 SQL.REQUEST_LAST_VERSION,
                 params("branch", branchId),
                 String.class
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TRequestEntry getRequestEntry(int entryId) {
+        return getNamedParameterJdbcTemplate().queryForObject(
+                SQL.REQUEST_ENTRY_BY_ID,
+                params("id", entryId),
+                requestEntryRowMapper
         );
     }
 

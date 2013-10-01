@@ -1,6 +1,5 @@
 package net.txconsole.backend;
 
-import net.txconsole.backend.security.AbstractSecurityTest;
 import net.txconsole.backend.support.SimpleTranslationSource;
 import net.txconsole.backend.support.SimpleTranslationSourceConfig;
 import net.txconsole.core.model.*;
@@ -25,7 +24,7 @@ import java.util.concurrent.Callable;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
-public class StructureServiceIntegrationTest extends AbstractSecurityTest {
+public class StructureServiceIntegrationTest extends AbstractBackendTest {
 
     @Autowired
     private ObjectMapper mapper;

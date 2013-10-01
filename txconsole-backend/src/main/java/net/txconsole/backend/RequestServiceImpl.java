@@ -7,6 +7,7 @@ import net.sf.jstring.Strings;
 import net.sf.jstring.model.*;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
+import net.txconsole.backend.dao.model.TRequestEntry;
 import net.txconsole.backend.exceptions.*;
 import net.txconsole.core.Content;
 import net.txconsole.core.NamedContent;
@@ -279,11 +280,17 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional
     public RequestControlledEntryValue editRequestEntry(Locale outputLocale, int entryId, RequestEntryInput input) {
+        // Gets the request information
+        TRequestEntry tRequestEntry = requestDao.getRequestEntry(entryId);
+        TRequest tRequest = requestDao.getById(tRequestEntry.getRequest());
         // Loads the branch for this entry
-        BranchSummary branch = structureService.getBranch(requestDao.getBranchIdForRequestEntry(entryId));
+        BranchSummary branch = structureService.getBranch(tRequest.getBranchId());
         // Checks the rights
         securityUtils.checkGrant(ProjectFunction.REQUEST_EDIT, branch.getProjectId());
-        // FIXME Checks the status of the request itself (#27)
+        // Checks the status of the request itself
+        if (tRequest.getStatus() != RequestStatus.EXPORTED) {
+            throw new RequestCannotBeEditedException();
+        }
         // Gets the details for this entry
         TranslationDiffEntry entry = getRequestEntryDetails(entryId);
         // Edits the entry

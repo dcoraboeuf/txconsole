@@ -9,7 +9,9 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Locale;
 
 public final class Helper {
@@ -98,6 +100,10 @@ public final class Helper {
                         )
                 )
         );
+    }
+
+    public static String uid(String prefix) {
+        return prefix + new SimpleDateFormat("mmssSSS").format(new Date());
     }
 
 }

@@ -1,5 +1,6 @@
 package net.txconsole.backend.security;
 
+import net.txconsole.backend.AbstractBackendTest;
 import net.txconsole.backend.support.MockTranslationSourceConfig;
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.core.model.ProjectCreationForm;
@@ -16,7 +17,7 @@ import java.util.concurrent.Callable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class StructureServiceIntegrationSecurityTest extends AbstractSecurityTest {
+public class StructureServiceIntegrationSecurityTest extends AbstractBackendTest {
 
     @Autowired
     private StructureService structureService;

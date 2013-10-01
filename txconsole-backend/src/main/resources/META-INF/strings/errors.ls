@@ -57,3 +57,7 @@ net.txconsole.backend.exceptions.RequestCannotUploadBecauseOfStatusException
 net.txconsole.backend.exceptions.RequestCannotMergeBecauseOfStatusException
     en -> [E-015] Cannot merge a request with status = {0}. Status {1} was expected.
     fr -> [E-015] Impossible de réintégrer une demande avec le statut {0}. Le statut {1} est attendu.
+
+net.txconsole.backend.exceptions.RequestCannotBeEditedException
+    en -> [E-016] Cannot edit the request because its state does not allow it.
+    fr -> [E-016] Impossible d'éditer la demande parce que sont status courant ne l'autorise pas.

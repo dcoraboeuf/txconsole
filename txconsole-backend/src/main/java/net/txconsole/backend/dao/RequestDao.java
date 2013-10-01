@@ -1,6 +1,7 @@
 package net.txconsole.backend.dao;
 
 import net.txconsole.backend.dao.model.TRequest;
+import net.txconsole.backend.dao.model.TRequestEntry;
 import net.txconsole.core.model.*;
 import net.txconsole.core.support.SimpleMessage;
 
@@ -44,4 +45,6 @@ public interface RequestDao {
     void setMergeVersion(int requestId, String version);
 
     String getLastVersion(int branchId);
+
+    TRequestEntry getRequestEntry(int entryId);
 }
