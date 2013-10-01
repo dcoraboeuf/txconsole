@@ -39,7 +39,8 @@ public class MockTranslationSource
     }
 
     @Override
-    public void write(MockTranslationSourceConfig config, TranslationMap map, String message) {
+    public String write(MockTranslationSourceConfig config, TranslationMap map, String message) {
+        return "";
     }
 
     @Override

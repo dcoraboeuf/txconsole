@@ -41,5 +41,5 @@ public interface RequestService {
 
     void uploadRequest(int id, Collection<MultipartFile> responses);
 
-    void mergeRequest(int id, RequestMergeForm form);
+    String mergeRequest(int id, RequestMergeForm form);
 }

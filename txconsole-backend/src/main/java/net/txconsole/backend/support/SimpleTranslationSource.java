@@ -49,14 +49,14 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
     }
 
     @Override
-    public void write(SimpleTranslationSourceConfig<S, F> config, final TranslationMap map, String message) {
+    public String write(SimpleTranslationSourceConfig<S, F> config, final TranslationMap map, String message) {
         // Gets the configuration
         TxFileSource<S> fileSource = config.getTxFileSourceConfigured().getConfigurable();
         S fileSourceConfig = config.getTxFileSourceConfigured().getConfiguration();
         final TxFileFormat<F> fileFormat = config.getTxFileFormatConfigured().getConfigurable();
         final F fileFormatConfig = config.getTxFileFormatConfigured().getConfiguration();
         // Writes
-        fileSource.withSource(
+        return fileSource.withSource(
                 fileSourceConfig,
                 null,
                 message,
@@ -71,7 +71,7 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
                         return null;
                     }
                 }
-        );
+        ).getVersion();
     }
 
     @Override

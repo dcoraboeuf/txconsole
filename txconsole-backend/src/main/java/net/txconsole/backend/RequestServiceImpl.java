@@ -435,7 +435,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public void mergeRequest(int requestId, RequestMergeForm form) {
+    public String mergeRequest(int requestId, RequestMergeForm form) {
         // Loads the request
         RequestSummary request = getRequest(requestId);
         int branchId = request.getBranchId();
@@ -456,9 +456,11 @@ public class RequestServiceImpl implements RequestService {
         // Applies the diff to the map
         map = map.applyDiff(diff);
         // Writes back the map to the store
-        configuredTranslationSource.getConfigurable().write(configuredTranslationSource.getConfiguration(), map, form.getMessage());
+        String version = configuredTranslationSource.getConfigurable().write(configuredTranslationSource.getConfiguration(), map, form.getMessage());
         // Changes the status of the request
         requestDao.setStatus(requestId, RequestStatus.CLOSED);
+        // OK
+        return version;
     }
 
     protected TranslationMap readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {

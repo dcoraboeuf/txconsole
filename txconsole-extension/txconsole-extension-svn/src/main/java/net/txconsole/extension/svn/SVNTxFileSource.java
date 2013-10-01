@@ -4,12 +4,13 @@ import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.txconsole.core.model.VersionFormat;
+import net.txconsole.core.support.IOContext;
+import net.txconsole.core.support.IOContextFactory;
 import net.txconsole.extension.scm.AbstractSCMTxFileSource;
 import net.txconsole.extension.svn.support.SVNService;
 import net.txconsole.service.ScheduledService;
-import net.txconsole.core.support.IOContext;
-import net.txconsole.core.support.IOContextFactory;
 import net.txconsole.service.support.TxFileSource;
+import net.txconsole.service.support.TxFileSourceResult;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -88,17 +89,18 @@ public class SVNTxFileSource
     }
 
     @Override
-    public <T> T withSource(SVNTxFileSourceConfig config, String version, String message, Function<IOContext, T> action) {
+    public <T> TxFileSourceResult<T> withSource(SVNTxFileSourceConfig config, String version, String message, Function<IOContext, T> action) {
         // Gets the context for this version
         IOContext context = getSource(config, version);
         // Executes the action
         T result = action.apply(context);
         // Commits the resulting context using the given message
+        long revision = -1;
         if (!Boolean.getBoolean(TXCONSOLE_EXTENSION_SVN_NOCOMMIT)) {
-            svnService.commit(context.getDir(), message, config.getUser(), config.getPassword());
+            revision = svnService.commit(context.getDir(), message, config.getUser(), config.getPassword());
         }
         // OK
-        return result;
+        return new TxFileSourceResult<>(String.valueOf(revision), result);
     }
 
     protected IOContext checkout(SVNTxFileSourceConfig config, IOContext context, SVNRevision revision) {

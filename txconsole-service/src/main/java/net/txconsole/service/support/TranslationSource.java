@@ -40,8 +40,9 @@ public interface TranslationSource<C> extends Configurable<C> {
      * @param config  The configuration to use
      * @param map     The translation map to write back
      * @param message The message to associate with this operation
+     * @return Version of the new map
      */
-    void write(C config, TranslationMap map, String message);
+    String write(C config, TranslationMap map, String message);
 
     Locale getDefaultLocale(C configuration);
 

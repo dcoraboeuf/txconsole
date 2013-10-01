@@ -39,8 +39,8 @@ public interface TxFileSource<C> extends Configurable<C> {
      * @param message The message associated with the action
      * @param action  The action to execute in this context
      * @param <T>     The type of value returned by the action
-     * @return The value returned by the action
+     * @return The value returned by the action, associated with the new version of the source
      */
-    <T> T withSource(C config, String version, String message, Function<IOContext, T> action);
+    <T> TxFileSourceResult<T> withSource(C config, String version, String message, Function<IOContext, T> action);
 
 }
