@@ -4,6 +4,7 @@ import net.sf.jstring.Strings;
 import net.txconsole.backend.dao.RequestDao;
 import net.txconsole.backend.dao.model.TRequest;
 import net.txconsole.backend.dao.model.TRequestEntry;
+import net.txconsole.backend.exceptions.DeletedRequestEntryCannotBeEditedException;
 import net.txconsole.backend.exceptions.RequestCannotBeEditedException;
 import net.txconsole.core.config.CoreConfig;
 import net.txconsole.core.model.BranchSummary;
@@ -106,6 +107,35 @@ public class RequestServiceTest {
                 "110",
                 null,
                 RequestStatus.CLOSED,
+                null
+        ));
+        when(structureService.getBranch(10)).thenReturn(new BranchSummary(
+                10,
+                1,
+                "BCH1"
+        ));
+        // Call
+        service.editRequestEntry(Locale.ENGLISH, 1000, new RequestEntryInput(Locale.FRENCH, "Valeur"));
+    }
+
+    @Test(expected = DeletedRequestEntryCannotBeEditedException.class)
+    public void editRequestEntry_deleted() {
+        // Mocking
+        when(requestDao.getRequestEntry(1000)).thenReturn(new TRequestEntry(
+                1000,
+                100,
+                "common",
+                "default",
+                "one",
+                TranslationDiffType.DELETED
+        ));
+        when(requestDao.getById(100)).thenReturn(new TRequest(
+                100,
+                10,
+                "100",
+                "110",
+                null,
+                RequestStatus.EXPORTED,
                 null
         ));
         when(structureService.getBranch(10)).thenReturn(new BranchSummary(

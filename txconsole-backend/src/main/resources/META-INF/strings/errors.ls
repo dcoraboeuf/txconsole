@@ -38,7 +38,9 @@ net.txconsole.backend.exceptions.RequestNoRequestFileException
     en -> [E-010] Cannot find any request file for {0}.
     fr -> [E-010] Impossible de trouver un fichier pour la demande {0}.
 
-# E-011
+net.txconsole.backend.exceptions.DeletedRequestEntryCannotBeEditedException
+    en -> [E-011] A deleted key cannot be edited.
+    fr -> [E-011] Une clef supprimée ne peut pas être éditée.
 
 # E-012
 

@@ -291,6 +291,10 @@ public class RequestServiceImpl implements RequestService {
         if (tRequest.getStatus() != RequestStatus.EXPORTED) {
             throw new RequestCannotBeEditedException();
         }
+        // Checks the type of entry
+        if (tRequestEntry.getType() == TranslationDiffType.DELETED) {
+            throw new DeletedRequestEntryCannotBeEditedException();
+        }
         // Gets the details for this entry
         TranslationDiffEntry entry = getRequestEntryDetails(entryId);
         // Edits the entry
