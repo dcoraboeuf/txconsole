@@ -111,8 +111,12 @@ define(['config', 'render', 'jquery', 'common'], function(config, render, $, com
                 // Button section
                 if (dialog.buttons && dialog.buttons.length > 0) {
                     var controls = $('<div></div>').addClass('controls');
+                    dialog.controls = {};
                     $.each(dialog.buttons, function (index, button) {
                         var item = createButton(dialog, button);
+                        if (button.action) {
+                            dialog.controls[button.action] = item;
+                        }
                         controls.append(item);
                     });
                     $('<div></div>').addClass('control-group').append(controls).appendTo(form);

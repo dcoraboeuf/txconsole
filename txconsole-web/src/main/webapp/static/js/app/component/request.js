@@ -69,6 +69,9 @@ define(
                                     txFileExchangeConfig: txFileExchangeConfig
                                     // FIXME Additional keys
                                 },
+                                loading: {
+                                    el: dialog.controls['submit']
+                                },
                                 successFn: function (request) {
                                     dialog.closeFn();
                                     // Goes to the request page
