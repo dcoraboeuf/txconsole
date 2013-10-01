@@ -29,16 +29,18 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
     }
 
     function loadEntry(header, entryId, viewResource) {
+        var editable = viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0;
         ajax.get({
             url: 'ui/request/entry/{0}'.format(entryId),
             loading: {
                 el: header
             },
             successFn: function (controlledEntry) {
+                var editableEntry = editable && controlledEntry.diffEntry.status != 'DELETED';
                 var container = $('#translation-key-content-{0}'.format(entryId));
                 $.each(controlledEntry.diffEntry.entries, function (index, entryValue) {
                     // Adapt editable status according to the ACL
-                    entryValue.editableAllowed = entryValue.editable && viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0;
+                    entryValue.editableAllowed = editableEntry;
                     // Collects the associated control if any
                     if (controlledEntry.diffControl) {
                         var message = controlledEntry.diffControl.messages[entryValue.locale];
