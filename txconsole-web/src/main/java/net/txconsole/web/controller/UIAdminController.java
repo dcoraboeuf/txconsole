@@ -122,4 +122,32 @@ public class UIAdminController extends AbstractUIController {
         return accountService.setProjectACL(project, account, role);
     }
 
+    /**
+     * Unregistering an ACL for a project
+     */
+    @RequestMapping(value = "/ui/acl/project/{project}/{account}", method = RequestMethod.DELETE)
+    public
+    @ResponseBody
+    Ack unsetProjectACL(@PathVariable int project, @PathVariable int account) {
+        return accountService.unsetProjectACL(project, account);
+    }
+
+    /**
+     * List of authorizations for a project
+     */
+    @RequestMapping(value = "/ui/acl/project/{project}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<Resource<ProjectAuthorization>> getProjectACLList(@PathVariable int project) {
+        return Lists.transform(
+                accountService.getProjectACLList(project),
+                new Function<ProjectAuthorization, Resource<ProjectAuthorization>>() {
+                    @Override
+                    public Resource<ProjectAuthorization> apply(ProjectAuthorization o) {
+                        return new Resource<>(o);
+                    }
+                }
+        );
+    }
+
 }

@@ -70,4 +70,15 @@ public class ProjectAuthorizationJdbcDao extends AbstractJdbcDao implements Proj
         );
         return Ack.OK;
     }
+
+    @Override
+    @Transactional
+    public Ack unset(int project, int account) {
+        MapSqlParameterSource params = params("project", project).addValue("account", account);
+        getNamedParameterJdbcTemplate().update(
+                SQL.PROJECT_AUTHORIZATION_DELETE,
+                params
+        );
+        return Ack.OK;
+    }
 }

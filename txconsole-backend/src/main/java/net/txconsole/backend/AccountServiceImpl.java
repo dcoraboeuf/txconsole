@@ -125,6 +125,31 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
     }
 
     @Override
+    @Transactional
+    @ProjectGrant(ProjectFunction.ACL)
+    public Ack unsetProjectACL(@ProjectGrantId int project, int account) {
+        return projectAuthorizationDao.unset(project, account);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProjectAuthorization> getProjectACLList(int project) {
+        return Lists.transform(
+                projectAuthorizationDao.findByProject(project),
+                new Function<TProjectAuthorization, ProjectAuthorization>() {
+                    @Override
+                    public ProjectAuthorization apply(TProjectAuthorization t) {
+                        return new ProjectAuthorization(
+                                t.getProject(),
+                                accountSummaryFn.apply(accountDao.getByID(t.getAccount())),
+                                t.getRole()
+                        );
+                    }
+                }
+        );
+    }
+
+    @Override
     @Transactional(readOnly = true)
     @AdminGrant
     public List<Account> getAccounts() {

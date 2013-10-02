@@ -13,4 +13,6 @@ public interface ProjectAuthorizationDao {
     List<TProjectAuthorization> findByAccount(int account);
 
     Ack set(int project, int account, ProjectRole role);
+
+    Ack unset(int project, int account);
 }
