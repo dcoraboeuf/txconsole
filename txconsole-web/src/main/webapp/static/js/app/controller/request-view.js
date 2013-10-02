@@ -29,7 +29,7 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
     }
 
     function loadEntry(header, entryId, viewResource) {
-        var editable = viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0;
+        var editable = viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0 && viewResource.data.summary.status == 'EXPORTED';
         ajax.get({
             url: 'ui/request/entry/{0}'.format(entryId),
             loading: {
