@@ -1,18 +1,18 @@
 package net.txconsole.web.controller;
 
 import com.google.common.base.Function;
-import net.txconsole.core.model.Account;
-import net.txconsole.core.model.AccountCreationForm;
-import net.txconsole.core.model.AccountPasswordResetForm;
-import net.txconsole.core.model.AccountUpdateForm;
+import com.google.common.collect.Lists;
+import net.sf.jstring.Strings;
+import net.txconsole.core.model.*;
 import net.txconsole.service.AccountService;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
-import net.sf.jstring.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -92,4 +92,24 @@ public class UIAdminController extends AbstractUIController {
                 )
         );
     }
+
+    /**
+     * Account lookup
+     */
+    @RequestMapping(value = "/ui/account/lookup/{query:[a-zA-Z0-9\\-_]+}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<Resource<AccountSummary>> accountLookup(@PathVariable String query) {
+        return Lists.transform(
+                accountService.accountLookup(query),
+                new Function<AccountSummary, Resource<AccountSummary>>() {
+
+                    @Override
+                    public Resource<AccountSummary> apply(AccountSummary o) {
+                        return new Resource<>(o);
+                    }
+                }
+        );
+    }
+
 }

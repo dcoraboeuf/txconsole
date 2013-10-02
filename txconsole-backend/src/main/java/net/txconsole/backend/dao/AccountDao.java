@@ -34,4 +34,6 @@ public interface AccountDao {
     Ack changeLanguage(int accountId, Locale lang);
 
     List<TAccount> getUserAccounts();
+
+    List<TAccount> findByQuery(String query);
 }

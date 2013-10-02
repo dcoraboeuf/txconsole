@@ -4,7 +4,7 @@ define(['jquery', 'ajax', 'jquery-ui', 'bootstrap'], function ($, ajax) {
 
     function userLookup(query, processFn) {
         ajax.get({
-            url: 'ui/admin/account/lookup/{0}'.format(query)
+            url: 'ui/account/lookup/{0}'.format(query)
         })
     }
 

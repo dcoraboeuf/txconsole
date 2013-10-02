@@ -33,4 +33,6 @@ public interface AccountService {
     List<AccountSummary> getUserAccounts();
 
     AccountSummary getAccountSummary(int account);
+
+    List<AccountSummary> accountLookup(String query);
 }

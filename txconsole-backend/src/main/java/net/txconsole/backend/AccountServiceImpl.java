@@ -108,6 +108,15 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
 
     @Override
     @Transactional(readOnly = true)
+    public List<AccountSummary> accountLookup(String query) {
+        return Lists.transform(
+                accountDao.findByQuery(query),
+                accountSummaryFn
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     @AdminGrant
     public List<Account> getAccounts() {
         return Lists.transform(
