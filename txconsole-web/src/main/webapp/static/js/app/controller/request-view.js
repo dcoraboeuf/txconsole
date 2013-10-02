@@ -1,4 +1,4 @@
-define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, ajax) {
+define(['jquery', 'render', 'ajax', 'jquery.typing', 'component/request'], function ($, render, ajax) {
 
     function saveEntryForLocale(input, entryId, locale, newValue, oldValue) {
         ajax.put({
@@ -64,10 +64,8 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                             // Entry ID & locale
                             var entryId = $(input).attr('data-entry-id');
                             var locale = $(input).attr('data-locale');
-                            // Key pressed
+                            // Shift+Enter for validation
                             $(input).keydown(function (e) {
-                                // On any key
-                                $(input).addClass('warning');
                                 // On Shit+Enter ==> submit
                                 if (e.which == 13 && e.shiftKey) {
                                     // Gets the new value & old value
@@ -77,6 +75,12 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                                     saveEntryForLocale($(input), entryId, locale, newValue, oldValue);
                                     // Does not send the normal event
                                     e.preventDefault();
+                                }
+                            });
+                            // Monitor the typing
+                            $(input).typing({
+                                start: function () {
+                                    $(input).addClass('warning').removeClass('success');
                                 }
                             });
                         });
