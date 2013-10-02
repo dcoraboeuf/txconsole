@@ -2,10 +2,12 @@ package net.txconsole.backend.dao.impl;
 
 import net.txconsole.backend.dao.ProjectAuthorizationDao;
 import net.txconsole.backend.dao.model.TProjectAuthorization;
+import net.txconsole.core.model.Ack;
 import net.txconsole.core.model.ProjectRole;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,5 +54,20 @@ public class ProjectAuthorizationJdbcDao extends AbstractJdbcDao implements Proj
                 params("account", account),
                 projectAuthorizationRowMapper
         );
+    }
+
+    @Override
+    @Transactional
+    public Ack set(int project, int account, ProjectRole role) {
+        MapSqlParameterSource params = params("project", project).addValue("account", account);
+        getNamedParameterJdbcTemplate().update(
+                SQL.PROJECT_AUTHORIZATION_DELETE,
+                params
+        );
+        getNamedParameterJdbcTemplate().update(
+                SQL.PROJECT_AUTHORIZATION_INSERT,
+                params.addValue("role", role.name())
+        );
+        return Ack.OK;
     }
 }

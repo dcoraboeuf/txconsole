@@ -15,6 +15,8 @@ import net.txconsole.core.validation.AccountValidation;
 import net.txconsole.core.validation.Validations;
 import net.txconsole.service.AccountService;
 import net.txconsole.service.security.AdminGrant;
+import net.txconsole.service.security.ProjectGrant;
+import net.txconsole.service.security.ProjectGrantId;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,6 +115,13 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
                 accountDao.findByQuery(query),
                 accountSummaryFn
         );
+    }
+
+    @Override
+    @Transactional
+    @ProjectGrant(ProjectFunction.ACL)
+    public Ack setProjectACL(@ProjectGrantId int project, int account, ProjectRole role) {
+        return projectAuthorizationDao.set(project, account, role);
     }
 
     @Override

@@ -112,4 +112,14 @@ public class UIAdminController extends AbstractUIController {
         );
     }
 
+    /**
+     * Registering an ACL for a project
+     */
+    @RequestMapping(value = "/ui/acl/project/{project}/{account}/{role}", method = RequestMethod.PUT)
+    public
+    @ResponseBody
+    Ack setProjectACL(@PathVariable int project, @PathVariable int account, @PathVariable ProjectRole role) {
+        return accountService.setProjectACL(project, account, role);
+    }
+
 }

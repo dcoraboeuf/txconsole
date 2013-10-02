@@ -35,4 +35,6 @@ public interface AccountService {
     AccountSummary getAccountSummary(int account);
 
     List<AccountSummary> accountLookup(String query);
+
+    Ack setProjectACL(int project, int account, ProjectRole role);
 }
