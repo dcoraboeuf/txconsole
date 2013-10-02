@@ -142,8 +142,6 @@ public class RequestServiceImpl implements RequestService {
     }
 
     protected void launchCreation(int requestId) {
-        // Admin account? (granted by the RequestCreationBatch class)
-        securityUtils.checkIsAdmin();
         // Gets the request
         TRequest request = requestDao.getById(requestId);
         // Checks the status
