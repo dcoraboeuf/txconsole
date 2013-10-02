@@ -20,9 +20,11 @@ public class MockTranslationSource
         extends AbstractSimpleConfigurable<MockTranslationSourceConfig>
         implements TranslationSource<MockTranslationSourceConfig> {
 
+    public static final String ID = "mock";
+
     @Autowired
     public MockTranslationSource(ObjectMapper objectMapper) {
-        super("mock", "txsource.mock", "txsource.mock.description", MockTranslationSourceConfig.class, objectMapper);
+        super(ID, "txsource.mock", "txsource.mock.description", MockTranslationSourceConfig.class, objectMapper);
     }
 
     @Override

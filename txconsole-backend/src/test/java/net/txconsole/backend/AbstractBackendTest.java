@@ -27,11 +27,11 @@ import java.util.concurrent.Callable;
 public abstract class AbstractBackendTest extends AbstractIntegrationTest {
 
     @Autowired
-    private ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
     @Autowired
-    private StructureService structureService;
+    protected StructureService structureService;
     @Autowired
-    private RequestService requestService;
+    protected RequestService requestService;
 
     protected AnonymousCall asAnonymous() {
         return new AnonymousCall();
