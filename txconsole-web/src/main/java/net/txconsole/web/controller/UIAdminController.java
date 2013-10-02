@@ -96,7 +96,7 @@ public class UIAdminController extends AbstractUIController {
     /**
      * Account lookup
      */
-    @RequestMapping(value = "/ui/account/lookup/{query:[a-zA-Z0-9\\-_]+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/ui/account/lookup/{query:[a-zA-Z0-9\\-_]*}", method = RequestMethod.GET)
     public
     @ResponseBody
     List<Resource<AccountSummary>> accountLookup(@PathVariable String query) {
