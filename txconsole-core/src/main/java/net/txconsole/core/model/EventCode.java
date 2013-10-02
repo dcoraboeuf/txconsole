@@ -8,6 +8,8 @@ public enum EventCode {
 
     BRANCH_CREATED,
 
-    REQUEST_CREATED
+    REQUEST_CREATED,
+
+    REQUEST_MERGED
 
 }

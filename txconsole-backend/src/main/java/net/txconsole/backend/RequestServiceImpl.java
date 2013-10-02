@@ -465,6 +465,12 @@ public class RequestServiceImpl implements RequestService {
         requestDao.setMergeVersion(requestId, version);
         // Changes the status of the request
         requestDao.setStatus(requestId, RequestStatus.CLOSED);
+        // Event
+        eventService.event(EventForm.requestMerged(
+                request,
+                branch,
+                structureService.getProject(branch.getProjectId())
+        ));
         // OK
         return version;
     }
