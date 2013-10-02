@@ -2,6 +2,8 @@ package net.txconsole.web.controller;
 
 import net.txconsole.core.model.BranchSummary;
 import net.txconsole.core.model.RequestSummary;
+import net.txconsole.core.security.ProjectFunction;
+import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.core.support.MapBuilder;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.AbstractGUIController;
@@ -28,13 +30,15 @@ public class GUIController extends AbstractGUIController {
     private final UI ui;
     private final UIRequest uiRequest;
     private final ErrorHandlingMultipartResolver errorHandlingMultipartResolver;
+    private final SecurityUtils securityUtils;
 
     @Autowired
-    public GUIController(ErrorHandler errorHandler, UI ui, UIRequest uiRequest, ErrorHandlingMultipartResolver errorHandlingMultipartResolver) {
+    public GUIController(ErrorHandler errorHandler, UI ui, UIRequest uiRequest, ErrorHandlingMultipartResolver errorHandlingMultipartResolver, SecurityUtils securityUtils) {
         super(errorHandler);
         this.ui = ui;
         this.uiRequest = uiRequest;
         this.errorHandlingMultipartResolver = errorHandlingMultipartResolver;
+        this.securityUtils = securityUtils;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -48,6 +52,15 @@ public class GUIController extends AbstractGUIController {
     @RequestMapping(value = "/project/{id}", method = RequestMethod.GET)
     public ModelAndView getProject(Locale locale, @PathVariable int id) {
         return new ModelAndView("project", "project", ui.getProject(locale, id));
+    }
+
+    /**
+     * Project ACL page
+     */
+    @RequestMapping(value = "/project/{id}/acl", method = RequestMethod.GET)
+    public ModelAndView getProjectACL(Locale locale, @PathVariable int id) {
+        securityUtils.checkGrant(ProjectFunction.ACL, id);
+        return new ModelAndView("project-acl", "project", ui.getProject(locale, id));
     }
 
     /**

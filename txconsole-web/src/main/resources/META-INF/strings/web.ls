@@ -521,3 +521,7 @@ keyfilter.go
 acl.project
     en -> Authorizations
     fr -> Autorisations
+
+acl.project.description
+    en -> Management of authorizations for {0}.
+    fr -> Gestion des autorisations pour {0}.

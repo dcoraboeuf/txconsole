@@ -11,7 +11,7 @@
 
     <@title value=project.data.name description=project.data.fullName>
         <@acl resource=project action='PROJECT#ACL'>
-            <@title_command id="project-acl" title=loc('acl.project') class="icon-user" />
+            <@title_command id="project-acl" title=loc('acl.project') class="icon-user" link="project/${project.data.id?c}/acl" />
         </@acl>
         <@acl resource=project action='PROJECT#DELETE'>
             <@title_command id="project-delete" title=loc('general.delete') class="icon-trash" />
