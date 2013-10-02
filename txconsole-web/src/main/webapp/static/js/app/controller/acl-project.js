@@ -10,7 +10,7 @@ define(['render', 'jquery', 'ajax', 'dynamic'], function (render, $, ajax, dynam
                 var account = $(action).attr('data-account');
                 $(action).click(function () {
                     ajax.del({
-                        url: '/ui/acl/project/{0}/{1}'.format(project, account),
+                        url: 'ui/acl/project/{0}/{1}'.format(project, account),
                         successFn: function () {
                             dynamic.reloadSection('acl-project');
                         }
