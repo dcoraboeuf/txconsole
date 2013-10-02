@@ -68,13 +68,15 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                             $(input).keydown(function (e) {
                                 // On any key
                                 $(input).addClass('warning');
-                                // On Enter ==> submit
-                                if (e.which == 13) {
+                                // On Shit+Enter ==> submit
+                                if (e.which == 13 && e.shiftKey) {
                                     // Gets the new value & old value
                                     var newValue = $(input).val();
                                     var oldValue = $(input).attr('data-old-value');
                                     // Sends the changes
                                     saveEntryForLocale($(input), entryId, locale, newValue, oldValue);
+                                    // Does not send the normal event
+                                    e.preventDefault();
                                 }
                             });
                         });
