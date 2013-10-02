@@ -525,3 +525,7 @@ acl.project
 acl.project.description
     en -> Management of authorizations for {0}.
     fr -> Gestion des autorisations pour {0}.
+
+acl.account
+    en -> Account
+    fr -> Compte utilisateur
