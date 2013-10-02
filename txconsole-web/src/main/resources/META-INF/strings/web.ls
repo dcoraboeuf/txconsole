@@ -515,3 +515,9 @@ request.merge.force
 keyfilter.go
     en -> Search
     fr -> Chercher
+
+[acl]
+
+acl.project
+    en -> Authorizations
+    fr -> Autorisations

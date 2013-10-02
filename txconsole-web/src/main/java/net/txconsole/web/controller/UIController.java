@@ -46,10 +46,7 @@ public class UIController extends AbstractUIController implements UI {
                                             // List of branches
                                     .withLink(linkTo(methodOn(UIController.class).getProjectBranches(locale, o.getId())).withRel("branches"))
                                             // ACL
-                                    .withAction(ProjectFunction.UPDATE, securityUtils.isGranted(ProjectFunction.UPDATE, o.getId()))
-                                    .withAction(ProjectFunction.DELETE, securityUtils.isGranted(ProjectFunction.DELETE, o.getId()))
-                                    .withAction(ProjectFunction.REQUEST_CREATE, securityUtils.isGranted(ProjectFunction.REQUEST_CREATE, o.getId()))
-                                    .withAction(ProjectFunction.REQUEST_DELETE, securityUtils.isGranted(ProjectFunction.REQUEST_DELETE, o.getId()))
+                                    .withActions(securityUtils, o.getId(), ProjectFunction.values())
                                             // Events
                                     .withEvent(guiEventService.getResourceEvent(locale, EventEntity.PROJECT, o.getId(), EventCode.PROJECT_CREATED));
                         }

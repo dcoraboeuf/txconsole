@@ -251,6 +251,7 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
                         account = account.withACL(ProjectFunction.REQUEST_CREATE, auth.getProject());
                         account = account.withACL(ProjectFunction.REQUEST_MERGE, auth.getProject());
                         account = account.withACL(ProjectFunction.REQUEST_DELETE, auth.getProject());
+                        account = account.withACL(ProjectFunction.ACL, auth.getProject());
                         // ... applies everything below
                     case TRANSLATOR:
                         account = account.withACL(ProjectFunction.REQUEST_UPLOAD, auth.getProject());

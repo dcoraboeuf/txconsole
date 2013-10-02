@@ -34,7 +34,11 @@ public enum ProjectFunction implements SecurityFunction {
     /**
      * Deleting an existing translation request
      */
-    REQUEST_DELETE;
+    REQUEST_DELETE,
+    /**
+     * Management of authorizations for the project
+     */
+    ACL;
 
     /**
      * Security functions for {@link SecurityCategory#PROJECT}.
