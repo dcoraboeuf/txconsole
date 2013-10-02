@@ -77,7 +77,8 @@ public class UIRequestController extends AbstractUIController implements UIReque
                             .withAction(ProjectFunction.REQUEST_EDIT, o.getStatus() == RequestStatus.EXPORTED && securityUtils.isGranted(ProjectFunction.REQUEST_EDIT, branch.getProjectId()))
                             .withAction(ProjectFunction.REQUEST_DELETE, securityUtils.isGranted(ProjectFunction.REQUEST_DELETE, branch.getProjectId()))
                                     // Events
-                            .withEvent(guiEventService.getResourceEvent(locale, EventEntity.REQUEST, o.getId(), EventCode.REQUEST_CREATED));
+                            .withEvent(guiEventService.getResourceEvent(locale, EventEntity.REQUEST, o.getId(), EventCode.REQUEST_CREATED))
+                            .withEvent(guiEventService.getResourceEvent(locale, EventEntity.REQUEST, o.getId(), EventCode.REQUEST_MERGED));
                 }
             };
         }

@@ -30,6 +30,7 @@ public class GUIEventServiceImpl implements GUIEventService {
     public ResourceEvent getResourceEvent(Locale locale, EventEntity entity, int entityId, EventCode eventCode) {
         // Gets the event
         Event event = eventService.getEvent(entity, entityId, eventCode);
+        if (event == null) return null;
         // Converts the event
         Signature signature = event.getSignature();
         DateTime now = TimeUtils.now();

@@ -1,35 +1,41 @@
-define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, ajax) {
+define(['jquery', 'render', 'ajax', 'jquery.typing', 'component/request'], function ($, render, ajax) {
 
-    function saveEntryForLocale(input, entryId, locale, newValue, oldValue) {
-        ajax.put({
-            url: 'ui/request/entry/{0}'.format(entryId),
-            data: {
-                locale: locale,
-                value: newValue
-            },
-            loading: {
-                el: input
-            },
-            successFn: function (controlledEntryValue) {
-                // Change submitted
-                input.removeClass('warning').addClass('success');
-                // Updates the controls
-                var message = controlledEntryValue.messages[locale];
-                if (message) {
-                    input
-                        .addClass('translation-diff-input-invalid')
-                        .attr('title', message);
-                } else {
-                    input
-                        .removeClass('translation-diff-input-invalid')
-                        .removeAttr('title');
+    function saveEntryForLocale(input, entryId, locale) {
+        var newValue = $(input).val();
+        var previousValue = $(input).attr('data-previous-value');
+        if (newValue != previousValue) {
+            ajax.put({
+                url: 'ui/request/entry/{0}'.format(entryId),
+                data: {
+                    locale: locale,
+                    value: newValue
+                },
+                loading: {
+                    el: input
+                },
+                successFn: function (controlledEntryValue) {
+                    // Change submitted
+                    input.removeClass('warning').addClass('success');
+                    // Updates the previous value
+                    input.attr('data-previous-value', newValue);
+                    // Updates the controls
+                    var message = controlledEntryValue.messages[locale];
+                    if (message) {
+                        input
+                            .addClass('translation-diff-input-invalid')
+                            .attr('title', message);
+                    } else {
+                        input
+                            .removeClass('translation-diff-input-invalid')
+                            .removeAttr('title');
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     function loadEntry(header, entryId, viewResource) {
-        var editable = viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0;
+        var editable = viewResource.actions.indexOf('PROJECT#REQUEST_EDIT') >= 0 && viewResource.data.summary.status == 'EXPORTED';
         ajax.get({
             url: 'ui/request/entry/{0}'.format(entryId),
             loading: {
@@ -64,18 +70,26 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                             // Entry ID & locale
                             var entryId = $(input).attr('data-entry-id');
                             var locale = $(input).attr('data-locale');
-                            // Key pressed
+                            // Shift+Enter for validation
                             $(input).keydown(function (e) {
-                                // On any key
-                                $(input).addClass('warning');
-                                // On Enter ==> submit
-                                if (e.which == 13) {
-                                    // Gets the new value & old value
-                                    var newValue = $(input).val();
-                                    var oldValue = $(input).attr('data-old-value');
+                                // On Shit+Enter ==> submit
+                                if (e.which == 13 && e.shiftKey) {
                                     // Sends the changes
-                                    saveEntryForLocale($(input), entryId, locale, newValue, oldValue);
+                                    saveEntryForLocale($(input), entryId, locale);
+                                    // Does not send the normal event
+                                    e.preventDefault();
                                 }
+                            });
+                            // Monitor the typing
+                            $(input).typing({
+                                start: function () {
+                                    $(input).addClass('warning').removeClass('success');
+                                }
+                            });
+                            // Validating when exiting the field
+                            $(input).blur(function () {
+                                // Sends the changes
+                                saveEntryForLocale($(input), entryId, locale);
                             });
                         });
                         // Submit buttons
@@ -86,11 +100,8 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                                 var locale = $(btn).attr('data-locale');
                                 // Input
                                 var input = $(container).find('#translation-edit-input-{0}-{1}'.format(entryId, locale));
-                                // Gets the new value & old value
-                                var newValue = input.val();
-                                var oldValue = input.attr('data-old-value');
                                 // Sends the changes
-                                saveEntryForLocale(input, entryId, locale, newValue, oldValue);
+                                saveEntryForLocale(input, entryId, locale);
                             })
                         });
                         // Cancel buttons
@@ -101,8 +112,8 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                                 var locale = $(btn).attr('data-locale');
                                 // Input
                                 var input = $(container).find('#translation-edit-input-{0}-{1}'.format(entryId, locale));
-                                // Restores the old value
-                                input.val(input.attr('data-old-value'));
+                                // Restores the previous value
+                                input.val(input.attr('data-previous-value'));
                                 // Removes any class
                                 if (input.hasClass('success')) {
                                     input.removeClass('success').addClass('warning');

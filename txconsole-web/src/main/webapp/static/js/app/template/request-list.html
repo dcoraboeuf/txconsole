@@ -23,7 +23,11 @@
         {{/if}}
     </td>
     <td class="request-timestamp">
-        {{{eventTimestampAndElapsed 'REQUEST_CREATED'}}}
+        {{#if data.mergeVersion}}
+            {{{eventTimestampAndElapsed 'REQUEST_MERGED' 'icon-ok'}}}
+        {{else}}
+            {{{eventTimestampAndElapsed 'REQUEST_CREATED' 'icon-star'}}}
+        {{/if}}
     </td>
     <td class="request-actions">
         <span class="action action-optional action-inline">

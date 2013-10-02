@@ -45,10 +45,10 @@
 }
 
 /* Input validations */
-input.warning {
+input.warning,textarea.warning {
     background-color: lightsalmon;
 }
-input.success {
+input.success,textarea.success {
     background-color: lightgreen;
 }
 

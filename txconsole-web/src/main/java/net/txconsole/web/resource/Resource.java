@@ -47,7 +47,7 @@ public class Resource<T> extends ResourceSupport {
     }
 
     public Resource<T> withEvent(ResourceEvent event) {
-        events.add(event);
+        if (event != null) events.add(event);
         return this;
     }
 
