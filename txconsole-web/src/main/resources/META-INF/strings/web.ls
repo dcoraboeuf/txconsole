@@ -510,6 +510,15 @@ request.merge.force
         correctement renseignées. Voulez-vous continuer avec la réintégration ?
         ...
 
+request.hide.deleted
+    en -> Hide deleted
+    fr -> Filtrer supprimé
+
+request.hide.valid
+en -> Hide valid
+fr -> Filtrer valide
+
+
 [keyfilter]
 
 keyfilter.go

@@ -14,4 +14,27 @@ define(['jquery', 'component/request'], function ($, request) {
         request.deleteRequest(requestId)
     });
 
+    $('#request-hide-deleted').click(function() {
+        if(!$(this).hasClass('active')) {
+            $('tr.translation-entry-type-DELETED').hide();
+        } else {
+            $('tr.translation-entry-type-DELETED').show();
+        }
+    });
+
+    $('#request-hide-valid').click(function() {
+            if(!$(this).hasClass('active')) {
+                $('tr:not(.translation-entry-invalid)').hide();
+            } else {
+                // if filter on deleted already active, avoid to display them.
+                if($('#request-hide-deleted').hasClass('active')) {
+                    $('tr:not(.translation-entry-invalid)').not('.translation-entry-type-DELETED').show();
+                } else {
+                    $('tr:not(.translation-entry-invalid)').show();
+                }
+
+            }
+        });
+
+
 });

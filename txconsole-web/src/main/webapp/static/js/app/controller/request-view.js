@@ -143,6 +143,7 @@ define(['jquery', 'render', 'ajax', 'component/request'], function ($, render, a
                 // Mark for controls
                 if (entry.controls) {
                     entry.cls += ' translation-diff-invalid';
+                    entry.invalid = true;
                 }
             });
             return resource;
