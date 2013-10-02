@@ -154,6 +154,7 @@ define(['jquery', 'render', 'ajax', 'jquery.typing', 'component/request'], funct
                 // Mark for controls
                 if (entry.controls) {
                     entry.cls += ' translation-diff-invalid';
+                    entry.invalid = true;
                 }
             });
             return resource;
