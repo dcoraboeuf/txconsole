@@ -529,3 +529,11 @@ acl.project.description
 acl.account
     en -> Account
     fr -> Compte utilisateur
+
+acl.project.role
+    en -> Project role
+    fr -> Rôle pour le projet
+
+acl.project.add
+    en -> Add
+    fr -> Ajouter

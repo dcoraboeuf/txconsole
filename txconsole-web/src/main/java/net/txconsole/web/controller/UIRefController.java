@@ -2,6 +2,7 @@ package net.txconsole.web.controller;
 
 import com.google.common.collect.Collections2;
 import net.sf.jstring.Strings;
+import net.txconsole.core.model.ProjectRole;
 import net.txconsole.service.support.Description;
 import net.txconsole.service.support.TranslationSourceService;
 import net.txconsole.web.support.AbstractUIController;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -78,4 +80,15 @@ public class UIRefController extends AbstractUIController {
                 Description.fromDescriptible(strings, locale)
         );
     }
+
+    /**
+     * List of project roles
+     */
+    @RequestMapping(value = "/project-role", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Collection<ProjectRole> getProjectRoles() {
+        return Arrays.asList(ProjectRole.values());
+    }
+
 }

@@ -21,6 +21,13 @@
                     <label class="control-label" for="acl-account"><@lh key='acl.account'/></label>
                     <div class="controls">
                         <input type="text" id="acl-account" size="40" maxlength="80" autocomplete="off" />
+                        <div
+                                id="project-roles"
+                                class="dynamic"
+                                style="display: inline-block;"
+                                dynamic-controller="project-roles"
+                                ></div>
+                        <input type="submit" class="btn-primary btn" value="<@lh key='acl.project.add'/>" />
                     </div>
                 </div>
             </form>
