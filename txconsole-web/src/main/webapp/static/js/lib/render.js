@@ -33,6 +33,15 @@ define(['jquery', 'common', 'application', 'handlebars'], function ($, common, a
         return application.staticPathTo(path);
     });
 
+    Handlebars.registerHelper('projectRole', function (role) {
+        return $('<i></i>')
+            .append(
+                $('<img/>').attr('src', application.staticPathTo('images/projectRole-{0}.png'.format(role)))
+            )
+            .append(' ' + 'projectRole.{0}'.format(role).loc())
+            .html();
+    });
+
     Handlebars.registerHelper('eventTimestampAndElapsed', function (code, icon) {
         for (var i = 0; i < this.events.length; i++) {
             var event = this.events[i];

@@ -1,6 +1,6 @@
 <select id="acl-role" required="required">
     <option></option>
     {{#roles}}
-        <option value="{{.}}">{{.}}</option>
+        <option value="{{.}}">{{{projectRole .}}}</option>
     {{/roles}}
 </select>

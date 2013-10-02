@@ -13,6 +13,21 @@ time.ago
 	en -> {0} ago
 	fr -> il y a {0}
 
+projectRole.OWNER
+    en -> Owner
+    fr -> Manager
+
+projectRole.TRANSLATOR
+    en -> Translator
+    fr -> Traducteur
+
+projectRole.REVIEWER
+    en -> Reviewer
+    fr -> Chargé de revue
+
+projectRole.CONTRIBUTOR
+    en -> Contributor
+    fr -> Contributeur
 
 net.txconsole.core.IOContextException
     en -> [C-001] IO exception.
