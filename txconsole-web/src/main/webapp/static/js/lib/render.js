@@ -1,4 +1,4 @@
-define(['common', 'application', 'handlebars'], function (common, application, handlebars) {
+define(['jquery', 'common', 'application', 'handlebars'], function ($, common, application) {
 
     Handlebars.registerHelper('loc', function (key, options) {
         return key.loc();
@@ -33,14 +33,35 @@ define(['common', 'application', 'handlebars'], function (common, application, h
         return application.staticPathTo(path);
     });
 
-    Handlebars.registerHelper('eventTimestampAndElapsed', function (code) {
+    Handlebars.registerHelper('eventTimestampAndElapsed', function (code, icon) {
         for (var i = 0; i < this.events.length; i++) {
             var event = this.events[i];
             if (code == event.code) {
-                return '<span class="event-signature"><span class="event-timestamp">{0}</span> <span class="event-elapsed">{1}</span></span>'.format(
-                    event.formattedTimestamp,
-                    event.elapsedTimeAndAuthor
-                );
+                var box = $('<i></i>');
+                var container = $('<span></span>')
+                    .attr('title', 'event.{0}.short'.format(event.code).loc())
+                    .appendTo(box);
+                // Icon?
+                if (icon) {
+                    container.append($('<i></i>').addClass(icon));
+                    container.append(' ');
+                }
+                // Event signature
+                var eventSignature = $('<span></span>')
+                    .addClass('event-signature')
+                    .appendTo(container);
+                // Event timestamp
+                $('<span></span>')
+                    .addClass('event-timestamp')
+                    .text(event.formattedTimestamp)
+                    .appendTo(eventSignature);
+                // Event elapsed time + author
+                $('<span></span>')
+                    .addClass('event-elapsed')
+                    .text(' ' + event.elapsedTimeAndAuthor)
+                    .appendTo(eventSignature);
+                // OK
+                return box.html();
             }
         }
         common.log('render')('"{0}" event not found', code);
