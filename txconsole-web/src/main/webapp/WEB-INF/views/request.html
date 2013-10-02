@@ -1,64 +1,56 @@
 <#include "/lib/layout.html">
 
-    <@layout_std
+<@layout_std
     page="request"
     title=request.data.version?html
     breadcrumbs={
-    loc("home"): "",
-    project.data.name?html: "project/${project.data.id?c}",
-    branch.data.name?html: "branch/${branch.data.id?c}"
+        loc("home"): "",
+        project.data.name?html: "project/${project.data.id?c}",
+        branch.data.name?html: "branch/${branch.data.id?c}"
     }>
 
-    <input type="hidden" id="project" value="${project.data.id?c}"/>
-    <input type="hidden" id="branch" value="${branch.data.id?c}"/>
-    <input type="hidden" id="request" value="${request.data.id?c}"/>
+    <input type="hidden" id="project" value="${project.data.id?c}" />
+    <input type="hidden" id="branch" value="${branch.data.id?c}" />
+    <input type="hidden" id="request" value="${request.data.id?c}" />
 
     <@title value=request.data.version close="branch/${branch.data.id?c}">
-    <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
-    <@title_uplink name=branch.data.name href="branch/${branch.data.id?c}" />
-    <#if request.data.downloadable>
-        <@title_command id="request-download" title=loc('request.request.download') class="icon-download-alt"
-        link="ui/request/${request.data.id?c}/download" />
-    </#if>
-    <@acl resource=request action='PROJECT#REQUEST_MERGE'>
-    <@title_command id="request-merge" title=loc('request.merge') class="icon-check" />
-</@acl>
-<@acl resource=request action='PROJECT#REQUEST_UPLOAD'>
-<@title_command id="request-upload" title=loc('request.upload') class="icon-upload" />
-</@acl>
-<@acl resource=request action='PROJECT#REQUEST_DELETE'>
-<@title_command id="request-delete" title=loc('request.delete') class="icon-trash" />
-</@acl>
-</@title>
+        <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
+        <@title_uplink name=branch.data.name href="branch/${branch.data.id?c}" />
+        <#if request.data.downloadable>
+            <@title_command id="request-download" title=loc('request.request.download') class="icon-download-alt" link="ui/request/${request.data.id?c}/download" />
+        </#if>
+        <@acl resource=request action='PROJECT#REQUEST_MERGE'>
+            <@title_command id="request-merge" title=loc('request.merge') class="icon-check" />
+        </@acl>
+        <@acl resource=request action='PROJECT#REQUEST_UPLOAD'>
+            <@title_command id="request-upload" title=loc('request.upload') class="icon-upload" />
+        </@acl>
+        <@acl resource=request action='PROJECT#REQUEST_DELETE'>
+            <@title_command id="request-delete" title=loc('request.delete') class="icon-trash" />
+        </@acl>
+    </@title>
 
-<div class="row-fluid">
-
-    <div
+    <div class="row-fluid">
+        <div
             id="request-status"
             class="span12 dynamic"
             dynamic-controller="request-status"
             dynamic-request-id="${request.data.id?c}"
             dynamic-refresh="true"
             ></div>
-    <div>
-        <button id="request-hide-deleted" type="button" class="btn" data-toggle="button"><@lh key="request.hide.deleted"
-            />
-        </button>
-        <button id="request-hide-valid" type="button" class="btn" data-toggle="button"><@lh key="request.hide.valid"
-            />
-        </button>
+        <div>
+            <button id="request-hide-deleted" type="button" class="btn" data-toggle="button"><@lh key="request.hide.deleted"/></button>
+            <button id="request-hide-valid" type="button" class="btn" data-toggle="button"><@lh key="request.hide.valid"/></button>
+        </div>
     </div>
 
-</div>
-
-<div class="row-fluid">
-    <div
+    <div class="row-fluid">
+        <div
             id="request-view"
             class="span12 dynamic"
             dynamic-controller="request-view"
             dynamic-request-id="${request.data.id?c}"
             ></div>
-</div>
-
+    </div>
 
 </@layout_std>

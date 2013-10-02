@@ -1,22 +1,22 @@
 <table class="table table-condensed">
     <tbody>
-    {{#data.diff.entries}}
-    <tr class="{{cls}} translation-diff-{{type}} {{#invalid}}translation-entry-invalid{{/invalid}} translation-entry-type-{{type}}">
-        <td>
-            <span class="translation-bundle">{{bundle}}</span>
-            <i class="icon-arrow-right muted"></i>
-            <span class="translation-section">{{section}}</span>
-            <i class="icon-arrow-right muted"></i>
-            <span class="translation-key">{{key}}</span>
-            <i class="{{icon}} translation-key-load action action-optional action-inline"
-               data-request-entry-id="{{entryId}}"></i>
-        </td>
-    </tr>
-    <tr class="{{#invalid}}translation-entry-invalid{{/invalid}} translation-entry-type-{{type}}">
-        <td>
-            <div id="translation-key-content-{{entryId}}" class="hidden translation-key-content"></div>
-        </td>
-    </tr>
-    {{/data.diff.entries}}
+        {{#data.diff.entries}}
+            <tr class="{{cls}} translation-diff-{{type}} {{#invalid}}translation-entry-invalid{{/invalid}} translation-entry-type-{{type}}">
+                <td>
+                    <span class="translation-bundle">{{bundle}}</span>
+                    <i class="icon-arrow-right muted"></i>
+                    <span class="translation-section">{{section}}</span>
+                    <i class="icon-arrow-right muted"></i>
+                    <span class="translation-key">{{key}}</span>
+                    <i class="{{icon}} translation-key-load action action-optional action-inline"
+                       data-request-entry-id="{{entryId}}"></i>
+                </td>
+            </tr>
+            <tr class="{{#invalid}}translation-entry-invalid{{/invalid}} translation-entry-type-{{type}}">
+                <td>
+                    <div id="translation-key-content-{{entryId}}" class="hidden translation-key-content"></div>
+                </td>
+            </tr>
+        {{/data.diff.entries}}
     </tbody>
 </table>

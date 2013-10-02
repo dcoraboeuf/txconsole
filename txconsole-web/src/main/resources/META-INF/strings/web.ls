@@ -511,13 +511,12 @@ request.merge.force
         ...
 
 request.hide.deleted
-    en -> Hide deleted
-    fr -> Filtrer supprimé
+    en -> Hide deleted entries
+    fr -> Cacher les entrées cachées
 
 request.hide.valid
-en -> Hide valid
-fr -> Filtrer valide
-
+    en -> Hide valid entries
+    fr -> Cacher les entrées valides
 
 [keyfilter]
 
