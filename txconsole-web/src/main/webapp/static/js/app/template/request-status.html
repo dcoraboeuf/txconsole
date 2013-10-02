@@ -1,5 +1,8 @@
-<table>
+<table class="table table-condensed">
     <tbody>
+        <tr>
+            <td colspan="2">{{{requestStatus data.status data.message}}}</td>
+        </tr>
         <tr>
             <td>
                 {{#if data.toVersion}}
@@ -7,6 +10,9 @@
                     {{loc 'request.toVersion'}}:
                     {{data.toVersion}}
                 {{/if}}
+            </td>
+            <td>
+                {{{eventTimestampAndElapsed 'REQUEST_CREATED'}}}
             </td>
         </tr>
         <tr>
@@ -17,9 +23,9 @@
                     {{data.mergeVersion}}
                 {{/if}}
             </td>
-        </tr>
-        <tr>
-            <td>{{{requestStatus data.status data.message}}}</td>
+            <td>
+                {{{eventTimestampAndElapsed 'REQUEST_MERGED'}}}
+            </td>
         </tr>
     </tbody>
 </table>
