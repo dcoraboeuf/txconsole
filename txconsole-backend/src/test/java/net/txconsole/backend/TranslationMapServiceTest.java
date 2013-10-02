@@ -125,11 +125,55 @@ public class TranslationMapServiceTest {
                                 0,
                                 "common",
                                 "default",
+                                "added.both",
+                                TranslationDiffType.ADDED,
+                                MapBuilder.dual(
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, null, "Added both"),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, null, "Ajout des deux")
+                                )
+                        ),
+                        new TranslationDiffEntry(
+                                0,
+                                "common",
+                                "default",
                                 "added.default-only",
                                 TranslationDiffType.ADDED,
                                 MapBuilder.dual(
                                         Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, null, "Added default only"),
                                         Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, null, null)
+                                )
+                        ),
+                        new TranslationDiffEntry(
+                                0,
+                                "common",
+                                "default",
+                                "deleted.both",
+                                TranslationDiffType.DELETED,
+                                MapBuilder.dual(
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, "Initial value", null),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, "Valeur initiale", null)
+                                )
+                        ),
+                        new TranslationDiffEntry(
+                                0,
+                                "common",
+                                "default",
+                                "deleted.default-only",
+                                TranslationDiffType.DELETED,
+                                MapBuilder.dual(
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, "Initial value", null),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, "Valeur initiale", "Valeur initiale")
+                                )
+                        ),
+                        new TranslationDiffEntry(
+                                0,
+                                "common",
+                                "default",
+                                "updated.both",
+                                TranslationDiffType.UPDATED,
+                                MapBuilder.dual(
+                                        Locale.ENGLISH, new TranslationDiffEntryValue(0, Locale.ENGLISH, "Initial value", "Updated both"),
+                                        Locale.FRENCH, new TranslationDiffEntryValue(0, Locale.FRENCH, "Valeur initiale", "Les deux sont modifiés")
                                 )
                         ),
                         new TranslationDiffEntry(
