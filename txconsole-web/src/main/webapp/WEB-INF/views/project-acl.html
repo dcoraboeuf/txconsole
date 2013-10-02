@@ -16,7 +16,7 @@
 
     <div class="row-fluid">
         <div class="span12">
-            <form class="form-horizontal">
+            <form id="acl-form" class="form-horizontal">
                 <div class="control-group">
                     <label class="control-label" for="acl-account"><@lh key='acl.account'/></label>
                     <div class="controls">
@@ -27,7 +27,7 @@
                                 style="display: inline-block;"
                                 dynamic-controller="project-roles"
                                 ></div>
-                        <input type="submit" class="btn-primary btn" value="<@lh key='acl.project.add'/>" />
+                        <input id="acl-submit" type="submit" class="btn-primary btn" value="<@lh key='acl.project.add'/>" />
                     </div>
                 </div>
             </form>

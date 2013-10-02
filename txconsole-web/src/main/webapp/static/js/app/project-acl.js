@@ -22,6 +22,22 @@ define(['jquery', 'ajax', 'jquery-ui', 'bootstrap'], function ($, ajax) {
         })
     }
 
+    function addACL() {
+        var role = $('#acl-role').val();
+        if (selectedAccount && role) {
+            ajax.put({
+                url: 'ui/acl/project/{0}/{1}/{2}'.format(
+                    projectId,
+                    selectedAccount.data.id,
+                    role
+                ),
+                successFn: function () {
+                    location.reload();
+                }
+            })
+        }
+    }
+
     $('#acl-account').typeahead({
         source: userLookup,
         matcher: function () {
@@ -38,6 +54,11 @@ define(['jquery', 'ajax', 'jquery-ui', 'bootstrap'], function ($, ajax) {
             selectedAccount = accountsByNames[accountLabel];
             return accountLabel;
         }
+    });
+
+    $('#acl-form').submit(function () {
+        addACL();
+        return false;
     });
 
 });
