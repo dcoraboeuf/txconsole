@@ -22,7 +22,7 @@ public class JMXConfiguration {
     public Object exporter() throws IOException {
         MBeanExporter exporter = new MBeanExporter();
         exporter.setBeans(MapBuilder.<String, Object>create()
-                .with("configuration:name=strings", strings)
+                .with("configuration:app=txconsole,name=strings", strings)
                 .get());
         return exporter;
     }
