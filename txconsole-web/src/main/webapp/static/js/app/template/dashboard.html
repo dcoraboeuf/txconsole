@@ -1,7 +1,26 @@
 <tr>
-    <td>
+    <td width="10%">
         <b><a href="{{link 'gui'}}">{{data.project.name}}</a></b>
         <br/>
         <span class="description">{{data.project.fullName}}</span>
+    </td>
+    <td>
+        <table class="dashboard-branches">
+            <tbody>
+                <tr>
+                    {{#branches}}
+                        <td>
+                            <div class="dashboard-branch {{#request}}dashboard-branch-open{{/request}}">
+                                <p class="dashboard-branch-name"><a href="{{link 'gui'}}">{{data.branch.name}}</a></p>
+                                {{#request}}
+                                    <i class="icon-arrow-right"></i>
+                                    <a href="{{link 'gui'}}"><code>{{data.version}}</code></a>
+                                {{/request}}
+                            </div>
+                        </td>
+                    {{/branches}}
+                </tr>
+            </tbody>
+        </table>
     </td>
 </tr>

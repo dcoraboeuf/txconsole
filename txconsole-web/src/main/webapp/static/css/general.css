@@ -123,3 +123,25 @@ input.success,textarea.success {
 .translation-diff-input-invalid {
     border-color: red !important;
 }
+
+/* Dashboard */
+
+table.dashboard-branches td {
+    border: 0;
+}
+
+div.dashboard-branch {
+    height: 4em;
+    border: solid 1px darkgray;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #FFFFFF;
+}
+
+div.dashboard-branch.dashboard-branch-open {
+    background-color: #FFCCCC;
+}
+
+div.dashboard-branch i {
+    opacity: 0.50;
+}
