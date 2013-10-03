@@ -92,6 +92,16 @@ public class RequestJdbcDao extends AbstractJdbcDao implements RequestDao {
 
     @Override
     @Transactional(readOnly = true)
+    public TRequest findLastForBranch(int branchId) {
+        return getFirstItem(
+                SQL.REQUEST_LAST_FOR_BRANCH,
+                params("branch", branchId),
+                requestRowMapper
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Integer> findCreated() {
         return getNamedParameterJdbcTemplate().queryForList(
                 SQL.REQUESTS_CREATED,

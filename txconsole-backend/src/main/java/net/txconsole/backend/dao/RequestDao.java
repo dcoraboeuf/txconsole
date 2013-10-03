@@ -47,4 +47,6 @@ public interface RequestDao {
     String getLastVersion(int branchId);
 
     TRequestEntry getRequestEntry(int entryId);
+
+    TRequest findLastForBranch(int branchId);
 }

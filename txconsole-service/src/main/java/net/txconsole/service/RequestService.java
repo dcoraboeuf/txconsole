@@ -39,4 +39,6 @@ public interface RequestService {
     void uploadRequest(int id, Collection<MultipartFile> responses);
 
     String mergeRequest(int id, RequestMergeForm form);
+
+    List<ProjectDashboard> dashboard();
 }

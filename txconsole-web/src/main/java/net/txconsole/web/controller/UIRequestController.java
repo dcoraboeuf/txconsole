@@ -9,6 +9,7 @@ import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.RequestService;
 import net.txconsole.service.StructureService;
+import net.txconsole.web.resource.ProjectDashboardResource;
 import net.txconsole.web.resource.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
@@ -96,6 +97,22 @@ public class UIRequestController extends AbstractUIController implements UIReque
         this.structureService = structureService;
         this.guiEventService = guiEventService;
         this.securityUtils = securityUtils;
+    }
+
+    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+    @Override
+    public
+    @ResponseBody
+    List<ProjectDashboardResource> dashboard(Locale locale) {
+        return Lists.transform(
+                requestService.dashboard(),
+                new Function<ProjectDashboard, ProjectDashboardResource>() {
+                    @Override
+                    public ProjectDashboardResource apply(ProjectDashboard o) {
+                        return new ProjectDashboardResource(o);
+                    }
+                }
+        );
     }
 
     /**

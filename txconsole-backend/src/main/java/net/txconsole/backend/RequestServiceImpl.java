@@ -473,6 +473,41 @@ public class RequestServiceImpl implements RequestService {
         return version;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProjectDashboard> dashboard() {
+        // All projects
+        List<ProjectSummary> projects = structureService.getProjects();
+        // Transforms all projects into their dashboards
+        return Lists.transform(
+                projects,
+                new Function<ProjectSummary, ProjectDashboard>() {
+                    @Override
+                    public ProjectDashboard apply(ProjectSummary p) {
+                        return new ProjectDashboard(
+                                p,
+                                Lists.transform(
+                                        structureService.getProjectBranches(p.getId()),
+                                        new Function<BranchSummary, BranchDashboard>() {
+                                            @Override
+                                            public BranchDashboard apply(BranchSummary b) {
+                                                return new BranchDashboard(
+                                                        b,
+                                                        getLastOpenRequestForBranch(b.getId())
+                                                );
+                                            }
+                                        }
+                                )
+                        );
+                    }
+                }
+        );
+    }
+
+    private RequestSummary getLastOpenRequestForBranch(int branchId) {
+        return requestSummaryFn.apply(requestDao.findLastForBranch(branchId));
+    }
+
     protected TranslationMap readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {
         // Content
         NamedContent content;
