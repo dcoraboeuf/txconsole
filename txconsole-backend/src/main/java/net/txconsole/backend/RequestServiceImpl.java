@@ -505,7 +505,8 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private RequestSummary getLastOpenRequestForBranch(int branchId) {
-        return requestSummaryFn.apply(requestDao.findLastForBranch(branchId));
+        TRequest lastForBranch = requestDao.findLastForBranch(branchId);
+        return lastForBranch != null ? requestSummaryFn.apply(lastForBranch) : null;
     }
 
     protected TranslationMap readResponse(Configured<Object, TxFileExchange<Object>> configuredTxFileExchange, Locale defaultLocale, Set<Locale> supportedLocales, MultipartFile response) {

@@ -23,8 +23,8 @@ public class ProjectDashboardResource extends Resource<ProjectDashboard> {
 
     public ProjectDashboardResource(ProjectDashboard o) {
         super(o);
-        withLink(linkTo(methodOn(UIController.class).getBranch(Locale.ENGLISH, o.getProject().getId())).withSelfRel());
-        withLink(linkTo(methodOn(GUIController.class).getBranch(Locale.ENGLISH, o.getProject().getId())).withRel(Resource.REL_GUI));
+        withLink(linkTo(methodOn(UIController.class).getProject(Locale.ENGLISH, o.getProject().getId())).withSelfRel());
+        withLink(linkTo(methodOn(GUIController.class).getProject(Locale.ENGLISH, o.getProject().getId())).withRel(Resource.REL_GUI));
         this.branches = Lists.transform(
                 o.getBranches(),
                 new Function<BranchDashboard, BranchDashboardResource>() {

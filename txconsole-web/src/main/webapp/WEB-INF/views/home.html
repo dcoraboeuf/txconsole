@@ -3,12 +3,12 @@
 <@layout_std page="home">
 
     <div class="row-fluid">
-        <div class="span4">
+        <div class="span12">
             <@section title=loc('project.list')>
                 <div
-                    id="project-list"
+                    id="dashboard"
                     class="dynamic"
-                    dynamic-controller="project-list"
+                    dynamic-controller="dashboard"
                     ></div>
                 <#if secAdmin()>
                     <button id="project-create" type="button" class="btn"><@lh key="project.create" /></button>
