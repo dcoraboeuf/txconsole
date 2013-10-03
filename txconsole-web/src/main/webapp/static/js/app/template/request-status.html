@@ -15,16 +15,22 @@
                 {{{eventTimestampAndElapsed 'REQUEST_CREATED'}}}
             </td>
         </tr>
-        <tr>
-            <td>
-                {{#if data.mergeVersion}}
+        {{#if data.mergeVersion}}
+            <tr>
+                <td>
                     <i class="icon-ok"></i>
                     {{loc 'request.mergeVersion'}}:
                     {{data.mergeVersion}}
-                {{/if}}
-            </td>
-            <td>
-                {{{eventTimestampAndElapsed 'REQUEST_MERGED'}}}
+                </td>
+                <td>
+                    {{{eventTimestampAndElapsed 'REQUEST_MERGED'}}}
+                </td>
+            </tr>
+        {{/if}}
+        <tr>
+            <td colspan="2">
+                <button id="request-hide-deleted" type="button" class="btn" data-toggle="button"><i class="icon-filter"></i> {{loc 'request.hide.deleted'}}</button>
+                <button id="request-hide-valid" type="button" class="btn" data-toggle="button"><i class="icon-filter"></i> {{loc 'request.hide.valid'}}</button>
             </td>
         </tr>
     </tbody>
