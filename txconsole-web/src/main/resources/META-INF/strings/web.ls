@@ -512,7 +512,7 @@ request.merge.force
 
 request.hide.deleted
     en -> Hide deleted entries
-    fr -> Cacher les entrées cachées
+    fr -> Cacher les entrées supprimées
 
 request.hide.valid
     en -> Hide valid entries
