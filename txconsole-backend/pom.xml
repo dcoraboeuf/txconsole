@@ -60,6 +60,12 @@
             <groupId>net.sf.dbinit</groupId>
             <artifactId>dbinit</artifactId>
         </dependency>
+        <!-- Java Mail -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!-- Testing -->
         <dependency>
             <groupId>${project.groupId}</groupId>
