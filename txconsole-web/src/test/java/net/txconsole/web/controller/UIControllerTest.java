@@ -4,11 +4,12 @@ import net.sf.jstring.Strings;
 import net.txconsole.core.model.BranchSummary;
 import net.txconsole.core.model.ProjectCreationForm;
 import net.txconsole.core.model.ProjectSummary;
+import net.txconsole.core.model.Resource;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
+import net.txconsole.service.ContributionService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
-import net.txconsole.core.model.Resource;
 import net.txconsole.web.support.ErrorHandler;
 import net.txconsole.web.support.GUIEventService;
 import org.junit.Before;
@@ -43,7 +44,8 @@ public class UIControllerTest {
         securityUtils = mock(SecurityUtils.class);
         translationMapService = mock(TranslationMapService.class);
         guiEventService = mock(GUIEventService.class);
-        controller = new UIController(errorHandler, strings, structureService, translationMapService, guiEventService, securityUtils);
+        ContributionService contributionService = mock(ContributionService.class);
+        controller = new UIController(errorHandler, strings, structureService, contributionService, translationMapService, guiEventService, securityUtils);
         // Current request
         MockHttpServletRequest request = new MockHttpServletRequest();
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);

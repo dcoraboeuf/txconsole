@@ -6,10 +6,10 @@ import net.sf.jstring.Strings;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
+import net.txconsole.service.ContributionService;
 import net.txconsole.service.ResourceService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
-import net.txconsole.core.model.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
 import net.txconsole.web.support.GUIEventService;
@@ -28,6 +28,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class UIController extends AbstractUIController implements UI, ResourceService {
 
     private final StructureService structureService;
+    private final ContributionService contributionService;
     private final TranslationMapService translationMapService;
     private final GUIEventService guiEventService;
     private final SecurityUtils securityUtils;
@@ -77,11 +78,26 @@ public class UIController extends AbstractUIController implements UI, ResourceSe
                     };
                 }
             };
+    private final Function<Locale, Function<ContributionSummary, Resource<ContributionSummary>>> contributionSummaryFn =
+            new Function<Locale, Function<ContributionSummary, Resource<ContributionSummary>>>() {
+                @Override
+                public Function<ContributionSummary, Resource<ContributionSummary>> apply(final Locale locale) {
+                    return new Function<ContributionSummary, Resource<ContributionSummary>>() {
+                        @Override
+                        public Resource<ContributionSummary> apply(ContributionSummary o) {
+                            return new Resource<>(o)
+                                    .withLink(linkTo(methodOn(GUIController.class).getContribution(locale, o.getId())).withRel(Resource.REL_GUI))
+                                    .withLink(linkTo(methodOn(UIController.class).getContribution(locale, o.getId())).withRel(Resource.REL_GUI));
+                        }
+                    };
+                }
+            };
 
     @Autowired
-    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, TranslationMapService translationMapService, GUIEventService guiEventService, SecurityUtils securityUtils) {
+    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, ContributionService contributionService, TranslationMapService translationMapService, GUIEventService guiEventService, SecurityUtils securityUtils) {
         super(errorHandler, strings);
         this.structureService = structureService;
+        this.contributionService = contributionService;
         this.translationMapService = translationMapService;
         this.guiEventService = guiEventService;
         this.securityUtils = securityUtils;
@@ -200,5 +216,40 @@ public class UIController extends AbstractUIController implements UI, ResourceSe
         // TODO ACL for the map edition
     }
 
+    @Override
+    @RequestMapping(value = "/ui/branch/{id}/contribution", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Resource<ContributionSummary> newContribution(Locale locale, @PathVariable int id) {
+        // OK
+        return getContribution(locale, contributionService.blankContribution(id));
+    }
 
+    @Override
+    @RequestMapping(value = "/ui/branch/{id}/contribution", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    ContributionResult postContribution(Locale locale, @PathVariable int id, @RequestBody ContributionInput input) {
+        // Gets the branch
+        Resource<BranchSummary> branch = getBranch(locale, id);
+        // Checks for authorizations
+        securityUtils.checkGrant(ProjectFunction.CONTRIBUTION, branch.getData().getProjectId());
+        // OK
+        return new ContributionResult(
+                contributionService.post(id, input).getLocalizedMessage(strings, locale)
+        );
+    }
+
+    @Override
+    @RequestMapping(value = "/ui/contribution/{id}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Resource<ContributionSummary> getContribution(Locale locale, @PathVariable int id) {
+        return getContribution(locale, contributionService.getContribution(id));
+    }
+
+    @Override
+    public Resource<ContributionSummary> getContribution(Locale locale, ContributionSummary contribution) {
+        return contributionSummaryFn.apply(locale).apply(contribution);
+    }
 }

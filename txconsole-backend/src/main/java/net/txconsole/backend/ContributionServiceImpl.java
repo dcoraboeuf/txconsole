@@ -1,9 +1,11 @@
 package net.txconsole.backend;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import net.sf.jstring.LocalizableMessage;
 import net.sf.jstring.Strings;
 import net.txconsole.backend.dao.ContributionDao;
+import net.txconsole.backend.dao.model.TContribution;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
@@ -27,6 +29,20 @@ public class ContributionServiceImpl implements ContributionService {
     private final ContributionDao contributionDao;
     private final SecurityUtils securityUtils;
     private final Strings strings;
+    private final Function<TContribution, ContributionSummary> contributionSummaryFunction = new Function<TContribution, ContributionSummary>() {
+
+        @Override
+        public ContributionSummary apply(TContribution t) {
+            return new ContributionSummary(
+                    t.getId(),
+                    true,
+                    t.getBranch(),
+                    t.getMessage(),
+                    accountService.getAccountSummary(t.getAuthor()),
+                    t.getTimestamp()
+            );
+        }
+    };
 
     @Autowired
     public ContributionServiceImpl(StructureService structureService, AccountService accountService, ResourceService resourceService, MessageService messageService, TemplateService templateService, ContributionDao contributionDao, SecurityUtils securityUtils, Strings strings) {
@@ -38,6 +54,32 @@ public class ContributionServiceImpl implements ContributionService {
         this.contributionDao = contributionDao;
         this.securityUtils = securityUtils;
         this.strings = strings;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ContributionSummary getContribution(int id) {
+        return contributionSummaryFunction.apply(contributionDao.getById(id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ContributionSummary blankContribution(int branchId) {
+        // Branch
+        BranchSummary branch = structureService.getBranch(branchId);
+        // Checks for authorizations
+        securityUtils.checkGrant(ProjectFunction.CONTRIBUTION, branch.getProjectId());
+        // Contribution mode
+        boolean direct = securityUtils.isGranted(ProjectFunction.CONTRIBUTION_DIRECT, branch.getProjectId());
+        // OK
+        return new ContributionSummary(
+                0,
+                direct,
+                branchId,
+                "",
+                null,
+                null
+        );
     }
 
     @Override
@@ -68,6 +110,8 @@ public class ContributionServiceImpl implements ContributionService {
         Account account = securityUtils.getCurrentAccount();
         // Saves the contribution
         int contributionId = contributionDao.post(account.getId(), branchId, input);
+        // Loads the contribution summary
+        ContributionSummary contribution = getContribution(contributionId);
         // Sends a message to all the reviewers for the project
         // Gets the addresses of all reviewers for this project
         Collection<String> addresses = securityUtils.asAdmin(new Callable<Collection<String>>() {
@@ -85,8 +129,7 @@ public class ContributionServiceImpl implements ContributionService {
         TemplateModel model = new TemplateModel();
         model.add("account", account.getFullName());
         model.add("title", title);
-        // TODO Contribution resource
-        model.add("contribution", contributionId);
+        model.add("contribution", resourceService.getContribution(locale, contribution));
         model.add("branch", resourceService.getBranch(locale, branch));
         model.add("project", resourceService.getProject(locale, project));
         String content = templateService.generate("contribution-staged.html", Locale.ENGLISH, model);

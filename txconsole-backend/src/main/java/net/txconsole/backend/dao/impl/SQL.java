@@ -67,4 +67,5 @@ public interface SQL {
     // Contributions
     String CONTRIBUTION_INSERT = "INSERT INTO CONTRIBUTION(BRANCH, MESSAGE, ACCOUNT, TIMESTAMP) VALUES (:branch, :message, :account, :timestamp)";
     String CONTRIBUTION_ENTRY_INSERT = "INSERT INTO CONTRIBUTION_ENTRY(CONTRIBUTION, BUNDLE, SECTION, NAME, LOCALE, VALUE) VALUES (:contribution, :bundle, :section, :name, :locale, :value)";
+    String CONTRIBUTION_BY_ID = "SELECT * FROM CONTRIBUTION WHERE ID = :id";
 }

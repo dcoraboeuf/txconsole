@@ -1,11 +1,12 @@
 package net.txconsole.web.controller;
 
 import net.txconsole.core.model.BranchSummary;
+import net.txconsole.core.model.ContributionSummary;
 import net.txconsole.core.model.RequestSummary;
+import net.txconsole.core.model.Resource;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.core.support.MapBuilder;
-import net.txconsole.core.model.Resource;
 import net.txconsole.web.support.AbstractGUIController;
 import net.txconsole.web.support.ErrorHandler;
 import net.txconsole.web.support.ErrorHandlingMultipartResolver;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,16 +29,14 @@ public class GUIController extends AbstractGUIController {
 
     private final UI ui;
     private final UIRequest uiRequest;
-    private final UIContribution uiContribution;
     private final ErrorHandlingMultipartResolver errorHandlingMultipartResolver;
     private final SecurityUtils securityUtils;
 
     @Autowired
-    public GUIController(ErrorHandler errorHandler, UI ui, UIRequest uiRequest, UIContribution uiContribution, ErrorHandlingMultipartResolver errorHandlingMultipartResolver, SecurityUtils securityUtils) {
+    public GUIController(ErrorHandler errorHandler, UI ui, UIRequest uiRequest, ErrorHandlingMultipartResolver errorHandlingMultipartResolver, SecurityUtils securityUtils) {
         super(errorHandler);
         this.ui = ui;
         this.uiRequest = uiRequest;
-        this.uiContribution = uiContribution;
         this.errorHandlingMultipartResolver = errorHandlingMultipartResolver;
         this.securityUtils = securityUtils;
     }
@@ -97,7 +95,7 @@ public class GUIController extends AbstractGUIController {
                         .with("branch", branch)
                         .with("project", ui.getProject(locale, branch.getData().getProjectId()))
                                 // Empty contribution
-                        .with("contribution", uiContribution.newContribution(locale, id))
+                        .with("contribution", ui.newContribution(locale, id))
                                 // OK
                         .get()
         );
@@ -124,9 +122,7 @@ public class GUIController extends AbstractGUIController {
      * Uploads a response file to the request
      */
     @RequestMapping(value = "/request/{id}/upload", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    RedirectView uploadRequest(HttpServletRequest request, Locale locale, @PathVariable int id) {
+    public RedirectView uploadRequest(HttpServletRequest request, Locale locale, @PathVariable int id) {
         // Error handling
         errorHandlingMultipartResolver.checkForUploadError(request);
         // Gets the files
@@ -138,4 +134,17 @@ public class GUIController extends AbstractGUIController {
         return new RedirectView("/request/" + id, true);
     }
 
+    @RequestMapping(value = "/contribution/{id}", method = RequestMethod.GET)
+    public ModelAndView getContribution(Locale locale, @PathVariable int id) {
+        Resource<ContributionSummary> contribution = ui.getContribution(locale, id);
+        Resource<BranchSummary> branch = ui.getBranch(locale, contribution.getData().getBranch());
+        return new ModelAndView("contribution",
+                MapBuilder
+                        .params()
+                        .with("contribution", contribution)
+                        .with("branch", branch)
+                        .with("project", ui.getProject(locale, branch.getData().getProjectId()))
+                        .get()
+        );
+    }
 }

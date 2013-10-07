@@ -1,16 +1,19 @@
 package net.txconsole.backend.dao.impl;
 
 import net.txconsole.backend.dao.ContributionDao;
-import net.txconsole.core.model.Ack;
+import net.txconsole.backend.dao.model.TContribution;
 import net.txconsole.core.model.ContributionEntry;
 import net.txconsole.core.model.ContributionInput;
 import net.txconsole.core.support.TimeUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Component
 public class ContributionJdbcDao extends AbstractJdbcDao implements ContributionDao {
@@ -45,5 +48,26 @@ public class ContributionJdbcDao extends AbstractJdbcDao implements Contribution
         }
         // OK
         return contributionId;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TContribution getById(int id) {
+        return getNamedParameterJdbcTemplate().queryForObject(
+                SQL.CONTRIBUTION_BY_ID,
+                params("id", id),
+                new RowMapper<TContribution>() {
+                    @Override
+                    public TContribution mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return new TContribution(
+                                rs.getInt("id"),
+                                rs.getInt("branch"),
+                                rs.getString("message"),
+                                rs.getInt("account"),
+                                SQLUtils.getDateTime(rs, "timestamp")
+                        );
+                    }
+                }
+        );
     }
 }
