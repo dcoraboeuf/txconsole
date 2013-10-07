@@ -560,6 +560,15 @@ contribution.edit
     en -> Edit the labels...
     fr -> Editez les libellés...
 
+contribution.edit.empty
+    en -> Search for keys or labels in order to start edition.
+    fr -> Cherchez des clefs ou des libellés afin de commencer l'édition.
+
 contribution.manage
     en -> ... and commit them.
     fr -> ... et soumettez les.
+
+contribution.manage.empty
+    en -> Nothing to commit yet.
+    fr -> Rien à soumettre.
+
