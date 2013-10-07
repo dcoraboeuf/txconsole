@@ -564,6 +564,14 @@ contribution.edit.empty
     en -> Search for keys or labels in order to start edition.
     fr -> Cherchez des clefs ou des libellés afin de commencer l'édition.
 
+contribution.edit.noresult
+    en -> No result was found.
+    fr -> Aucun résultat n'a été trouvé.
+
+contribution.edit.total
+    en -> Total:
+    fr -> Total :
+
 contribution.manage
     en -> ... and commit them.
     fr -> ... et soumettez les.

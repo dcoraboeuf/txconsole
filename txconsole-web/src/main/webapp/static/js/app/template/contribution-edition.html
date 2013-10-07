@@ -1,0 +1,31 @@
+{{#if response.data.entries.length}}
+    <p>{{loc 'contribution.edit.total'}} {{request.limit}}/{{response.data.total}}</p>
+    <table class="table table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>{{loc 'translation.key'}}</th>
+                {{#response.data.locales}}
+                    <th>{{.}}</th>
+                {{/response.data.locales}}
+            </tr>
+        </thead>
+        <tbody>
+            {{#response.data.entries}}
+                <tr>
+                    <td>
+                        <code>{{key.key}}</code>
+                    </td>
+                    {{#../../response.data.locales}}
+                        <td>
+                            {{{contribution-field .. .}}}
+                        </td>
+                    {{/../../response.data.locales}}
+                </tr>
+            {{/response.data.entries}}
+        </tbody>
+    </table>
+{{else}}
+    <div class="alert alert-error">
+        {{loc 'contribution.edit.noresult'}}
+    </div>
+{{/if}}
