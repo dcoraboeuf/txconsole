@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>${title?html}</title>
+</head>
+<body>
+
+    <p>
+        User <b>${account?html}</b> has created a contribution for the branch
+        <b><a href="#">${branch.name?html}</a></b>
+        in project <b><a href="#">${project.name?html}</a></b>.
+    </p>
+
+    <p>
+        You can review this contribution by clicking on this
+        <a href="#">link</a>.
+    </p>
+
+    <p>
+        You receive this email because you are registered as a reviewer on project
+        <a href="#">${project.name?html}</a>.
+    </p>
+
+    <p>The Translation Console.</p>
+
+</body>
+</html>

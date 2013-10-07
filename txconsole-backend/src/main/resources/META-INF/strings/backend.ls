@@ -37,3 +37,7 @@ txfilesource
 contribution.staged
     en -> Your contributions has been staged and you will be notified when they have been approved or rejected.
     fr -> Votre contribution a été sauvegardée pour revue et vous serez avertis quand elle a été approuvée ou rejetée.
+
+contribution.staged.title
+    en -> Contribution {0} for {3}/{2} by {1}
+    fr -> Contribution {0} pour {3}/{2} par {1}
