@@ -8,7 +8,7 @@ import net.txconsole.core.model.ContributionResult;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.ContributionService;
-import net.txconsole.web.resource.Resource;
+import net.txconsole.core.model.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;

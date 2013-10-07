@@ -8,7 +8,7 @@ import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
-import net.txconsole.web.resource.Resource;
+import net.txconsole.core.model.Resource;
 import net.txconsole.web.support.ErrorHandler;
 import net.txconsole.web.support.GUIEventService;
 import org.junit.Before;

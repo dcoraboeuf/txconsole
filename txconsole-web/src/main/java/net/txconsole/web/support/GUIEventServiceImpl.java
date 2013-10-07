@@ -7,7 +7,7 @@ import net.txconsole.core.model.EventEntity;
 import net.txconsole.core.model.Signature;
 import net.txconsole.core.support.TimeUtils;
 import net.txconsole.service.EventService;
-import net.txconsole.web.resource.ResourceEvent;
+import net.txconsole.core.model.ResourceEvent;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

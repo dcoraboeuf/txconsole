@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import net.sf.jstring.Strings;
 import net.txconsole.core.model.*;
 import net.txconsole.service.AccountService;
-import net.txconsole.web.resource.Resource;
+import net.txconsole.core.model.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;

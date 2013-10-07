@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.txconsole.core.model.BranchDashboard;
 import net.txconsole.core.model.ProjectDashboard;
+import net.txconsole.core.model.Resource;
 import net.txconsole.web.controller.GUIController;
 import net.txconsole.web.controller.UIController;
 

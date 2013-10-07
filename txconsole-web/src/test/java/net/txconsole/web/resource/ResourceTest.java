@@ -2,6 +2,7 @@ package net.txconsole.web.resource;
 
 import com.netbeetle.jackson.ObjectMapperFactory;
 import net.txconsole.core.model.BranchSummary;
+import net.txconsole.core.model.Resource;
 import net.txconsole.core.security.ProjectFunction;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;

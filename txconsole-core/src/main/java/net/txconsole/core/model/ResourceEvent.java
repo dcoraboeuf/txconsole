@@ -1,4 +1,4 @@
-package net.txconsole.web.resource;
+package net.txconsole.core.model;
 
 import lombok.Data;
 import net.txconsole.core.model.EventCode;

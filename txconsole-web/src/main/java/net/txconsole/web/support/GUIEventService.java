@@ -2,7 +2,7 @@ package net.txconsole.web.support;
 
 import net.txconsole.core.model.EventCode;
 import net.txconsole.core.model.EventEntity;
-import net.txconsole.web.resource.ResourceEvent;
+import net.txconsole.core.model.ResourceEvent;
 
 import java.util.Locale;
 

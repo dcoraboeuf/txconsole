@@ -5,7 +5,7 @@ import net.txconsole.core.model.RequestSummary;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.core.support.MapBuilder;
-import net.txconsole.web.resource.Resource;
+import net.txconsole.core.model.Resource;
 import net.txconsole.web.support.AbstractGUIController;
 import net.txconsole.web.support.ErrorHandler;
 import net.txconsole.web.support.ErrorHandlingMultipartResolver;

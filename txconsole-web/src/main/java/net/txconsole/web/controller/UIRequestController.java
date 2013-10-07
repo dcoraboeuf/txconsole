@@ -10,7 +10,7 @@ import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.RequestService;
 import net.txconsole.service.StructureService;
 import net.txconsole.web.resource.ProjectDashboardResource;
-import net.txconsole.web.resource.Resource;
+import net.txconsole.core.model.Resource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
 import net.txconsole.web.support.GUIEventService;

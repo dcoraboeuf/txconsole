@@ -3,7 +3,7 @@ package net.txconsole.web.controller;
 import net.txconsole.core.model.RequestControlledView;
 import net.txconsole.core.model.RequestSummary;
 import net.txconsole.web.resource.ProjectDashboardResource;
-import net.txconsole.web.resource.Resource;
+import net.txconsole.core.model.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;

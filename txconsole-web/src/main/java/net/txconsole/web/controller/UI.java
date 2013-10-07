@@ -2,8 +2,7 @@ package net.txconsole.web.controller;
 
 import net.txconsole.core.model.BranchSummary;
 import net.txconsole.core.model.ProjectSummary;
-import net.txconsole.core.model.RequestSummary;
-import net.txconsole.web.resource.Resource;
+import net.txconsole.core.model.Resource;
 
 import java.util.Locale;
 
