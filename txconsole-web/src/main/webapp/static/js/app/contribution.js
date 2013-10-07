@@ -23,9 +23,17 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
     function submitContributions() {
         if (contributions.length) {
             ajax.post({
-                url: 'branch/{0}/contribution'.format(branchId),
+                url: 'ui/branch/{0}/contribution'.format(branchId),
                 data: {
-                    contributions: contributions,
+                    contributions: $.map(contributions, function (contribution) {
+                        return {
+                            bundle: contribution.bundle,
+                            section: contribution.section,
+                            key: contribution.key,
+                            locale: contribution.locale,
+                            value: contribution.newValue
+                        }
+                    }),
                     message: $('#submit-message').val()
                 },
                 successFn: function () {

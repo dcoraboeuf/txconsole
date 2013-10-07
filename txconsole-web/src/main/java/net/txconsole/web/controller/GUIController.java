@@ -1,7 +1,6 @@
 package net.txconsole.web.controller;
 
 import net.txconsole.core.model.BranchSummary;
-import net.txconsole.core.model.Contribution;
 import net.txconsole.core.model.RequestSummary;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
@@ -30,14 +29,16 @@ public class GUIController extends AbstractGUIController {
 
     private final UI ui;
     private final UIRequest uiRequest;
+    private final UIContribution uiContribution;
     private final ErrorHandlingMultipartResolver errorHandlingMultipartResolver;
     private final SecurityUtils securityUtils;
 
     @Autowired
-    public GUIController(ErrorHandler errorHandler, UI ui, UIRequest uiRequest, ErrorHandlingMultipartResolver errorHandlingMultipartResolver, SecurityUtils securityUtils) {
+    public GUIController(ErrorHandler errorHandler, UI ui, UIRequest uiRequest, UIContribution uiContribution, ErrorHandlingMultipartResolver errorHandlingMultipartResolver, SecurityUtils securityUtils) {
         super(errorHandler);
         this.ui = ui;
         this.uiRequest = uiRequest;
+        this.uiContribution = uiContribution;
         this.errorHandlingMultipartResolver = errorHandlingMultipartResolver;
         this.securityUtils = securityUtils;
     }
@@ -96,7 +97,7 @@ public class GUIController extends AbstractGUIController {
                         .with("branch", branch)
                         .with("project", ui.getProject(locale, branch.getData().getProjectId()))
                                 // Empty contribution
-                        .with("contribution", new Contribution(securityUtils.isGranted(ProjectFunction.CONTRIBUTION_DIRECT, branch.getData().getProjectId())))
+                        .with("contribution", uiContribution.newContribution(locale, id))
                                 // OK
                         .get()
         );

@@ -3,7 +3,7 @@ package net.txconsole.core.model;
 import lombok.Data;
 
 @Data
-public class Contribution {
+public class ContributionForm {
 
     private final boolean direct;
 
