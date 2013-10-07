@@ -1,7 +1,7 @@
 <#include "/lib/layout.html">
 
 <@layout_std
-    page="branch"
+    page="contribution"
     title=loc('contribution')
     breadcrumbs={
         loc("home"): "",
@@ -20,7 +20,7 @@
     <div class="row-fluid">
         <div class="span12">
             <h1><small><@lh key="contribution.search" /></small></h1>
-            <form class="form-inline">
+            <form id="search-form" class="form-inline">
                 <input id="search" type="text" class="span6" required="required" />
                 <button id="search-go" type="submit" class="btn"><i class="icon-search"></i></button>
             </form>
