@@ -1,0 +1,25 @@
+<#include "/lib/layout.html">
+
+<@layout_std
+    page="branch"
+    title=loc('contribution')
+    breadcrumbs={
+        loc("home"): "",
+        project.data.name?html: "project/${project.data.id?c}",
+        branch.data.name?html: "branch/${branch.data.id?c}"
+    }>
+
+    <input type="hidden" id="project" value="${project.data.id?c}" />
+    <input type="hidden" id="branch" value="${branch.data.id?c}" />
+
+    <@title value=loc('contribution') close="branch/${branch.data.id?c}">
+        <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
+        <@title_uplink name=branch.data.name href="branch/${branch.data.id?c}" />
+    </@title>
+
+    <div class="row-fluid">
+        <div class="span12">
+        </div>
+    </div>
+
+</@layout_std>

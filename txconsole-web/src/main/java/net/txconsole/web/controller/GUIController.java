@@ -1,6 +1,7 @@
 package net.txconsole.web.controller;
 
 import net.txconsole.core.model.BranchSummary;
+import net.txconsole.core.model.Contribution;
 import net.txconsole.core.model.RequestSummary;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
@@ -74,6 +75,29 @@ public class GUIController extends AbstractGUIController {
                         .params()
                         .with("branch", branch)
                         .with("project", ui.getProject(locale, branch.getData().getProjectId()))
+                        .get()
+        );
+    }
+
+    /**
+     * Branch new contribution
+     */
+    @RequestMapping(value = "/branch/{id}/contribution", method = RequestMethod.GET)
+    public ModelAndView getBranchNewContribution(Locale locale, @PathVariable int id) {
+        // Gets the branch
+        Resource<BranchSummary> branch = ui.getBranch(locale, id);
+        // Checks for authorizations
+        securityUtils.checkGrant(ProjectFunction.CONTRIBUTION, branch.getData().getProjectId());
+        // Returns the page
+        return new ModelAndView("contribution",
+                MapBuilder
+                        .params()
+                                // Branch & project
+                        .with("branch", branch)
+                        .with("project", ui.getProject(locale, branch.getData().getProjectId()))
+                                // Empty contribution
+                        .with("contribution", Contribution.empty())
+                                // OK
                         .get()
         );
     }
