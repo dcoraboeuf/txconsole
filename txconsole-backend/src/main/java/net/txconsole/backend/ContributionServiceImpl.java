@@ -1,7 +1,7 @@
 package net.txconsole.backend;
 
+import net.sf.jstring.LocalizableMessage;
 import net.txconsole.backend.dao.ContributionDao;
-import net.txconsole.core.model.Ack;
 import net.txconsole.core.model.BranchSummary;
 import net.txconsole.core.model.ContributionInput;
 import net.txconsole.core.security.ProjectFunction;
@@ -28,7 +28,7 @@ public class ContributionServiceImpl implements ContributionService {
 
     @Override
     @Transactional
-    public Ack post(int branchId, ContributionInput input) {
+    public LocalizableMessage post(int branchId, ContributionInput input) {
         // Branch
         BranchSummary branch = structureService.getBranch(branchId);
         // Checks for authorizations
@@ -37,7 +37,7 @@ public class ContributionServiceImpl implements ContributionService {
         boolean direct = securityUtils.isGranted(ProjectFunction.CONTRIBUTION_DIRECT, branch.getProjectId());
         // FIXME Direct mode
         if (direct) {
-            return Ack.NOK;
+            throw new RuntimeException("NYI");
         }
         // Staging
         else {
@@ -45,11 +45,14 @@ public class ContributionServiceImpl implements ContributionService {
         }
     }
 
-    protected Ack stage(int branchId, ContributionInput input) {
+    protected LocalizableMessage stage(int branchId, ContributionInput input) {
         // Gets the current account ID
         int accountId = securityUtils.getCurrentAccountId();
+        // TODO Sends a message to all the reviewers for the project
         // Saves the contribution
-        return contributionDao.post(accountId, branchId, input);
+        contributionDao.post(accountId, branchId, input);
+        // OK
+        return new LocalizableMessage("contribution.staged");
     }
 
 }

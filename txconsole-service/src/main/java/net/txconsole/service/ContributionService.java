@@ -1,10 +1,10 @@
 package net.txconsole.service;
 
-import net.txconsole.core.model.Ack;
+import net.sf.jstring.LocalizableMessage;
 import net.txconsole.core.model.ContributionInput;
 
 public interface ContributionService {
 
-    Ack post(int branchId, ContributionInput input);
+    LocalizableMessage post(int branchId, ContributionInput input);
 
 }

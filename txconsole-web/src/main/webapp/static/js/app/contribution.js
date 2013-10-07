@@ -36,12 +36,15 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
                     }),
                     message: $('#submit-message').val()
                 },
-                successFn: function () {
+                successFn: function (result) {
                     // Clears the edition box
                     clearEditionBox();
                     // Clears the contributions
                     contributions = [];
                     displayContributions();
+                    // Message
+                    $('#submit-result-message').text(result.message);
+                    $('#submit-result').show();
                 }
             })
         }

@@ -1,10 +1,10 @@
 package net.txconsole.web.controller;
 
 import net.sf.jstring.Strings;
-import net.txconsole.core.model.Ack;
 import net.txconsole.core.model.BranchSummary;
 import net.txconsole.core.model.ContributionForm;
 import net.txconsole.core.model.ContributionInput;
+import net.txconsole.core.model.ContributionResult;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.ContributionService;
@@ -25,7 +25,7 @@ public class UIContributionController extends AbstractUIController implements UI
     private final SecurityUtils securityUtils;
 
     @Autowired
-    public UIContributionController(ErrorHandler errorHandler, Strings strings, UI ui, ContributionService contributionService, SecurityUtils securityUtils) {
+    public UIContributionController(ErrorHandler errorHandler, Strings strings, UI ui, ContributionService contributionService, SecurityUtils securityUtils, Strings strings1) {
         super(errorHandler, strings);
         this.ui = ui;
         this.contributionService = contributionService;
@@ -49,12 +49,14 @@ public class UIContributionController extends AbstractUIController implements UI
     @RequestMapping(value = "/ui/branch/{id}/contribution", method = RequestMethod.POST)
     public
     @ResponseBody
-    Ack postContribution(Locale locale, @PathVariable int id, @RequestBody ContributionInput input) {
+    ContributionResult postContribution(Locale locale, @PathVariable int id, @RequestBody ContributionInput input) {
         // Gets the branch
         Resource<BranchSummary> branch = ui.getBranch(locale, id);
         // Checks for authorizations
         securityUtils.checkGrant(ProjectFunction.CONTRIBUTION, branch.getData().getProjectId());
         // OK
-        return contributionService.post(id, input);
+        return new ContributionResult(
+                contributionService.post(id, input).getLocalizedMessage(strings, locale)
+        );
     }
 }

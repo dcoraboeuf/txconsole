@@ -31,3 +31,9 @@ txfileformat
 txfilesource
     en -> File source
     fr -> Source de fichiers
+
+[contribution]
+
+contribution.staged
+    en -> Your contributions has been staged and you will be notified when they have been approved or rejected.
+    fr -> Votre contribution a été sauvegardée pour revue et vous serez avertis quand elle a été approuvée ou rejetée.
