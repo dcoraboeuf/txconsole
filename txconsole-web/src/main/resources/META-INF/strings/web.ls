@@ -591,3 +591,19 @@ contribution.oldvalue
 contribution.newvalue
     en -> New value
     fr -> Nouvelle valeur
+
+contribution.message
+    en -> Message to associate with the contribution
+    fr -> Message associé à la contribution
+
+contribution.stage.message
+    en -> Your contributions won't be saved immediately. They will have to be reviewed by an authorized used before being actually committed.
+    fr -> Votre contribution ne sera pas sauvegardée immédiatement. Les changements devront d'abord être validés par un utilisateur autorisé avant d'être réellement sauvegardés.
+
+contribution.stage
+    en -> Save for review
+    fr -> Sauvegarger pour revue
+
+contribution.submit
+    en -> Save
+    fr -> Sauvegarder

@@ -96,7 +96,7 @@ public class GUIController extends AbstractGUIController {
                         .with("branch", branch)
                         .with("project", ui.getProject(locale, branch.getData().getProjectId()))
                                 // Empty contribution
-                        .with("contribution", Contribution.empty())
+                        .with("contribution", new Contribution(securityUtils.isGranted(ProjectFunction.CONTRIBUTION_DIRECT, branch.getData().getProjectId())))
                                 // OK
                         .get()
         );

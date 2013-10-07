@@ -12,6 +12,7 @@
 
     <input type="hidden" id="project" value="${project.data.id?c}" />
     <input type="hidden" id="branch" value="${branch.data.id?c}" />
+    <input type="hidden" id="direct" value="${contribution.direct?string}" />
 
     <@title value=loc('contribution') close="branch/${branch.data.id?c}">
         <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
@@ -20,9 +21,8 @@
 
     <div class="row-fluid">
         <div class="span12">
-            <h1><small><@lh key="contribution.search" /></small></h1>
             <form id="search-form" class="form-inline">
-                <input id="search" type="text" class="span6" required="required" />
+                <input id="search" type="text" class="span6" required="required" placeholder="<@lh key='contribution.search' />" />
                 <button id="search-go" type="submit" class="btn"><i class="icon-search"></i></button>
             </form>
         </div>

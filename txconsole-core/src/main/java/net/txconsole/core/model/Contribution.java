@@ -5,8 +5,6 @@ import lombok.Data;
 @Data
 public class Contribution {
 
-    public static Contribution empty() {
-        return new Contribution();
-    }
+    private final boolean direct;
 
 }

@@ -1,7 +1,7 @@
 define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($, ajax, render) {
 
-    var projectId = $('#project').val();
     var branchId = $('#branch').val();
+    var direct = $('#direct').val() == 'true';
 
     var contributions = [];
 
@@ -12,6 +12,31 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
             }
         }
         return -1;
+    }
+
+    function clearEditionBox() {
+        $('#edition-box').empty().append(
+            $('<div></div>').addClass('alert').addClass('alert-warning').text('contribution.edit.empty'.loc())
+        )
+    }
+
+    function submitContributions() {
+        if (contributions.length) {
+            ajax.post({
+                url: 'branch/{0}/contribution'.format(branchId),
+                data: {
+                    contributions: contributions,
+                    message: $('#submit-message').val()
+                },
+                successFn: function () {
+                    // Clears the edition box
+                    clearEditionBox();
+                    // Clears the contributions
+                    contributions = [];
+                    displayContributions();
+                }
+            })
+        }
     }
 
     function prepareContributionList() {
@@ -32,6 +57,13 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
                     }
                 })
             })
+        });
+        // Submit
+        $('#submit-form').submit(function () {
+            // Submit
+            submitContributions();
+            // No default submit
+            return false;
         })
     }
 
@@ -40,7 +72,8 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
             $('#manage-box'),
             'contribution-list',
             {
-                contributions: contributions
+                contributions: contributions,
+                direct: direct
             },
             prepareContributionList
         )
