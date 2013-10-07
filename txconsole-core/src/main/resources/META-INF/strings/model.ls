@@ -89,6 +89,10 @@ translation.key
     en -> Key
     fr -> Clef
 
+translation.locale
+    en -> Locale
+    fr -> Langage
+
 translation.keys
     en -> Keys
     fr -> Clefs

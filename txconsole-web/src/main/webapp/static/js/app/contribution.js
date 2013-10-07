@@ -5,6 +5,16 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
 
     var contributions = [];
 
+    function displayContributions() {
+        render.renderInto(
+            $('#manage-box'),
+            'contribution-list',
+            {
+                contributions: contributions
+            }
+        )
+    }
+
     function saveEdition(field) {
         // Gets the data
         var bundle = field.attr('data-bundle');
@@ -20,9 +30,11 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
                 section: section,
                 key: key,
                 locale: locale,
-                value: value
+                oldValue: oldValue,
+                newValue: value
             });
-            // TODO Updates the contribution view
+            // Updates the contribution view
+            displayContributions();
             // Clears the field status
             field.removeClass('contribution-field-ongoing');
         }

@@ -584,3 +584,10 @@ contribution.manage.empty
     en -> Nothing to commit yet.
     fr -> Rien à soumettre.
 
+contribution.oldvalue
+    en -> Old value
+    fr -> Ancienne valeur
+
+contribution.newvalue
+    en -> New value
+    fr -> Nouvelle valeur

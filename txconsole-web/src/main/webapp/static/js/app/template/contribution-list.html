@@ -1,0 +1,30 @@
+{{#if contributions.length}}
+    <table class="table table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>{{loc 'translation.bundle'}}</th>
+                <th>{{loc 'translation.section'}}</th>
+                <th>{{loc 'translation.key'}}</th>
+                <th>{{loc 'translation.locale'}}</th>
+                <th>{{loc 'contribution.oldvalue'}}</th>
+                <th>{{loc 'contribution.newvalue'}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#contributions}}
+                <tr>
+                    <td class="translation-bundle">{{bundle}}</td>
+                    <td class="translation-section">{{section}}</td>
+                    <td class="translation-key">{{key}}</td>
+                    <td>{{locale}}</td>
+                    <td>{{oldValue}}</td>
+                    <td>{{newValue}}</td>
+                </tr>
+            {{/contributions}}
+        </tbody>
+    </table>
+{{else}}
+    <div class="alert alert-warning">
+        {{loc 'contribution.manage.empty'}}
+    </div>
+{{/if}}
