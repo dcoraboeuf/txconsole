@@ -1,5 +1,6 @@
 package net.txconsole.core.model;
 
+import com.google.common.base.Function;
 import lombok.Data;
 import net.txconsole.core.security.SecurityFunction;
 import net.txconsole.core.security.SecurityRoles;
@@ -11,6 +12,12 @@ import java.util.Set;
 @Data
 public class Account {
 
+    public static final Function<Account, String> emailFn = new Function<Account, String>() {
+        @Override
+        public String apply(Account o) {
+            return o.getEmail();
+        }
+    };
     private final int id;
     private final String name;
     private final String fullName;

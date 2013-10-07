@@ -22,7 +22,7 @@ public class ContributionJdbcDao extends AbstractJdbcDao implements Contribution
 
     @Override
     @Transactional
-    public Ack post(int accountId, int branchId, ContributionInput input) {
+    public int post(int accountId, int branchId, ContributionInput input) {
         // Root
         int contributionId = dbCreate(
                 SQL.CONTRIBUTION_INSERT,
@@ -44,6 +44,6 @@ public class ContributionJdbcDao extends AbstractJdbcDao implements Contribution
             );
         }
         // OK
-        return Ack.OK;
+        return contributionId;
     }
 }

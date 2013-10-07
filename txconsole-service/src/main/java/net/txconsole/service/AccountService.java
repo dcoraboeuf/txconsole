@@ -1,7 +1,9 @@
 package net.txconsole.service;
 
 import net.txconsole.core.model.*;
+import net.txconsole.core.security.ProjectFunction;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface AccountService {
@@ -41,4 +43,6 @@ public interface AccountService {
     Ack unsetProjectACL(int project, int account);
 
     List<ProjectAuthorization> getProjectACLList(int project);
+
+    Collection<Account> findAccountsForProjectACL(int project, ProjectFunction fn);
 }

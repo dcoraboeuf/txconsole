@@ -2,7 +2,6 @@ package net.txconsole.backend;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
 import net.sf.jstring.Strings;
 import net.txconsole.backend.dao.AccountDao;
 import net.txconsole.backend.dao.ProjectAuthorizationDao;
@@ -23,8 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Lists.transform;
 
 @Service
 public class AccountServiceImpl extends AbstractValidatorService implements AccountService {
@@ -111,7 +114,7 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
     @Override
     @Transactional(readOnly = true)
     public List<AccountSummary> accountLookup(String query) {
-        return Lists.transform(
+        return transform(
                 accountDao.findByQuery(query),
                 accountSummaryFn
         );
@@ -134,7 +137,7 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
     @Override
     @Transactional(readOnly = true)
     public List<ProjectAuthorization> getProjectACLList(int project) {
-        return Lists.transform(
+        return transform(
                 projectAuthorizationDao.findByProject(project),
                 new Function<TProjectAuthorization, ProjectAuthorization>() {
                     @Override
@@ -153,7 +156,7 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
     @Transactional(readOnly = true)
     @AdminGrant
     public List<Account> getAccounts() {
-        return Lists.transform(
+        return transform(
                 accountDao.findAll(),
                 accountFunction
         );
@@ -277,9 +280,35 @@ public class AccountServiceImpl extends AbstractValidatorService implements Acco
     @Override
     @Transactional(readOnly = true)
     public List<AccountSummary> getUserAccounts() {
-        return Lists.transform(
+        return transform(
                 accountDao.getUserAccounts(),
                 accountSummaryFn
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<Account> findAccountsForProjectACL(final int project, final ProjectFunction fn) {
+        // Filtering
+        return filter(
+                transform(
+                        transform(
+                                accountDao.findAll(),
+                                accountFunction
+                        ),
+                        new Function<Account, Account>() {
+                            @Override
+                            public Account apply(Account o) {
+                                return getACL(o);
+                            }
+                        }
+                ),
+                new Predicate<Account>() {
+                    @Override
+                    public boolean apply(Account account) {
+                        return account.isGranted(fn, project);
+                    }
+                }
         );
     }
 
