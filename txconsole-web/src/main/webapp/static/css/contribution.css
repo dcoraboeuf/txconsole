@@ -9,3 +9,7 @@
 .contribution-field {
     width: 100%;
 }
+
+.contribution-field-ongoing {
+    background-color: lightsalmon;
+}
