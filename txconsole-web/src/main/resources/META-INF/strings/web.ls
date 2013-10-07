@@ -551,3 +551,15 @@ acl.project.add
 contribution
     en -> Contribution
     fr -> Contribution
+
+contribution.search
+    en -> Search for keys/labels to edit...
+    fr -> Cherchez les clefs ou libellés à éditer...
+
+contribution.edit
+    en -> Edit the labels...
+    fr -> Editez les libellés...
+
+contribution.manage
+    en -> ... and commit them.
+    fr -> ... et soumettez les.
