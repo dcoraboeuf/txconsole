@@ -13,6 +13,9 @@
 
     <@title value=branch.data.name close="project/${project.data.id?c}">
         <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
+        <@acl resource=branch action='PROJECT#CONTRIBUTION'>
+            <@title_command id="contribution" title=loc('contribution') class="icon-pencil" link="branch/${branch.data.id?c}/contribution" />
+        </@acl>
         <@acl resource=branch action='PROJECT#REQUEST_CREATE'>
             <@title_command id="request-create" title=loc('request.create') class="icon-file" />
         </@acl>

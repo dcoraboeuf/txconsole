@@ -545,3 +545,9 @@ acl.project.role
 acl.project.add
     en -> Add
     fr -> Ajouter
+
+[contributions]
+
+contribution
+    en -> Contribution
+    fr -> Contribution
