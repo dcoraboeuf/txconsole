@@ -125,12 +125,17 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
         })
     }
 
+    function getContributionId(entry, locale) {
+        return '{0}-{1}-{2}-{3}'.format(entry.key.bundle, entry.key.section, entry.key.key, locale).replace('.', '_').replace('/', '_')
+    }
+
     function displayResults(request, translationMapResponseResource) {
         render.withTemplate('contribution-field', function (contributionFieldTemplate) {
 
             Handlebars.registerHelper('contribution-field', function (entry, locale) {
                 var label = entry.labels[locale];
                 return contributionFieldTemplate({
+                    id: getContributionId(entry, locale),
                     key: entry.key,
                     locale: locale,
                     label: label
