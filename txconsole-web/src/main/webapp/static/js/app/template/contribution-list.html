@@ -8,6 +8,7 @@
                 <th>{{loc 'translation.locale'}}</th>
                 <th>{{loc 'contribution.oldvalue'}}</th>
                 <th>{{loc 'contribution.newvalue'}}</th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -19,6 +20,11 @@
                     <td>{{locale}}</td>
                     <td>{{oldValue}}</td>
                     <td>{{newValue}}</td>
+                    <td>
+                        <i
+                                class="icon-trash action action-optional action-inline contribution-remove"
+                                data-field-id="{{id}}"></i>
+                    </td>
                 </tr>
             {{/contributions}}
         </tbody>

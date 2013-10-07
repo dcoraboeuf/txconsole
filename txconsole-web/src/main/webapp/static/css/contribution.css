@@ -13,3 +13,7 @@
 .contribution-field-ongoing {
     background-color: lightsalmon;
 }
+
+.contribution-field-edited {
+    background-color: lightgreen;
+}

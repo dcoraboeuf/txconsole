@@ -5,18 +5,50 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
 
     var contributions = [];
 
+    function indexOfContribution(id) {
+        for (var i = 0; i < contributions.length; i++) {
+            if (id == contributions[i].id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function prepareContributionList() {
+        // Removing a contribution
+        $('.contribution-remove').each(function (i, action) {
+            var id = $(action).attr('data-field-id');
+            $(action).click(function () {
+                // Restores the field old value (if present)
+                $('#{0}'.format(id)).each(function (i, field) {
+                    var oldValue = $(field).attr('data-old-value');
+                    $(field).val(oldValue);
+                    $(field).removeClass('contribution-field-ongoing').removeClass('contribution-field-edited');
+                    // Removes the element from the contribution list
+                    var index = indexOfContribution(id);
+                    if (index >= 0) {
+                        contributions.splice(index, 1);
+                        displayContributions();
+                    }
+                })
+            })
+        })
+    }
+
     function displayContributions() {
         render.renderInto(
             $('#manage-box'),
             'contribution-list',
             {
                 contributions: contributions
-            }
+            },
+            prepareContributionList
         )
     }
 
     function saveEdition(field) {
         // Gets the data
+        var id = field.attr('id');
         var bundle = field.attr('data-bundle');
         var section = field.attr('data-section');
         var key = field.attr('data-key');
@@ -24,19 +56,26 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
         var oldValue = field.attr('data-old-value');
         var value = field.val();
         if (value != oldValue) {
-            // Sends the data to the contributions
-            contributions.push({
-                bundle: bundle,
-                section: section,
-                key: key,
-                locale: locale,
-                oldValue: oldValue,
-                newValue: value
-            });
+            var index = indexOfContribution(id);
+            if (index < 0) {
+                // Sends the data to the contributions
+                contributions.push({
+                    id: id,
+                    bundle: bundle,
+                    section: section,
+                    key: key,
+                    locale: locale,
+                    oldValue: oldValue,
+                    newValue: value
+                });
+            } else {
+                // Edit the existing contribution
+                contributions[index].newValue = value;
+            }
             // Updates the contribution view
             displayContributions();
             // Clears the field status
-            field.removeClass('contribution-field-ongoing');
+            field.removeClass('contribution-field-ongoing').addClass('contribution-field-edited');
         }
     }
 
@@ -44,7 +83,7 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
         // Changes
         field.typing({
             start: function () {
-                field.addClass('contribution-field-ongoing');
+                field.addClass('contribution-field-ongoing').removeClass('contribution-field-edited');
             }
         });
         // Special keys
@@ -61,7 +100,7 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
                 // Restores the old value
                 field.val(field.attr('data-old-value'));
                 // Removes the edition class
-                field.removeClass('contribution-field-ongoing');
+                field.removeClass('contribution-field-ongoing').removeClass('contribution-field-edited');
                 // Does not send the normal event
                 e.preventDefault();
             }
