@@ -1,0 +1,11 @@
+.contribution-key {
+    width: 15em;
+}
+
+.contribution-cell {
+    padding-right: 1em !important;
+}
+
+.contribution-field {
+    width: 100%;
+}

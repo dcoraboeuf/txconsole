@@ -4,6 +4,13 @@ define(['jquery', 'ajax', 'render', 'handlebars'], function ($, ajax, render) {
     var branchId = $('#branch').val();
 
     function prepareResults() {
+        // Hiding locales
+        $('.contribution-locale-hide').each(function (i, action) {
+            var locale = $(action).attr('data-locale');
+            $(action).click(function () {
+                $('.locale-{0}'.format(locale)).hide();
+            })
+        })
     }
 
     function displayResults(request, translationMapResponseResource) {

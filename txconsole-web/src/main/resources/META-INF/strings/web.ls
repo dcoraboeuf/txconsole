@@ -572,6 +572,10 @@ contribution.edit.total
     en -> Total:
     fr -> Total :
 
+contribution.edit.locale.filter
+    en -> Hide this locale
+    fr -> Masquer ce language
+
 contribution.manage
     en -> ... and commit them.
     fr -> ... et soumettez les.
