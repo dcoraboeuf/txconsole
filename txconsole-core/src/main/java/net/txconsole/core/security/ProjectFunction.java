@@ -38,7 +38,19 @@ public enum ProjectFunction implements SecurityFunction {
     /**
      * Management of authorizations for the project
      */
-    ACL;
+    ACL,
+    /**
+     * Contribution is allowed
+     */
+    CONTRIBUTION,
+    /**
+     * Contribution is direct
+     */
+    CONTRIBUTION_DIRECT,
+    /**
+     * Review of contributions
+     */
+    CONTRIBUTION_REVIEW;
 
     /**
      * Security functions for {@link SecurityCategory#PROJECT}.
