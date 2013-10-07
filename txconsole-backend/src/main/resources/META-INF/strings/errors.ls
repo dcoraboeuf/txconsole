@@ -59,3 +59,9 @@ net.txconsole.backend.exceptions.RequestCannotMergeBecauseOfStatusException
 net.txconsole.backend.exceptions.RequestCannotBeEditedException
     en -> [E-016] Cannot edit the request because its state does not allow it.
     fr -> [E-016] Impossible d'éditer la demande parce que sont status courant ne l'autorise pas.
+
+net.txconsole.backend.exceptions.TemplateMergeException
+    en -> [E-017] Error while merging template {0}.
+
+net.txconsole.backend.exceptions.TemplateNotFoundException
+    en -> [E-018] Cannot find template with name {0}.
