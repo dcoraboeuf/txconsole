@@ -21,6 +21,7 @@ public class ContributionServiceImpl implements ContributionService {
 
     private final StructureService structureService;
     private final AccountService accountService;
+    private final ResourceService resourceService;
     private final MessageService messageService;
     private final TemplateService templateService;
     private final ContributionDao contributionDao;
@@ -28,9 +29,10 @@ public class ContributionServiceImpl implements ContributionService {
     private final Strings strings;
 
     @Autowired
-    public ContributionServiceImpl(StructureService structureService, AccountService accountService, MessageService messageService, TemplateService templateService, ContributionDao contributionDao, SecurityUtils securityUtils, Strings strings) {
+    public ContributionServiceImpl(StructureService structureService, AccountService accountService, ResourceService resourceService, MessageService messageService, TemplateService templateService, ContributionDao contributionDao, SecurityUtils securityUtils, Strings strings) {
         this.structureService = structureService;
         this.accountService = accountService;
+        this.resourceService = resourceService;
         this.messageService = messageService;
         this.templateService = templateService;
         this.contributionDao = contributionDao;
@@ -83,9 +85,10 @@ public class ContributionServiceImpl implements ContributionService {
         TemplateModel model = new TemplateModel();
         model.add("account", account.getFullName());
         model.add("title", title);
+        // TODO Contribution resource
         model.add("contribution", contributionId);
-        model.add("branch", branch);
-        model.add("project", project);
+        model.add("branch", resourceService.getBranch(locale, branch));
+        model.add("project", resourceService.getProject(locale, project));
         String content = templateService.generate("contribution-staged.html", Locale.ENGLISH, model);
         // Sends the message
         Message message = new Message(

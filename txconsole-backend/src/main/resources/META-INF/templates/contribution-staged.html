@@ -7,8 +7,8 @@
 
     <p>
         User <b>${account?html}</b> has created a contribution for the branch
-        <b><a href="#">${branch.name?html}</a></b>
-        in project <b><a href="#">${project.name?html}</a></b>.
+        <b><a href="${resourceGui(branch)}">${branch.data.name?html}</a></b>
+        in project <b><a href="${resourceGui(project)}">${project.data.name?html}</a></b>.
     </p>
 
     <p>
@@ -18,7 +18,7 @@
 
     <p>
         You receive this email because you are registered as a reviewer on project
-        <a href="#">${project.name?html}</a>.
+        <a href="${resourceGui(project)}">${project.data.name?html}</a>.
     </p>
 
     <p>The Translation Console.</p>

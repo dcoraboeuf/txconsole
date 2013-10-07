@@ -6,6 +6,7 @@ import net.sf.jstring.Strings;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
+import net.txconsole.service.ResourceService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
 import net.txconsole.core.model.Resource;
@@ -24,7 +25,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Controller
 @RequestMapping("/ui")
-public class UIController extends AbstractUIController implements UI {
+public class UIController extends AbstractUIController implements UI, ResourceService {
 
     private final StructureService structureService;
     private final TranslationMapService translationMapService;
@@ -118,7 +119,12 @@ public class UIController extends AbstractUIController implements UI {
     public
     @ResponseBody
     Resource<ProjectSummary> getProject(Locale locale, @PathVariable int id) {
-        return projectSummaryResourceFn.apply(locale).apply(structureService.getProject(id));
+        return getProject(locale, structureService.getProject(id));
+    }
+
+    @Override
+    public Resource<ProjectSummary> getProject(Locale locale, ProjectSummary project) {
+        return projectSummaryResourceFn.apply(locale).apply(project);
     }
 
     /**
@@ -173,7 +179,12 @@ public class UIController extends AbstractUIController implements UI {
     public
     @ResponseBody
     Resource<BranchSummary> getBranch(Locale locale, @PathVariable int id) {
-        return branchSummaryResourceFn.apply(locale).apply(structureService.getBranch(id));
+        return getBranch(locale, structureService.getBranch(id));
+    }
+
+    @Override
+    public Resource<BranchSummary> getBranch(Locale locale, BranchSummary branch) {
+        return branchSummaryResourceFn.apply(locale).apply(branch);
     }
 
     /**
