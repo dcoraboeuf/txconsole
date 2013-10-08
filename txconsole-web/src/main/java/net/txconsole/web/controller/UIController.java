@@ -179,7 +179,7 @@ public class UIController extends AbstractUIController implements UI {
     }
 
     @Override
-    @RequestMapping(value = "/ui/branch/{id}/contribution", method = RequestMethod.OPTIONS)
+    @RequestMapping(value = "/branch/{id}/contribution", method = RequestMethod.OPTIONS)
     public
     @ResponseBody
     Resource<ContributionSummary> newContribution(Locale locale, @PathVariable int id) {
@@ -187,7 +187,7 @@ public class UIController extends AbstractUIController implements UI {
     }
 
     @Override
-    @RequestMapping(value = "/ui/branch/{id}/contribution", method = RequestMethod.POST)
+    @RequestMapping(value = "/branch/{id}/contribution", method = RequestMethod.POST)
     public
     @ResponseBody
     ContributionResult postContribution(Locale locale, @PathVariable int id, @RequestBody ContributionInput input) {
@@ -202,7 +202,7 @@ public class UIController extends AbstractUIController implements UI {
     }
 
     @Override
-    @RequestMapping(value = "/ui/contribution/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/contribution/{id}", method = RequestMethod.GET)
     public
     @ResponseBody
     Resource<ContributionSummary> getContribution(Locale locale, @PathVariable int id) {
