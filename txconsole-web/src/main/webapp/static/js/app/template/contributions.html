@@ -1,11 +1,14 @@
 <tr>
     <td>
-        <code>{{data.id}}</code>
+        <code><a href="{{link 'gui'}}">{{data.id}}</a></code>
     </td>
     <td>
-        {{data.author.fullName}}
+        <a href="{{link 'gui'}}">{{data.author.fullName}}</a>
     </td>
     <td class="contribution-message">
         {{data.message}}
+    </td>
+    <td>
+        {{{eventTimestampAndElapsed 'CONTRIBUTION_CREATED'}}}
     </td>
 </tr>

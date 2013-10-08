@@ -1,0 +1,4 @@
+.contribution-message {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

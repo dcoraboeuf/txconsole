@@ -1,13 +1,9 @@
 package net.txconsole.web.support;
 
 import net.sf.jstring.Strings;
-import net.txconsole.core.model.Event;
-import net.txconsole.core.model.EventCode;
-import net.txconsole.core.model.EventEntity;
-import net.txconsole.core.model.Signature;
+import net.txconsole.core.model.*;
 import net.txconsole.core.support.TimeUtils;
 import net.txconsole.service.EventService;
-import net.txconsole.core.model.ResourceEvent;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,15 +29,18 @@ public class GUIEventServiceImpl implements GUIEventService {
         if (event == null) return null;
         // Converts the event
         Signature signature = event.getSignature();
+        return getResourceEvent(locale, signature.getAuthorName(), signature.getTimestamp(), eventCode);
+    }
+
+    @Override
+    public ResourceEvent getResourceEvent(Locale locale, String author, DateTime timestamp, EventCode eventCode) {
         DateTime now = TimeUtils.now();
-        ResourceEvent re = new ResourceEvent(
-                event.getEventCode(),
-                signature.getAuthorName(),
-                TimeUtils.format(locale, signature.getTimestamp()),
-                TimeUtils.elapsed(strings, locale, signature.getTimestamp(), now),
-                TimeUtils.elapsed(strings, locale, signature.getTimestamp(), now, signature.getAuthorName())
+        return new ResourceEvent(
+                eventCode,
+                author,
+                TimeUtils.format(locale, timestamp),
+                TimeUtils.elapsed(strings, locale, timestamp, now),
+                TimeUtils.elapsed(strings, locale, timestamp, now, author)
         );
-        // OK
-        return re;
     }
 }

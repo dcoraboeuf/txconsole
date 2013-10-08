@@ -74,7 +74,8 @@ public class UIResourceService implements ResourceService {
                         public Resource<ContributionSummary> apply(ContributionSummary o) {
                             return new Resource<>(o)
                                     .withLink(linkTo(methodOn(GUIController.class).getContribution(locale, o.getId())).withRel(Resource.REL_GUI))
-                                    .withLink(linkTo(methodOn(UIController.class).getContribution(locale, o.getId())).withRel(Resource.REL_GUI));
+                                    .withLink(linkTo(methodOn(UIController.class).getContribution(locale, o.getId())).withRel(Resource.REL_GUI))
+                                    .withEvent(guiEventService.getResourceEvent(locale, o.getAuthor().getFullName(), o.getTimestamp(), EventCode.CONTRIBUTION_CREATED));
                         }
                     };
                 }

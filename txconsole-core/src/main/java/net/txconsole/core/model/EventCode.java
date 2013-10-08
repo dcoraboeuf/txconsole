@@ -10,6 +10,8 @@ public enum EventCode {
 
     REQUEST_CREATED,
 
+    CONTRIBUTION_CREATED,
+
     REQUEST_MERGED
 
 }
