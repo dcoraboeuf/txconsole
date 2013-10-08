@@ -2,6 +2,7 @@
 
 <@layout_std
     page="contributions"
+    noscript=true
     title=loc('contribution.review')
     breadcrumbs={
         loc("home"): "",
@@ -18,7 +19,7 @@
     </@title>
 
     <div class="row-fluid">
-        <div class="span12">
+        <div id="contributions" class="span12 dynamic" dynamic-controller="contributions" dynamic-branch="${branch.data.id?c}">
         </div>
     </div>
 

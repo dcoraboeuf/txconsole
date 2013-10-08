@@ -2,6 +2,7 @@ package net.txconsole.backend;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import net.sf.jstring.LocalizableMessage;
 import net.sf.jstring.Strings;
 import net.txconsole.backend.dao.ContributionDao;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
@@ -79,6 +81,15 @@ public class ContributionServiceImpl implements ContributionService {
                 "",
                 null,
                 null
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ContributionSummary> getContributionList(int branchId) {
+        return Lists.transform(
+                contributionDao.findByBranch(branchId),
+                contributionSummaryFunction
         );
     }
 

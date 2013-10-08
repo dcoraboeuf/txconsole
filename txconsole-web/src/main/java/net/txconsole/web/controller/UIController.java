@@ -186,6 +186,19 @@ public class UIController extends AbstractUIController implements UI {
         return contributionSummaryResourceFn.apply(locale).apply(contributionService.blankContribution(id));
     }
 
+    /**
+     * List of contributions for a branch
+     */
+    @RequestMapping(value = "/branch/{id}/contribution", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<Resource<ContributionSummary>> getContributionList(Locale locale, @PathVariable int id) {
+        return Lists.transform(
+                contributionService.getContributionList(id),
+                contributionSummaryResourceFn.apply(locale)
+        );
+    }
+
     @Override
     @RequestMapping(value = "/branch/{id}/contribution", method = RequestMethod.POST)
     public

@@ -14,9 +14,23 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Component
 public class ContributionJdbcDao extends AbstractJdbcDao implements ContributionDao {
+
+    private final RowMapper<TContribution> contributionRowMapper = new RowMapper<TContribution>() {
+        @Override
+        public TContribution mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new TContribution(
+                    rs.getInt("id"),
+                    rs.getInt("branch"),
+                    rs.getString("message"),
+                    rs.getInt("account"),
+                    SQLUtils.getDateTime(rs, "timestamp")
+            );
+        }
+    };
 
     @Autowired
     public ContributionJdbcDao(DataSource dataSource, ObjectMapper objectMapper) {
@@ -56,18 +70,17 @@ public class ContributionJdbcDao extends AbstractJdbcDao implements Contribution
         return getNamedParameterJdbcTemplate().queryForObject(
                 SQL.CONTRIBUTION_BY_ID,
                 params("id", id),
-                new RowMapper<TContribution>() {
-                    @Override
-                    public TContribution mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new TContribution(
-                                rs.getInt("id"),
-                                rs.getInt("branch"),
-                                rs.getString("message"),
-                                rs.getInt("account"),
-                                SQLUtils.getDateTime(rs, "timestamp")
-                        );
-                    }
-                }
+                contributionRowMapper
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TContribution> findByBranch(int branchId) {
+        return getNamedParameterJdbcTemplate().query(
+                SQL.CONTRIBUTION_BY_BRANCH,
+                params("branch", branchId),
+                contributionRowMapper
         );
     }
 }
