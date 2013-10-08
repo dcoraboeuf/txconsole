@@ -44,6 +44,10 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
                 successFn: function (result) {
                     // Clears the edition box
                     clearEditionBox();
+                    // Clears the review
+                    contributionId = 0;
+                    review = false;
+                    message = '';
                     // Clears the contributions
                     contributions = [];
                     displayContributions();
@@ -91,7 +95,7 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
                 contributions: contributions,
                 direct: direct,
                 review: review,
-                message: '{0} ({1})'.format(message, author)
+                message: review ? '{0} ({1})'.format(message, author) : ''
             },
             prepareContributionList
         )
