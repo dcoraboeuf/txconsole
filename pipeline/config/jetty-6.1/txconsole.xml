@@ -9,7 +9,7 @@
         <Arg>
             <New class="org.apache.commons.dbcp.BasicDataSource">
                 <Set name="DriverClassName">org.h2.Driver</Set>
-                <Set name="Url">jdbc:h2:file:~/txconsole/db/data;AUTOCOMMIT=OFF;MVCC=true;MODE=MySQL</Set>
+                <Set name="Url">jdbc:h2:file:<SystemProperty name="user.home" default="."/>/txconsole/db/data;AUTOCOMMIT=OFF;MVCC=true;MODE=MySQL</Set>
                 <Set name="Username">txconsole</Set>
                 <Set name="Password">txconsole</Set>
                 <Set name="DefaultAutoCommit">false</Set>
@@ -26,7 +26,7 @@
         <Arg>file/home</Arg>
         <Arg>
             <New class="java.io.File">
-                <Arg>~/txconsole/work</Arg>
+                <Arg><SystemProperty name="user.home" default="."/>/txconsole/work</Arg>
             </New>
         </Arg>
     </New>
