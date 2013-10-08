@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Locale;
 
 @Data
-public class ContributionEntry {
+public class ContributionDetail {
 
     private final String bundle;
     private final String section;

@@ -2,6 +2,7 @@ package net.txconsole.backend.dao.impl;
 
 import net.txconsole.backend.dao.ContributionDao;
 import net.txconsole.backend.dao.model.TContribution;
+import net.txconsole.backend.dao.model.TContributionDetail;
 import net.txconsole.core.model.ContributionEntry;
 import net.txconsole.core.model.ContributionInput;
 import net.txconsole.core.support.TimeUtils;
@@ -57,7 +58,8 @@ public class ContributionJdbcDao extends AbstractJdbcDao implements Contribution
                             .addValue("section", entry.getSection())
                             .addValue("name", entry.getKey())
                             .addValue("locale", entry.getLocale().toString())
-                            .addValue("value", entry.getValue())
+                            .addValue("oldValue", entry.getOldValue())
+                            .addValue("newValue", entry.getNewValue())
             );
         }
         // OK
@@ -81,6 +83,30 @@ public class ContributionJdbcDao extends AbstractJdbcDao implements Contribution
                 SQL.CONTRIBUTION_BY_BRANCH,
                 params("branch", branchId),
                 contributionRowMapper
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TContributionDetail> findDetailsById(int contribution) {
+        return getNamedParameterJdbcTemplate().query(
+                SQL.CONTRIBUTION_ENTRY_BY_CONTRIBUTION,
+                params("contribution", contribution),
+                new RowMapper<TContributionDetail>() {
+                    @Override
+                    public TContributionDetail mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return new TContributionDetail(
+                                rs.getInt("id"),
+                                rs.getInt("contribution"),
+                                rs.getString("bundle"),
+                                rs.getString("section"),
+                                rs.getString("name"),
+                                SQLUtils.toLocale(rs, "locale"),
+                                rs.getString("oldValue"),
+                                rs.getString("newValue")
+                        );
+                    }
+                }
         );
     }
 }

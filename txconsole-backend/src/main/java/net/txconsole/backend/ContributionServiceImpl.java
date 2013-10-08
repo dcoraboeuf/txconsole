@@ -7,9 +7,11 @@ import net.sf.jstring.LocalizableMessage;
 import net.sf.jstring.Strings;
 import net.txconsole.backend.dao.ContributionDao;
 import net.txconsole.backend.dao.model.TContribution;
+import net.txconsole.backend.dao.model.TContributionDetail;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
+import net.txconsole.core.support.TimeUtils;
 import net.txconsole.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +68,28 @@ public class ContributionServiceImpl implements ContributionService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<ContributionDetail> getContributionDetails(int id) {
+        return Lists.transform(
+                contributionDao.findDetailsById(id),
+                new Function<TContributionDetail, ContributionDetail>() {
+
+                    @Override
+                    public ContributionDetail apply(TContributionDetail t) {
+                        return new ContributionDetail(
+                                t.getBundle(),
+                                t.getSection(),
+                                t.getKey(),
+                                t.getLocale(),
+                                t.getOldValue(),
+                                t.getNewValue()
+                        );
+                    }
+                }
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public ContributionSummary blankContribution(int branchId) {
         // Branch
         BranchSummary branch = structureService.getBranch(branchId);
@@ -79,8 +103,8 @@ public class ContributionServiceImpl implements ContributionService {
                 direct,
                 branchId,
                 "",
-                null,
-                null
+                accountService.getAccountSummary(securityUtils.getCurrentAccountId()),
+                TimeUtils.now()
         );
     }
 

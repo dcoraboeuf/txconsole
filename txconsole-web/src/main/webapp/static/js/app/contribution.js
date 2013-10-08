@@ -33,7 +33,8 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
                             section: contribution.section,
                             key: contribution.key,
                             locale: contribution.locale,
-                            value: contribution.newValue
+                            oldValue: contribution.oldValue,
+                            newValue: contribution.newValue
                         }
                     }),
                     message: $('#submit-message').val()
@@ -229,5 +230,12 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
         // No std submit
         return false;
     });
+
+    // Loading for review
+    if (review) {
+        ajax.get({
+            url: 'ui/contribution/{0}/details'.format(contributionId)
+        })
+    }
 
 });

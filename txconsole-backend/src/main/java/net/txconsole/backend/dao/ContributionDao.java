@@ -1,6 +1,7 @@
 package net.txconsole.backend.dao;
 
 import net.txconsole.backend.dao.model.TContribution;
+import net.txconsole.backend.dao.model.TContributionDetail;
 import net.txconsole.core.model.ContributionInput;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface ContributionDao {
     TContribution getById(int id);
 
     List<TContribution> findByBranch(int branchId);
+
+    List<TContributionDetail> findDetailsById(int contribution);
 }

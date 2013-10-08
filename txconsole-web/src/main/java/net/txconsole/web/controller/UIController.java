@@ -222,4 +222,11 @@ public class UIController extends AbstractUIController implements UI {
         return contributionSummaryResourceFn.apply(locale).apply(contributionService.getContribution(id));
     }
 
+    @RequestMapping(value = "/contribution/{id}/details", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<ContributionDetail> getContributionDetails(Locale locale, @PathVariable int id) {
+        return contributionService.getContributionDetails(id);
+    }
+
 }
