@@ -13,6 +13,8 @@ import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.core.support.TimeUtils;
 import net.txconsole.service.*;
+import net.txconsole.service.support.Configured;
+import net.txconsole.service.support.TranslationSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,14 +128,42 @@ public class ContributionServiceImpl implements ContributionService {
         securityUtils.checkGrant(ProjectFunction.CONTRIBUTION, branch.getProjectId());
         // Contribution mode
         boolean direct = securityUtils.isGranted(ProjectFunction.CONTRIBUTION_DIRECT, branch.getProjectId());
-        // FIXME Direct mode
+        // Direct mode
         if (direct) {
-            throw new RuntimeException("NYI");
+            return save(branchId, input);
         }
         // Staging
         else {
             return stage(branchId, input);
         }
+    }
+
+    protected LocalizableMessage save(int branchId, ContributionInput input) {
+        // Loads the branch configuration
+        Configured<Object, TranslationSource<Object>> branchConfig = structureService.getConfiguredTranslationSource(branchId);
+        // Gets the latest map version
+        TranslationMap oldMap = branchConfig.getConfigurable().read(branchConfig.getConfiguration(), null);
+        // Creates a diff from the input
+        TranslationDiffBuilder diff = TranslationDiffBuilder.create();
+        for (ContributionEntry entry : input.getContributions()) {
+            diff.updated(
+                    entry.getBundle(),
+                    entry.getSection(),
+                    entry.getKey()
+            ).withDiff(entry.getLocale(), entry.getOldValue(), entry.getNewValue());
+        }
+        // Applies the diff
+        TranslationMap newMap = oldMap.applyDiff(diff.build());
+        // On the latest version
+        branchConfig.getConfigurable().write(
+                branchConfig.getConfiguration(),
+                newMap,
+                input.getMessage()
+        );
+        // TODO Deletes the contribution
+        // TODO #42 Sends a mail to the contributor
+        // OK
+        return new LocalizableMessage("contribution.saved");
     }
 
     protected LocalizableMessage stage(int branchId, ContributionInput input) {

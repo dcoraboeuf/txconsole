@@ -1,14 +1,16 @@
 package net.txconsole.core.model;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import net.sf.jstring.support.KeyIdentifier;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class TranslationDiffBuilder {
 
-    private final List<TranslationDiffEntryBuilder> entries = new ArrayList<>();
+    private final Map<KeyIdentifier, TranslationDiffEntryBuilder> entries = new LinkedHashMap<>();
 
     public static TranslationDiffBuilder create() {
         return new TranslationDiffBuilder();
@@ -16,27 +18,33 @@ public class TranslationDiffBuilder {
 
     public TranslationDiff build() {
         return new TranslationDiff(
-                Lists.transform(
-                        entries,
-                        new Function<TranslationDiffEntryBuilder, TranslationDiffEntry>() {
-                            @Override
-                            public TranslationDiffEntry apply(TranslationDiffEntryBuilder builder) {
-                                return builder.build();
-                            }
-                        }
+                Lists.newArrayList(
+                        Collections2.transform(
+                                entries.values(),
+                                new Function<TranslationDiffEntryBuilder, TranslationDiffEntry>() {
+                                    @Override
+                                    public TranslationDiffEntry apply(TranslationDiffEntryBuilder builder) {
+                                        return builder.build();
+                                    }
+                                }
+                        )
                 )
         );
     }
 
     public TranslationDiffEntryBuilder entry(int entryId, String bundle, String section, String key, TranslationDiffType type) {
-        TranslationDiffEntryBuilder entry = new TranslationDiffEntryBuilder(
-                entryId,
-                bundle,
-                section,
-                key,
-                type
-        );
-        entries.add(entry);
+        KeyIdentifier ki = new KeyIdentifier(bundle, section, key);
+        TranslationDiffEntryBuilder entry = entries.get(ki);
+        if (entry == null) {
+            entry = new TranslationDiffEntryBuilder(
+                    entryId,
+                    bundle,
+                    section,
+                    key,
+                    type
+            );
+            entries.put(ki, entry);
+        }
         return entry;
     }
 
