@@ -2,8 +2,10 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
 
     var branchId = $('#branch').val();
     var contributionId = $('#contribution').val();
-    var review = (contributionId > 0);
     var direct = $('#direct').val() == 'true';
+    var review = (contributionId > 0);
+    var author = $('#author').val();
+    var message = $('#message').val();
 
     var contributions = [];
 
@@ -88,7 +90,8 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
             {
                 contributions: contributions,
                 direct: direct,
-                review: review
+                review: review,
+                message: '{0} ({1})'.format(message, author)
             },
             prepareContributionList
         )
@@ -234,7 +237,11 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
     // Loading for review
     if (review) {
         ajax.get({
-            url: 'ui/contribution/{0}/details'.format(contributionId)
+            url: 'ui/contribution/{0}/details'.format(contributionId),
+            successFn: function (details) {
+                contributions = details;
+                displayContributions();
+            }
         })
     }
 
