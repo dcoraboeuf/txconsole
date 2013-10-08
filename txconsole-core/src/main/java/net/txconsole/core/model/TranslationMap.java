@@ -186,12 +186,14 @@ public class TranslationMap {
         // Deletion of keys
         final Set<KeyIdentifier> keysToDelete = new HashSet<>();
         for (TranslationDiffEntry entry : diff.getEntries()) {
-            KeyIdentifier tkey = new KeyIdentifier(
-                    entry.getBundle(),
-                    entry.getSection(),
-                    entry.getKey()
-            );
-            keysToDelete.add(tkey);
+            if (entry.getType() == TranslationDiffType.DELETED) {
+                KeyIdentifier tkey = new KeyIdentifier(
+                        entry.getBundle(),
+                        entry.getSection(),
+                        entry.getKey()
+                );
+                keysToDelete.add(tkey);
+            }
         }
 
         // Removes all deleted keys from the bundle collection
