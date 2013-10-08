@@ -38,7 +38,7 @@
                             </div>
                         {{/direct}}
                         <input id="submit-message" type="text" class="span8" required="required" placeholder="{{loc 'contribution.message'}}" value="{{message}}" />
-                        <button type="submit" class="btn btn-primary">
+                        <button id="submit-button" type="submit" class="btn btn-primary">
                             {{#if direct}}
                                 {{loc 'contribution.submit'}}
                             {{else}}

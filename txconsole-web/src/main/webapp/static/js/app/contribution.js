@@ -41,6 +41,9 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
                     }),
                     message: $('#submit-message').val()
                 },
+                loading: {
+                    el: $('#submit-button')
+                },
                 successFn: function (result) {
                     // Clears the edition box
                     clearEditionBox();
