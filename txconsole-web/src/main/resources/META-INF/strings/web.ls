@@ -607,3 +607,7 @@ contribution.stage
 contribution.submit
     en -> Save
     fr -> Sauvegarder
+
+contribution.review
+    en -> Review of contributions
+    fr -> Revue des contributions

@@ -140,6 +140,7 @@ public class GUIController extends AbstractGUIController {
     @RequestMapping(value = "/branch/{branch}/contribution", method = RequestMethod.GET)
     public ModelAndView getContributions(Locale locale, @PathVariable int branch) {
         Resource<BranchSummary> branchSummary = ui.getBranch(locale, branch);
+        securityUtils.checkGrant(ProjectFunction.CONTRIBUTION_REVIEW, branchSummary.getData().getProjectId());
         return new ModelAndView("contributions",
                 MapBuilder
                         .params()

@@ -16,6 +16,9 @@
         <@acl resource=branch action='PROJECT#CONTRIBUTION'>
             <@title_command id="contribution" title=loc('contribution') class="icon-pencil" link="branch/${branch.data.id?c}/contribution/new" />
         </@acl>
+        <@acl resource=branch action='PROJECT#CONTRIBUTION_REVIEW'>
+            <@title_command id="contribution-review" title=loc('contribution.review') class="icon-eye-open" link="branch/${branch.data.id?c}/contribution" />
+        </@acl>
         <@acl resource=branch action='PROJECT#REQUEST_CREATE'>
             <@title_command id="request-create" title=loc('request.create') class="icon-file" />
         </@acl>
