@@ -12,7 +12,6 @@ import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
-import net.txconsole.web.support.GUIEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,81 +24,54 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Controller
 @RequestMapping("/ui")
-public class UIController extends AbstractUIController implements UI, ResourceService {
+public class UIController extends AbstractUIController implements UI {
 
     private final StructureService structureService;
     private final ContributionService contributionService;
     private final TranslationMapService translationMapService;
-    private final GUIEventService guiEventService;
+    private final ResourceService resourceService;
     private final SecurityUtils securityUtils;
-    /**
-     * Gets the resource for a project
-     */
-    private final Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>> projectSummaryResourceFn =
-            new Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>>() {
+    private Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>> projectSummaryResourceFn = new Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>>() {
+        @Override
+        public Function<ProjectSummary, Resource<ProjectSummary>> apply(final Locale locale) {
+            return new Function<ProjectSummary, Resource<ProjectSummary>>() {
                 @Override
-                public Function<ProjectSummary, Resource<ProjectSummary>> apply(final Locale locale) {
-                    return new Function<ProjectSummary, Resource<ProjectSummary>>() {
-                        @Override
-                        public Resource<ProjectSummary> apply(ProjectSummary o) {
-                            return new Resource<>(o)
-                                    .withLink(linkTo(methodOn(UIController.class).getProject(locale, o.getId())).withSelfRel())
-                                    .withLink(linkTo(methodOn(GUIController.class).getProject(locale, o.getId())).withRel(Resource.REL_GUI))
-                                            // List of branches
-                                    .withLink(linkTo(methodOn(UIController.class).getProjectBranches(locale, o.getId())).withRel("branches"))
-                                            // ACL
-                                    .withActions(securityUtils, o.getId(), ProjectFunction.values())
-                                            // Events
-                                    .withEvent(guiEventService.getResourceEvent(locale, EventEntity.PROJECT, o.getId(), EventCode.PROJECT_CREATED));
-                        }
-                    };
+                public Resource<ProjectSummary> apply(ProjectSummary project) {
+                    return resourceService.getProject(locale, project);
                 }
             };
-    /**
-     * Gets the resource for a branch
-     */
-    private final Function<Locale, Function<BranchSummary, Resource<BranchSummary>>> branchSummaryResourceFn =
-            new Function<Locale, Function<BranchSummary, Resource<BranchSummary>>>() {
+        }
+    };
+    private Function<Locale, Function<BranchSummary, Resource<BranchSummary>>> branchSummaryResourceFn = new Function<Locale, Function<BranchSummary, Resource<BranchSummary>>>() {
+        @Override
+        public Function<BranchSummary, Resource<BranchSummary>> apply(final Locale locale) {
+            return new Function<BranchSummary, Resource<BranchSummary>>() {
                 @Override
-                public Function<BranchSummary, Resource<BranchSummary>> apply(final Locale locale) {
-                    return new Function<BranchSummary, Resource<BranchSummary>>() {
-                        @Override
-                        public Resource<BranchSummary> apply(BranchSummary o) {
-                            return new Resource<>(o)
-                                    .withLink(linkTo(methodOn(UIController.class).getBranch(locale, o.getId())).withSelfRel())
-                                    .withLink(linkTo(methodOn(GUIController.class).getBranch(locale, o.getId())).withRel(Resource.REL_GUI))
-                                            // Project link
-                                    .withLink(linkTo(methodOn(UIController.class).getProject(locale, o.getProjectId())).withRel("project"))
-                                            // ACL
-                                    .withActions(securityUtils, o.getProjectId(), ProjectFunction.values())
-                                            // Events
-                                    .withEvent(guiEventService.getResourceEvent(locale, EventEntity.BRANCH, o.getId(), EventCode.BRANCH_CREATED));
-                        }
-                    };
+                public Resource<BranchSummary> apply(BranchSummary branch) {
+                    return resourceService.getBranch(locale, branch);
                 }
             };
-    private final Function<Locale, Function<ContributionSummary, Resource<ContributionSummary>>> contributionSummaryFn =
-            new Function<Locale, Function<ContributionSummary, Resource<ContributionSummary>>>() {
+        }
+    };
+    private Function<Locale, Function<ContributionSummary, Resource<ContributionSummary>>> contributionSummaryResourceFn = new Function<Locale, Function<ContributionSummary, Resource<ContributionSummary>>>() {
+        @Override
+        public Function<ContributionSummary, Resource<ContributionSummary>> apply(final Locale locale) {
+            return new Function<ContributionSummary, Resource<ContributionSummary>>() {
                 @Override
-                public Function<ContributionSummary, Resource<ContributionSummary>> apply(final Locale locale) {
-                    return new Function<ContributionSummary, Resource<ContributionSummary>>() {
-                        @Override
-                        public Resource<ContributionSummary> apply(ContributionSummary o) {
-                            return new Resource<>(o)
-                                    .withLink(linkTo(methodOn(GUIController.class).getContribution(locale, o.getId())).withRel(Resource.REL_GUI))
-                                    .withLink(linkTo(methodOn(UIController.class).getContribution(locale, o.getId())).withRel(Resource.REL_GUI));
-                        }
-                    };
+                public Resource<ContributionSummary> apply(ContributionSummary contribution) {
+                    return resourceService.getContribution(locale, contribution);
                 }
             };
+        }
+    };
 
     @Autowired
-    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, ContributionService contributionService, TranslationMapService translationMapService, GUIEventService guiEventService, SecurityUtils securityUtils) {
+    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, ContributionService contributionService, TranslationMapService translationMapService, ResourceService resourceService, SecurityUtils securityUtils) {
         super(errorHandler, strings);
         this.structureService = structureService;
         this.contributionService = contributionService;
         this.translationMapService = translationMapService;
-        this.guiEventService = guiEventService;
+        this.resourceService = resourceService;
         this.securityUtils = securityUtils;
     }
 
@@ -135,12 +107,7 @@ public class UIController extends AbstractUIController implements UI, ResourceSe
     public
     @ResponseBody
     Resource<ProjectSummary> getProject(Locale locale, @PathVariable int id) {
-        return getProject(locale, structureService.getProject(id));
-    }
-
-    @Override
-    public Resource<ProjectSummary> getProject(Locale locale, ProjectSummary project) {
-        return projectSummaryResourceFn.apply(locale).apply(project);
+        return projectSummaryResourceFn.apply(locale).apply(structureService.getProject(id));
     }
 
     /**
@@ -195,12 +162,7 @@ public class UIController extends AbstractUIController implements UI, ResourceSe
     public
     @ResponseBody
     Resource<BranchSummary> getBranch(Locale locale, @PathVariable int id) {
-        return getBranch(locale, structureService.getBranch(id));
-    }
-
-    @Override
-    public Resource<BranchSummary> getBranch(Locale locale, BranchSummary branch) {
-        return branchSummaryResourceFn.apply(locale).apply(branch);
+        return branchSummaryResourceFn.apply(locale).apply(structureService.getBranch(id));
     }
 
     /**
@@ -217,12 +179,11 @@ public class UIController extends AbstractUIController implements UI, ResourceSe
     }
 
     @Override
-    @RequestMapping(value = "/ui/branch/{id}/contribution", method = RequestMethod.GET)
+    @RequestMapping(value = "/ui/branch/{id}/contribution", method = RequestMethod.OPTIONS)
     public
     @ResponseBody
     Resource<ContributionSummary> newContribution(Locale locale, @PathVariable int id) {
-        // OK
-        return getContribution(locale, contributionService.blankContribution(id));
+        return contributionSummaryResourceFn.apply(locale).apply(contributionService.blankContribution(id));
     }
 
     @Override
@@ -245,11 +206,7 @@ public class UIController extends AbstractUIController implements UI, ResourceSe
     public
     @ResponseBody
     Resource<ContributionSummary> getContribution(Locale locale, @PathVariable int id) {
-        return getContribution(locale, contributionService.getContribution(id));
+        return contributionSummaryResourceFn.apply(locale).apply(contributionService.getContribution(id));
     }
 
-    @Override
-    public Resource<ContributionSummary> getContribution(Locale locale, ContributionSummary contribution) {
-        return contributionSummaryFn.apply(locale).apply(contribution);
-    }
 }

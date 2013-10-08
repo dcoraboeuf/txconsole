@@ -1,6 +1,14 @@
 define(['common'], function (common) {
 
     /**
+     * Performs a OPTIONS request
+     * @param config.*          See #call
+     */
+    function options (config) {
+        call($.extend(config, { method: 'OPTIONS' }));
+    }
+
+    /**
      * Performs a PUT request
      * @param config.*          See #call
      */

@@ -134,6 +134,21 @@ public class GUIController extends AbstractGUIController {
         return new RedirectView("/request/" + id, true);
     }
 
+    /**
+     * List of contributions
+     */
+    @RequestMapping(value = "/branch/{branch}/contribution", method = RequestMethod.GET)
+    public ModelAndView getContributions(Locale locale, @PathVariable int branch) {
+        Resource<BranchSummary> branchSummary = ui.getBranch(locale, branch);
+        return new ModelAndView("contributions",
+                MapBuilder
+                        .params()
+                        .with("branch", branchSummary)
+                        .with("project", ui.getProject(locale, branchSummary.getData().getProjectId()))
+                        .get()
+        );
+    }
+
     @RequestMapping(value = "/contribution/{id}", method = RequestMethod.GET)
     public ModelAndView getContribution(Locale locale, @PathVariable int id) {
         Resource<ContributionSummary> contribution = ui.getContribution(locale, id);

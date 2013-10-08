@@ -8,6 +8,7 @@ import net.txconsole.core.model.Resource;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.ContributionService;
+import net.txconsole.service.ResourceService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
 import net.txconsole.web.support.ErrorHandler;
@@ -45,7 +46,8 @@ public class UIControllerTest {
         translationMapService = mock(TranslationMapService.class);
         guiEventService = mock(GUIEventService.class);
         ContributionService contributionService = mock(ContributionService.class);
-        controller = new UIController(errorHandler, strings, structureService, contributionService, translationMapService, guiEventService, securityUtils);
+        ResourceService resourceService = mock(ResourceService.class);
+        controller = new UIController(errorHandler, strings, structureService, contributionService, translationMapService, resourceService, securityUtils);
         // Current request
         MockHttpServletRequest request = new MockHttpServletRequest();
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
