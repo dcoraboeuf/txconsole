@@ -160,7 +160,11 @@ public class ContributionServiceImpl implements ContributionService {
                 newMap,
                 input.getMessage()
         );
-        // TODO Deletes the contribution
+        // Deletes the contribution
+        int id = input.getId();
+        if (id > 0) {
+            contributionDao.delete(id);
+        }
         // TODO #42 Sends a mail to the contributor
         // OK
         return new LocalizableMessage("contribution.saved");

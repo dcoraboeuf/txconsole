@@ -39,7 +39,8 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
                             newValue: contribution.newValue
                         }
                     }),
-                    message: $('#submit-message').val()
+                    message: $('#submit-message').val(),
+                    id: contributionId
                 },
                 loading: {
                     el: $('#submit-button')

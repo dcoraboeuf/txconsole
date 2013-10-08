@@ -15,4 +15,6 @@ public interface ContributionDao {
     List<TContribution> findByBranch(int branchId);
 
     List<TContributionDetail> findDetailsById(int contribution);
+
+    void delete(int id);
 }

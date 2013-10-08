@@ -109,4 +109,13 @@ public class ContributionJdbcDao extends AbstractJdbcDao implements Contribution
                 }
         );
     }
+
+    @Override
+    @Transactional
+    public void delete(int id) {
+        getNamedParameterJdbcTemplate().update(
+                SQL.CONTRIBUTION_DELETE,
+                params("id", id)
+        );
+    }
 }
