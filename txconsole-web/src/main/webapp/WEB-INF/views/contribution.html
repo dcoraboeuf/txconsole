@@ -12,7 +12,8 @@
 
     <input type="hidden" id="project" value="${project.data.id?c}" />
     <input type="hidden" id="branch" value="${branch.data.id?c}" />
-    <input type="hidden" id="direct" value="${contribution.direct?string}" />
+    <input type="hidden" id="contribution" value="${contribution.data.id?c}" />
+    <input type="hidden" id="direct" value="${contribution.data.direct?string}" />
 
     <@title value=loc('contribution') close="branch/${branch.data.id?c}">
         <@title_uplink name=project.data.name href="project/${project.data.id?c}" />

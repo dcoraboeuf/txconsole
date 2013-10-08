@@ -79,29 +79,6 @@ public class GUIController extends AbstractGUIController {
     }
 
     /**
-     * Branch new contribution
-     */
-    @RequestMapping(value = "/branch/{id}/contribution", method = RequestMethod.GET)
-    public ModelAndView getBranchNewContribution(Locale locale, @PathVariable int id) {
-        // Gets the branch
-        Resource<BranchSummary> branch = ui.getBranch(locale, id);
-        // Checks for authorizations
-        securityUtils.checkGrant(ProjectFunction.CONTRIBUTION, branch.getData().getProjectId());
-        // Returns the page
-        return new ModelAndView("contribution",
-                MapBuilder
-                        .params()
-                                // Branch & project
-                        .with("branch", branch)
-                        .with("project", ui.getProject(locale, branch.getData().getProjectId()))
-                                // Empty contribution
-                        .with("contribution", ui.newContribution(locale, id))
-                                // OK
-                        .get()
-        );
-    }
-
-    /**
      * Request page
      */
     @RequestMapping(value = "/request/{id}", method = RequestMethod.GET)
@@ -132,6 +109,29 @@ public class GUIController extends AbstractGUIController {
         // Success, redirect to the request page
         // TODO Includes the upload feedback as redirection attributes
         return new RedirectView("/request/" + id, true);
+    }
+
+    /**
+     * Branch new contribution
+     */
+    @RequestMapping(value = "/branch/{id}/contribution/new", method = RequestMethod.GET)
+    public ModelAndView getBranchNewContribution(Locale locale, @PathVariable int id) {
+        // Gets the branch
+        Resource<BranchSummary> branch = ui.getBranch(locale, id);
+        // Checks for authorizations
+        securityUtils.checkGrant(ProjectFunction.CONTRIBUTION, branch.getData().getProjectId());
+        // Returns the page
+        return new ModelAndView("contribution",
+                MapBuilder
+                        .params()
+                                // Branch & project
+                        .with("branch", branch)
+                        .with("project", ui.getProject(locale, branch.getData().getProjectId()))
+                                // Empty contribution
+                        .with("contribution", ui.newContribution(locale, id))
+                                // OK
+                        .get()
+        );
     }
 
     /**
