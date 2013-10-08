@@ -154,6 +154,7 @@ public class GUIController extends AbstractGUIController {
     public ModelAndView getContribution(Locale locale, @PathVariable int id) {
         Resource<ContributionSummary> contribution = ui.getContribution(locale, id);
         Resource<BranchSummary> branch = ui.getBranch(locale, contribution.getData().getBranch());
+        securityUtils.checkGrant(ProjectFunction.CONTRIBUTION_REVIEW, branch.getData().getProjectId());
         return new ModelAndView("contribution",
                 MapBuilder
                         .params()
