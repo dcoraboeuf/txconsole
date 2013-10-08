@@ -611,3 +611,7 @@ contribution.submit
 contribution.review
     en -> Review of contributions
     fr -> Revue des contributions
+
+contribution.reject
+    en -> Reject
+    fr -> Rejeter

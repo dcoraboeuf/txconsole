@@ -1,6 +1,8 @@
 define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($, ajax, render) {
 
     var branchId = $('#branch').val();
+    var contributionId = $('#contribution').val();
+    var review = (contributionId > 0);
     var direct = $('#direct').val() == 'true';
 
     var contributions = [];
@@ -84,7 +86,8 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
             'contribution-list',
             {
                 contributions: contributions,
-                direct: direct
+                direct: direct,
+                review: review
             },
             prepareContributionList
         )

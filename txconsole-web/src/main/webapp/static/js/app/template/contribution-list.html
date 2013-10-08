@@ -45,6 +45,11 @@
                                 {{loc 'contribution.stage'}}
                             {{/if}}
                         </button>
+                        {{#if review}}
+                            <button id="contribution-cancel" type="button" class="btn btn-warning">
+                                {{loc 'contribution.reject'}}
+                            </button>
+                        {{/if}}
                     </form>
                 </td>
             </tr>
