@@ -157,9 +157,11 @@ define(
                             force: force
                         },
                         submitFn: function (dialog) {
-                            dialog.closeFn();
                             ajax.post({
                                 url: 'ui/request/{0}/merge'.format(requestId),
+                                loading: {
+                                    el: dialog.controls['submit']
+                                },
                                 data: {
                                     force: force,
                                     message: dialog.get('#request-merge-message').val()
@@ -167,6 +169,7 @@ define(
                                 successFn: function (resource) {
                                     // Reloading the request page
                                     application.gui(resource);
+                                    dialog.closeFn();
                                 }
                             })
                         }
