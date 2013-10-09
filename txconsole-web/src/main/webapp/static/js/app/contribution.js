@@ -1,4 +1,4 @@
-define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($, ajax, render) {
+define(['jquery', 'common', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($, common, ajax, render) {
 
     var branchId = $('#branch').val();
     var contributionId = $('#contribution').val();
@@ -25,15 +25,20 @@ define(['jquery', 'ajax', 'render', 'handlebars', 'jquery.typing'], function ($,
     }
 
     function rejectContribution(btn) {
-        ajax.del({
-            url: 'ui/contribution/{0}'.format(contributionId),
-            loading: {
-                el: $(btn)
-            },
-            successFn: function () {
-                'branch/{0}/contribution'.format(branchId).goto()
+        common.confirmAndCall(
+            'contribution.reject.prompt'.loc(),
+            function () {
+                ajax.del({
+                    url: 'ui/contribution/{0}'.format(contributionId),
+                    loading: {
+                        el: $(btn)
+                    },
+                    successFn: function () {
+                        'branch/{0}/contribution'.format(branchId).goto()
+                    }
+                })
             }
-        })
+        )
     }
 
     function submitContributions() {

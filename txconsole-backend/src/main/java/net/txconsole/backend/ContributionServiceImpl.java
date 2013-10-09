@@ -127,6 +127,7 @@ public class ContributionServiceImpl implements ContributionService {
         BranchSummary branch = structureService.getBranch(t.getBranch());
         // Checks for authorizations
         securityUtils.checkGrant(ProjectFunction.CONTRIBUTION_REVIEW, branch.getProjectId());
+        // TODO #42 Sends a mail to the contributor
         // Deletion
         return contributionDao.delete(id);
     }
