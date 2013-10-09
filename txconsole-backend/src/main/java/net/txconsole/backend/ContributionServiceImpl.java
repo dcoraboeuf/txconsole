@@ -168,7 +168,7 @@ public class ContributionServiceImpl implements ContributionService {
         // Applies the diff
         TranslationMap newMap = oldMap.applyDiff(diff.build());
         // On the latest version
-        branchConfig.getConfigurable().write(
+        String version = branchConfig.getConfigurable().write(
                 branchConfig.getConfiguration(),
                 newMap,
                 input.getMessage()
@@ -180,7 +180,7 @@ public class ContributionServiceImpl implements ContributionService {
         }
         // TODO #42 Sends a mail to the contributor
         // OK
-        return new LocalizableMessage("contribution.saved");
+        return new LocalizableMessage("contribution.saved", version);
     }
 
     protected LocalizableMessage stage(int branchId, ContributionInput input) {

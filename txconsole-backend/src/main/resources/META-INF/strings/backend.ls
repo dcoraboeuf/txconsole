@@ -41,3 +41,7 @@ contribution.staged
 contribution.staged.title
     en -> Contribution {0} for {3}/{2} by {1}
     fr -> Contribution {0} pour {3}/{2} par {1}
+
+contribution.saved
+    en -> The contribution has been saved with version {0}.
+    fr -> La contribution a été sauvegardée avec la version {0}.
