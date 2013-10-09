@@ -9,7 +9,7 @@ import java.io.File;
 
 @Configuration
 @Profile({RunProfile.DEV})
-public class DevEnvironmentConfig implements EnvironmentConfig {
+public class DevEnvironmentConfig extends AbstractEnvironmentConfig {
 
     @Override
     @Bean

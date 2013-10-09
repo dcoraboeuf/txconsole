@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 @Configuration
 @Profile(RunProfile.PROD)
-public class ProdEnvironmentConfig implements EnvironmentConfig {
+public class ProdEnvironmentConfig extends AbstractEnvironmentConfig {
 
     private static final String VARIABLE_PATTERN = "\\%\\{([a-zA-Z_\\-\\.0-9]+)\\}";
     public static final String SYS_HOME = "txconsole.home";

@@ -9,7 +9,7 @@ import java.io.File;
 
 @Configuration
 @Profile({RunProfile.IT, RunProfile.TEST})
-public class TestEnvironmentConfig implements EnvironmentConfig {
+public class TestEnvironmentConfig extends AbstractEnvironmentConfig {
 
     @Override
     @Bean
