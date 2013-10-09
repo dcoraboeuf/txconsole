@@ -46,7 +46,7 @@ public class UIControllerTest {
         translationMapService = mock(TranslationMapService.class);
         guiEventService = mock(GUIEventService.class);
         ContributionService contributionService = mock(ContributionService.class);
-        ResourceService resourceService = mock(ResourceService.class);
+        ResourceService resourceService = new UIResourceService(guiEventService, securityUtils);
         controller = new UIController(errorHandler, strings, structureService, contributionService, translationMapService, resourceService, securityUtils);
         // Current request
         MockHttpServletRequest request = new MockHttpServletRequest();
