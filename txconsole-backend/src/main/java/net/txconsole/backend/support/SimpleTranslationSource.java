@@ -4,9 +4,9 @@ import com.google.common.base.Function;
 import net.txconsole.core.model.JsonConfiguration;
 import net.txconsole.core.model.TranslationMap;
 import net.txconsole.core.model.VersionFormat;
+import net.txconsole.core.support.IOContext;
 import net.txconsole.core.support.MapBuilder;
 import net.txconsole.service.support.*;
-import net.txconsole.core.support.IOContext;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +39,19 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
     }
 
     @Override
-    public TranslationMap read(SimpleTranslationSourceConfig<S, F> config, String version) {
-        // Gets the file source
-        IOContext s = config.getTxFileSourceConfigured().getConfigurable().getSource(config.getTxFileSourceConfigured().getConfiguration(), version);
-        // Reads the map
-        return config.getTxFileFormatConfigured().getConfigurable().readFrom(
-                config.getTxFileFormatConfigured().getConfiguration(),
-                s);
+    public TranslationMap read(final SimpleTranslationSourceConfig<S, F> config, String version) {
+        return config.getTxFileSourceConfigured().getConfigurable().withReadableSource(
+                config.getTxFileSourceConfigured().getConfiguration(),
+                version,
+                new Function<IOContext, TranslationMap>() {
+                    @Override
+                    public TranslationMap apply(IOContext input) {
+                        return config.getTxFileFormatConfigured().getConfigurable().readFrom(
+                                config.getTxFileFormatConfigured().getConfiguration(),
+                                input);
+                    }
+                }
+        ).getData();
     }
 
     @Override
@@ -56,7 +62,7 @@ public class SimpleTranslationSource<S, F> extends AbstractConfigurable<SimpleTr
         final TxFileFormat<F> fileFormat = config.getTxFileFormatConfigured().getConfigurable();
         final F fileFormatConfig = config.getTxFileFormatConfigured().getConfiguration();
         // Writes
-        return fileSource.withSource(
+        return fileSource.withWritableSource(
                 fileSourceConfig,
                 null,
                 message,
