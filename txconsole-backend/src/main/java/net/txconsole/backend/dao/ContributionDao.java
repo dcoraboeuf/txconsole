@@ -2,6 +2,7 @@ package net.txconsole.backend.dao;
 
 import net.txconsole.backend.dao.model.TContribution;
 import net.txconsole.backend.dao.model.TContributionDetail;
+import net.txconsole.core.model.Ack;
 import net.txconsole.core.model.ContributionInput;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface ContributionDao {
 
     List<TContributionDetail> findDetailsById(int contribution);
 
-    void delete(int id);
+    Ack delete(int id);
 }

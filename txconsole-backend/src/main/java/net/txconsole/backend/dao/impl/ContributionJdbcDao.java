@@ -3,6 +3,7 @@ package net.txconsole.backend.dao.impl;
 import net.txconsole.backend.dao.ContributionDao;
 import net.txconsole.backend.dao.model.TContribution;
 import net.txconsole.backend.dao.model.TContributionDetail;
+import net.txconsole.core.model.Ack;
 import net.txconsole.core.model.ContributionEntry;
 import net.txconsole.core.model.ContributionInput;
 import net.txconsole.core.support.TimeUtils;
@@ -112,10 +113,12 @@ public class ContributionJdbcDao extends AbstractJdbcDao implements Contribution
 
     @Override
     @Transactional
-    public void delete(int id) {
-        getNamedParameterJdbcTemplate().update(
-                SQL.CONTRIBUTION_DELETE,
-                params("id", id)
+    public Ack delete(int id) {
+        return Ack.one(
+                getNamedParameterJdbcTemplate().update(
+                        SQL.CONTRIBUTION_DELETE,
+                        params("id", id)
+                )
         );
     }
 }

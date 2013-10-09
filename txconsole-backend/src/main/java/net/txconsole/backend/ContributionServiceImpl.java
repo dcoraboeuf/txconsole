@@ -121,6 +121,18 @@ public class ContributionServiceImpl implements ContributionService {
 
     @Override
     @Transactional
+    public Ack deleteContribution(int id) {
+        TContribution t = contributionDao.getById(id);
+        // Branch
+        BranchSummary branch = structureService.getBranch(t.getBranch());
+        // Checks for authorizations
+        securityUtils.checkGrant(ProjectFunction.CONTRIBUTION_REVIEW, branch.getProjectId());
+        // Deletion
+        return contributionDao.delete(id);
+    }
+
+    @Override
+    @Transactional
     public LocalizableMessage post(int branchId, ContributionInput input) {
         // Branch
         BranchSummary branch = structureService.getBranch(branchId);

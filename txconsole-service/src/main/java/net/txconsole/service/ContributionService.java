@@ -1,6 +1,7 @@
 package net.txconsole.service;
 
 import net.sf.jstring.LocalizableMessage;
+import net.txconsole.core.model.Ack;
 import net.txconsole.core.model.ContributionDetail;
 import net.txconsole.core.model.ContributionInput;
 import net.txconsole.core.model.ContributionSummary;
@@ -18,4 +19,6 @@ public interface ContributionService {
     ContributionSummary blankContribution(int branchId);
 
     List<ContributionSummary> getContributionList(int branchId);
+
+    Ack deleteContribution(int id);
 }

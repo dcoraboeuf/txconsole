@@ -222,6 +222,13 @@ public class UIController extends AbstractUIController implements UI {
         return contributionSummaryResourceFn.apply(locale).apply(contributionService.getContribution(id));
     }
 
+    @RequestMapping(value = "/contribution/{id}", method = RequestMethod.DELETE)
+    public
+    @ResponseBody
+    Ack deleteContribution(@PathVariable int id) {
+        return contributionService.deleteContribution(id);
+    }
+
     @RequestMapping(value = "/contribution/{id}/details", method = RequestMethod.GET)
     public
     @ResponseBody
