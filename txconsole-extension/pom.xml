@@ -13,7 +13,7 @@
     <parent>
         <artifactId>txconsole-parent</artifactId>
         <groupId>net.txconsole</groupId>
-        <version>0.3-SNAPSHOT</version>
+        <version>0.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>txconsole-extension</artifactId>
