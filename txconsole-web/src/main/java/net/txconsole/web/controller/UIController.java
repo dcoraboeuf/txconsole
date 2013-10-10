@@ -141,6 +141,13 @@ public class UIController extends AbstractUIController implements UI {
         return branchSummaryResourceFn.apply(locale).apply(structureService.createBranch(id, form));
     }
 
+    @RequestMapping(value = "/branch/{id}", method = RequestMethod.DELETE)
+    public
+    @ResponseBody
+    Resource<ProjectSummary> deleteBranch(Locale locale, @PathVariable int id) {
+        return projectSummaryResourceFn.apply(locale).apply(structureService.deleteBranch(id));
+    }
+
     /**
      * List of branches for a project
      */

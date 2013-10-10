@@ -13,6 +13,7 @@ import net.txconsole.backend.exceptions.ProjectParametersNotDefinedByBranchExcep
 import net.txconsole.backend.exceptions.ProjectParametersNotDefinedException;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
+import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.EventService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.security.AdminGrant;
@@ -42,6 +43,7 @@ public class StructureServiceImpl implements StructureService {
     private final TranslationSourceService translationSourceService;
     private final ProjectDao projectDao;
     private final BranchDao branchDao;
+    private final SecurityUtils securityUtils;
     private final ObjectMapper objectMapper;
     /**
      * Project summary from the table
@@ -71,11 +73,12 @@ public class StructureServiceImpl implements StructureService {
     };
 
     @Autowired
-    public StructureServiceImpl(EventService eventService, TranslationSourceService translationSourceService, ProjectDao projectDao, BranchDao branchDao, ObjectMapper objectMapper) {
+    public StructureServiceImpl(EventService eventService, TranslationSourceService translationSourceService, ProjectDao projectDao, BranchDao branchDao, SecurityUtils securityUtils, ObjectMapper objectMapper) {
         this.eventService = eventService;
         this.translationSourceService = translationSourceService;
         this.projectDao = projectDao;
         this.branchDao = branchDao;
+        this.securityUtils = securityUtils;
         this.objectMapper = objectMapper;
     }
 
@@ -150,6 +153,23 @@ public class StructureServiceImpl implements StructureService {
         }
         // OK
         return configuredTranslationSource.withConfiguration(branchConfiguration);
+    }
+
+    @Override
+    @Transactional
+    public ProjectSummary deleteBranch(int id) {
+        // Loads the branch
+        BranchSummary branch = getBranch(id);
+        // Checks the rights
+        securityUtils.checkGrant(ProjectFunction.UPDATE, branch.getProjectId());
+        // Project
+        ProjectSummary project = getProject(branch.getProjectId());
+        // Deletion
+        branchDao.delete(id);
+        // Event
+        eventService.event(EventForm.branchDeleted(project, branch));
+        // OK
+        return project;
     }
 
     @Override

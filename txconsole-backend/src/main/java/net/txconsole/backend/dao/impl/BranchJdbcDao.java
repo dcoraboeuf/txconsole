@@ -103,4 +103,13 @@ public class BranchJdbcDao extends AbstractJdbcDao implements BranchDao {
         );
         return map;
     }
+
+    @Override
+    @Transactional
+    public void delete(int id) {
+        getNamedParameterJdbcTemplate().update(
+                SQL.BRANCH_DELETE,
+                params("id", id)
+        );
+    }
 }

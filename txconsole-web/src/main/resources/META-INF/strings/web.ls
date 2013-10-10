@@ -431,6 +431,10 @@ branch.create
     en -> New branch
     fr -> Nouvelle branche
 
+branch.delete.prompt
+    en -> Are you sure to delete the branch "{0}"?
+    fr -> Etes-vous sûr de vouloir supprimer la branche "{0}" ?
+
 [request]
 
 request.list

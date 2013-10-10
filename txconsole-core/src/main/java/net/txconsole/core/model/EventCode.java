@@ -12,6 +12,8 @@ public enum EventCode {
 
     CONTRIBUTION_CREATED,
 
+    BRANCH_DELETED,
+
     REQUEST_MERGED
 
 }

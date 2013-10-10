@@ -1,4 +1,4 @@
-define(['dialog', 'ajax', 'application'], function (dialog, ajax, application) {
+define(['dialog', 'ajax', 'application', 'common'], function (dialog, ajax, application, common) {
 
     /**
      * Creating a branch for a project
@@ -49,8 +49,28 @@ define(['dialog', 'ajax', 'application'], function (dialog, ajax, application) {
             });
     }
 
+    function deleteBranch (id) {
+        ajax.get({
+            url: 'ui/branch/{0}'.format(id),
+            successFn: function (resource) {
+                common.confirmAndCall(
+                    'branch.delete.prompt'.loc(resource.data.name),
+                    function () {
+                        ajax.del({
+                            url: 'ui/branch/{0}'.format(id),
+                            successFn: function (project) {
+                                application.gui(project)
+                            }
+                        })
+                    }
+                )
+            }
+        })
+    }
+
     return {
-        createBranch: createBranch
+        createBranch: createBranch,
+        deleteBranch: deleteBranch
     }
 
 });

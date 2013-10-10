@@ -25,4 +25,6 @@ public interface StructureService {
     List<BranchSummary> getProjectBranches(int id);
 
     <C> Configured<C, TranslationSource<C>> getConfiguredTranslationSource(int branchId);
+
+    ProjectSummary deleteBranch(int id);
 }

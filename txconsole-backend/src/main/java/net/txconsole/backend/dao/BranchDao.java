@@ -16,4 +16,6 @@ public interface BranchDao {
     List<TBranch> findByProject(int project);
 
     Map<String,String> getBranchParameters(int branch);
+
+    void delete(int id);
 }
