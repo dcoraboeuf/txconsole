@@ -8,7 +8,7 @@
     <parent>
         <artifactId>txconsole-parent</artifactId>
         <groupId>net.txconsole</groupId>
-        <version>0.2-SNAPSHOT</version>
+        <version>0.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>txconsole-testutils</artifactId>
