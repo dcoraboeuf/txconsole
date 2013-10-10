@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>${title?html}</title>
+</head>
+<body>
+
+    <p>
+        User <b>${account?html}</b> has rejected your contribution for the branch
+        <b><a href="${resourceGui(branch)}">${branch.data.name?html}</a></b>
+        in project <b><a href="${resourceGui(project)}">${project.data.name?html}</a></b>.
+    </p>
+
+    <p>
+        The message for this contribution was:
+        <br/>
+        <code>${message?html}</code>
+    </p>
+
+    <p>The Translation Console.</p>
+
+</body>
+</html>

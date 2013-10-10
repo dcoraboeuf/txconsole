@@ -50,3 +50,6 @@ contribution.saved.title
     en -> Your contribution for the branch {0} of the project {1} with message "{2}" has been accepted.
     fr -> Votre contribution pour la branche {0} du projet {1} avec le message "{2}" a été acceptée.
 
+contribution.rejected.title
+    en -> Your contribution for the branch {0} of the project {1} with message "{2}" has been rejected.
+    fr -> Votre contribution pour la branche {0} du projet {1} avec le message "{2}" a été rejetée.

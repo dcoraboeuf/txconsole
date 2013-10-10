@@ -123,12 +123,38 @@ public class ContributionServiceImpl implements ContributionService {
     @Override
     @Transactional
     public Ack deleteContribution(int id) {
-        TContribution t = contributionDao.getById(id);
+        final TContribution contribution = contributionDao.getById(id);
         // Branch
-        BranchSummary branch = structureService.getBranch(t.getBranch());
+        BranchSummary branch = structureService.getBranch(contribution.getBranch());
+        ProjectSummary project = structureService.getProject(branch.getProjectId());
         // Checks for authorizations
         securityUtils.checkGrant(ProjectFunction.CONTRIBUTION_REVIEW, branch.getProjectId());
-        // TODO #42 Sends a mail to the contributor
+        // Gets the mail of the contributor
+        String email = securityUtils.asAdmin(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return accountService.getAccount(contribution.getAuthor()).getEmail();
+            }
+        });
+        // Generates a message (English only)
+        Locale locale = Locale.ENGLISH;
+        String title = strings.get(locale, "contribution.rejected.title", branch.getName(), project.getName(), contribution.getMessage());
+        TemplateModel model = new TemplateModel();
+        model.add("account", securityUtils.getCurrentAccount().getFullName());
+        model.add("title", title);
+        model.add("message", contribution.getMessage());
+        model.add("branch", resourceService.getBranch(locale, branch));
+        model.add("project", resourceService.getProject(locale, project));
+        String content = templateService.generate("contribution-rejected.html", Locale.ENGLISH, model);
+        // Sends the message
+        Message message = new Message(
+                title,
+                new MessageContent(
+                        MessageContentType.HTML,
+                        content
+                )
+        );
+        messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, Collections.singleton(email)));
         // Deletion
         return contributionDao.delete(id);
     }
@@ -190,11 +216,11 @@ public class ContributionServiceImpl implements ContributionService {
             });
             // Generates a message (English only)
             Locale locale = Locale.ENGLISH;
-            String title = strings.get(locale, "contribution.saved.title", branch.getName(), project.getName(), input.getMessage());
+            String title = strings.get(locale, "contribution.saved.title", branch.getName(), project.getName(), contribution.getMessage());
             TemplateModel model = new TemplateModel();
             model.add("account", securityUtils.getCurrentAccount().getFullName());
             model.add("title", title);
-            model.add("message", input.getMessage());
+            model.add("message", contribution.getMessage());
             model.add("version", version);
             model.add("branch", resourceService.getBranch(locale, branch));
             model.add("project", resourceService.getProject(locale, project));
