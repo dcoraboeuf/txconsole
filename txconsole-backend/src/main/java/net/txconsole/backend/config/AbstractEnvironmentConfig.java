@@ -12,7 +12,7 @@ public abstract class AbstractEnvironmentConfig implements EnvironmentConfig {
      */
     @Override
     public Duration contextCleanupScanInterval() {
-        return Duration.standardHours(1);
+        return Duration.standardHours(12);
     }
 
     /**
