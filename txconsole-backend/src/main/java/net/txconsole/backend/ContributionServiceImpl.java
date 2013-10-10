@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
@@ -176,9 +177,40 @@ public class ContributionServiceImpl implements ContributionService {
         // Deletes the contribution
         int id = input.getId();
         if (id > 0) {
+            // Details of the contribution
+            final TContribution contribution = contributionDao.getById(id);
+            BranchSummary branch = structureService.getBranch(branchId);
+            ProjectSummary project = structureService.getProject(branch.getProjectId());
+            // Gets the mail of the contributor
+            String email = securityUtils.asAdmin(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    return accountService.getAccount(contribution.getAuthor()).getEmail();
+                }
+            });
+            // Generates a message (English only)
+            Locale locale = Locale.ENGLISH;
+            String title = strings.get(locale, "contribution.saved.title", branch.getName(), project.getName(), input.getMessage());
+            TemplateModel model = new TemplateModel();
+            model.add("account", securityUtils.getCurrentAccount().getFullName());
+            model.add("title", title);
+            model.add("message", input.getMessage());
+            model.add("version", version);
+            model.add("branch", resourceService.getBranch(locale, branch));
+            model.add("project", resourceService.getProject(locale, project));
+            String content = templateService.generate("contribution-saved.html", Locale.ENGLISH, model);
+            // Sends the message
+            Message message = new Message(
+                    title,
+                    new MessageContent(
+                            MessageContentType.HTML,
+                            content
+                    )
+            );
+            messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, Collections.singleton(email)));
+            // Actual deletion
             contributionDao.delete(id);
         }
-        // TODO #42 Sends a mail to the contributor
         // OK
         return new LocalizableMessage("contribution.saved", version);
     }
