@@ -4,10 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Table;
-import com.google.common.collect.Tables;
+import com.google.common.collect.*;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import net.sf.jstring.builder.*;
@@ -37,10 +34,26 @@ public class TranslationMap {
     };
     private final String version;
     private final BundleCollection bundleCollection;
+    private final Set<Locale> supportedLocales;
 
     public TranslationMap(String version, BundleCollection bundleCollection) {
         this.version = version;
         this.bundleCollection = bundleCollection;
+        // Gets the list of supported locales
+        Set<Locale> locales = new TreeSet<>(LocaleComparator.INSTANCE);
+        // For all bundles
+        for (Bundle bundle : bundleCollection.getBundles()) {
+            // For all sections
+            for (BundleSection bundleSection : bundle.getSections()) {
+                // For all keys
+                for (BundleKey bundleKey : bundleSection.getKeys()) {
+                    // Locales
+                    locales.addAll(bundleKey.getValues().keySet());
+                }
+            }
+        }
+        // OK
+        supportedLocales = ImmutableSet.copyOf(locales);
     }
 
     public static TranslationMap asMap(TranslationDiff diff) {
@@ -118,20 +131,7 @@ public class TranslationMap {
     }
 
     public Set<Locale> getSupportedLocales() {
-        Set<Locale> locales = new TreeSet<>(LocaleComparator.INSTANCE);
-        // For all bundles
-        for (Bundle bundle : bundleCollection.getBundles()) {
-            // For all sections
-            for (BundleSection bundleSection : bundle.getSections()) {
-                // For all keys
-                for (BundleKey bundleKey : bundleSection.getKeys()) {
-                    // Locales
-                    locales.addAll(bundleKey.getValues().keySet());
-                }
-            }
-        }
-        // OK
-        return locales;
+        return supportedLocales;
     }
 
     public TranslationMapResponse filter(int limit, Predicate<TranslationEntry> entryPredicate) {

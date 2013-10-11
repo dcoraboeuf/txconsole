@@ -93,6 +93,12 @@
                 <artifactId>httpmime</artifactId>
                 <version>${httpClientVersion}</version>
             </dependency>
+            <!-- POI -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>3.9</version>
+            </dependency>
 			<!-- Guava -->
 			<dependency>
 				<groupId>com.google.guava</groupId>

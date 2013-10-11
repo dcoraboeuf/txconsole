@@ -3,19 +3,20 @@ package net.txconsole.web.controller;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.sf.jstring.Strings;
+import net.txconsole.core.Content;
 import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
-import net.txconsole.service.ContributionService;
-import net.txconsole.service.ResourceService;
-import net.txconsole.service.StructureService;
-import net.txconsole.service.TranslationMapService;
+import net.txconsole.service.*;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,6 +30,7 @@ public class UIController extends AbstractUIController implements UI {
     private final StructureService structureService;
     private final ContributionService contributionService;
     private final TranslationMapService translationMapService;
+    private final ExportService exportService;
     private final ResourceService resourceService;
     private final SecurityUtils securityUtils;
     private Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>> projectSummaryResourceFn = new Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>>() {
@@ -66,11 +68,12 @@ public class UIController extends AbstractUIController implements UI {
     };
 
     @Autowired
-    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, ContributionService contributionService, TranslationMapService translationMapService, ResourceService resourceService, SecurityUtils securityUtils) {
+    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, ContributionService contributionService, TranslationMapService translationMapService, ExportService exportService, ResourceService resourceService, SecurityUtils securityUtils) {
         super(errorHandler, strings);
         this.structureService = structureService;
         this.contributionService = contributionService;
         this.translationMapService = translationMapService;
+        this.exportService = exportService;
         this.resourceService = resourceService;
         this.securityUtils = securityUtils;
     }
@@ -170,6 +173,33 @@ public class UIController extends AbstractUIController implements UI {
     @ResponseBody
     Resource<BranchSummary> getBranch(Locale locale, @PathVariable int id) {
         return branchSummaryResourceFn.apply(locale).apply(structureService.getBranch(id));
+    }
+
+    /**
+     * Downloads a branch map as Excel
+     */
+    @RequestMapping(value = "/branch/{id}/export", method = RequestMethod.GET)
+    public void exportBranch(@PathVariable int id, HttpServletResponse response) throws IOException {
+        // Branch & project
+        BranchSummary branch = structureService.getBranch(id);
+        ProjectSummary project = structureService.getProject(branch.getProjectId());
+        // Gets the latest version
+        TranslationMap map = translationMapService.map(id, null);
+        // File name
+        String file = String.format("%s-%s.xls", project.getName(), branch.getName());
+        // Export of the data into an Excel file
+        Content content = exportService.excel(map);
+        // Prepares the response
+        response.setContentType(content.getType());
+        response.addHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", file));
+        response.setContentLength(content.getBytes().length);
+        // Gets the output
+        ServletOutputStream out = response.getOutputStream();
+        // Writes to the output
+        out.write(content.getBytes());
+        out.flush();
+        out.close();
+        // No response (already handled)
     }
 
     /**

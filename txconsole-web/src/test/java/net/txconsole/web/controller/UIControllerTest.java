@@ -7,10 +7,7 @@ import net.txconsole.core.model.ProjectSummary;
 import net.txconsole.core.model.Resource;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
-import net.txconsole.service.ContributionService;
-import net.txconsole.service.ResourceService;
-import net.txconsole.service.StructureService;
-import net.txconsole.service.TranslationMapService;
+import net.txconsole.service.*;
 import net.txconsole.web.support.ErrorHandler;
 import net.txconsole.web.support.GUIEventService;
 import org.junit.Before;
@@ -47,7 +44,8 @@ public class UIControllerTest {
         guiEventService = mock(GUIEventService.class);
         ContributionService contributionService = mock(ContributionService.class);
         ResourceService resourceService = new UIResourceService(guiEventService, securityUtils);
-        controller = new UIController(errorHandler, strings, structureService, contributionService, translationMapService, resourceService, securityUtils);
+        ExportService exportService = mock(ExportService.class);
+        controller = new UIController(errorHandler, strings, structureService, contributionService, translationMapService, exportService, resourceService, securityUtils);
         // Current request
         MockHttpServletRequest request = new MockHttpServletRequest();
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
