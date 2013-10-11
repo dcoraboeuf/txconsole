@@ -12,7 +12,7 @@ import java.util.List;
 @Configuration
 public class DBConfig {
 	
-	public static final int VERSION = 3;
+	public static final int VERSION = 4;
 	
 	@SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired

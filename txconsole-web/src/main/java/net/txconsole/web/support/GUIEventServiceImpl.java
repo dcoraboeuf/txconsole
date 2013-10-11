@@ -78,17 +78,19 @@ public class GUIEventServiceImpl implements GUIEventService {
         // Link?
         if (entity != null) {
             // Gets the entity ID
-            int entityId = event.getEntities().get(entity);
-            // Gets the href for this entity
-            String href = format(
-                    "%s/%d",
-                    entity.name().toLowerCase(),
-                    entityId
-            );
-            // Link
-            return format("<a class=\"event-entity\" href=\"%s\">%s</a>", href, name);
-        } else {
-            return format("<span class=\"event-entity\">%s</span>", name);
+            Integer entityId = event.getEntities().get(entity);
+            if (entityId != null) {
+                // Gets the href for this entity
+                String href = format(
+                        "%s/%d",
+                        entity.name().toLowerCase(),
+                        entityId
+                );
+                // Link
+                return format("<a class=\"event-entity\" href=\"%s\">%s</a>", href, name);
+            }
         }
+        // Default
+        return format("<span class=\"event-entity\">%s</span>", name);
     }
 }
