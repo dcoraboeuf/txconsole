@@ -8,9 +8,12 @@ import net.txconsole.core.model.ResourceEvent;
 @Data
 public class EventResource extends Resource<Event> {
 
-    public EventResource(Event e, ResourceEvent resourceEvent) {
+    private final String message;
+
+    public EventResource(Event e, ResourceEvent resourceEvent, String message) {
         super(e);
         withEvent(resourceEvent);
+        this.message = message;
     }
 
 }

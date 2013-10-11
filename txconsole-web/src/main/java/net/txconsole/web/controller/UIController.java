@@ -43,13 +43,16 @@ public class UIController extends AbstractUIController implements UI {
                 public Function<Event, EventResource> apply(final Locale locale) {
                     return new Function<Event, EventResource>() {
                         @Override
-                        public EventResource apply(Event e) {
-                            return new EventResource(e, guiEventService.getResourceEvent(
-                                    locale,
-                                    e.getSignature().getAuthorName(),
-                                    e.getSignature().getTimestamp(),
-                                    e.getEventCode()
-                            )
+                        public EventResource apply(Event event) {
+                            return new EventResource(
+                                    event,
+                                    guiEventService.getResourceEvent(
+                                            locale,
+                                            event.getSignature().getAuthorName(),
+                                            event.getSignature().getTimestamp(),
+                                            event.getEventCode()
+                                    ),
+                                    guiEventService.getEventMessage(locale, event)
                             );
                         }
                     };
