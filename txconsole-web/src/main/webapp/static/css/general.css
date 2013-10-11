@@ -132,6 +132,12 @@ input.success,textarea.success {
     border-color: red !important;
 }
 
+/* Events */
+
+.event-entity {
+    font-weight: bold;
+}
+
 /* Dashboard */
 
 table.dashboard-branches td {

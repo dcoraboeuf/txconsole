@@ -77,6 +77,37 @@ define(['jquery', 'common', 'application', 'handlebars'], function ($, common, a
         return '';
     });
 
+    Handlebars.registerHelper('eventElapsed', function (code, icon) {
+        for (var i = 0; i < this.events.length; i++) {
+            var event = this.events[i];
+            if (code == event.code) {
+                var box = $('<i></i>');
+                var container = $('<span></span>')
+                    .attr('title', 'event.{0}.short'.format(event.code).loc())
+                    .appendTo(box);
+                // Icon?
+                if (icon) {
+                    container.append($('<i></i>').addClass(icon));
+                    container.append(' ');
+                }
+                // Event signature
+                var eventSignature = $('<span></span>')
+                    .addClass('event-signature')
+                    .appendTo(container);
+                // Event elapsed time + author
+                $('<span></span>')
+                    .addClass('event-elapsed')
+                    .attr('title', event.formattedTimestamp)
+                    .text(' ' + event.elapsedTimeAndAuthor)
+                    .appendTo(eventSignature);
+                // OK
+                return box.html();
+            }
+        }
+        common.log('render')('"{0}" event not found', code);
+        return '';
+    });
+
     function withTemplate(templateId, templateFn) {
         require(['text!template/' + templateId + '.html'], function (rawTemplate) {
             templateFn(Handlebars.compile(rawTemplate));
