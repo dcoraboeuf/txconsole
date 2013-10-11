@@ -10,6 +10,8 @@ public enum EventCode {
 
     REQUEST_CREATED,
 
+    REQUEST_DELETED,
+
     CONTRIBUTION_CREATED,
 
     BRANCH_DELETED,

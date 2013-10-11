@@ -69,6 +69,20 @@ public class EventForm {
         return requestEvent(EventCode.REQUEST_CREATED, request, branch, project);
     }
 
+    public static EventForm requestDeleted(RequestSummary request, BranchSummary branch, ProjectSummary project) {
+        return new EventForm(
+                EventCode.REQUEST_DELETED,
+                MapBuilder
+                        .of(EventEntity.BRANCH, branch.getId())
+                        .with(EventEntity.PROJECT, project.getId())
+                        .get(),
+                valueOf(request.getId()),
+                request.getVersion(),
+                branch.getName(),
+                project.getName()
+        );
+    }
+
     public static EventForm requestMerged(RequestSummary request, BranchSummary branch, ProjectSummary project) {
         return requestEvent(EventCode.REQUEST_MERGED, request, branch, project);
     }

@@ -230,6 +230,12 @@ public class RequestServiceImpl implements RequestService {
         securityUtils.checkGrant(ProjectFunction.REQUEST_DELETE, branch.getProjectId());
         // Deletion
         requestDao.delete(id);
+        // Event creation
+        eventService.event(EventForm.requestDeleted(
+                request,
+                branch,
+                structureService.getProject(branch.getProjectId())
+        ));
         // OK
         return request;
     }

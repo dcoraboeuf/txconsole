@@ -36,6 +36,13 @@ event.REQUEST_CREATED
     en -> Request ##0,REQUEST## for version ##1## has been created for the branch ##2,BRANCH## of the project ##3,PROJECT##.
     fr -> La demande ##0,REQUEST## pour la version ##1## a été créée pour la branche ##2,BRANCH## du projet ##3,PROJECT##.
 
+event.REQUEST_DELETED.short
+    en -> Request deletion
+    fr -> Suppression de la demande
+event.REQUEST_DELETED
+    en -> Request ##0## for version ##1## has been deleted for the branch ##2,BRANCH## of the project ##3,PROJECT##.
+    fr -> La demande ##0## pour la version ##1## a été supprimée pour la branche ##2,BRANCH## du projet ##3,PROJECT##.
+
 event.REQUEST_MERGED.short
     en -> Request merged
     fr -> Réintégration de la demande
