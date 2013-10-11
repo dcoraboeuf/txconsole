@@ -11,6 +11,7 @@ import net.txconsole.service.*;
 import net.txconsole.web.resource.EventResource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
+import net.txconsole.web.support.GUIEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +35,26 @@ public class UIController extends AbstractUIController implements UI {
     private final ExportService exportService;
     private final EventService eventService;
     private final ResourceService resourceService;
+    private final GUIEventService guiEventService;
     private final SecurityUtils securityUtils;
-    private final Function<Event, EventResource> eventResourceFunction = new Function<Event, EventResource>() {
-        @Override
-        public EventResource apply(Event e) {
-            return new EventResource(e);
-        }
-    };
+    private final Function<Locale, Function<Event, EventResource>> eventResourceFunction =
+            new Function<Locale, Function<Event, EventResource>>() {
+                @Override
+                public Function<Event, EventResource> apply(final Locale locale) {
+                    return new Function<Event, EventResource>() {
+                        @Override
+                        public EventResource apply(Event e) {
+                            return new EventResource(e, guiEventService.getResourceEvent(
+                                    locale,
+                                    e.getSignature().getAuthorName(),
+                                    e.getSignature().getTimestamp(),
+                                    e.getEventCode()
+                            )
+                            );
+                        }
+                    };
+                }
+            };
     private Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>> projectSummaryResourceFn = new Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>>() {
         @Override
         public Function<ProjectSummary, Resource<ProjectSummary>> apply(final Locale locale) {
@@ -76,7 +90,7 @@ public class UIController extends AbstractUIController implements UI {
     };
 
     @Autowired
-    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, ContributionService contributionService, TranslationMapService translationMapService, ExportService exportService, EventService eventService, ResourceService resourceService, SecurityUtils securityUtils) {
+    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, ContributionService contributionService, TranslationMapService translationMapService, ExportService exportService, EventService eventService, ResourceService resourceService, GUIEventService guiEventService, SecurityUtils securityUtils) {
         super(errorHandler, strings);
         this.structureService = structureService;
         this.contributionService = contributionService;
@@ -84,6 +98,7 @@ public class UIController extends AbstractUIController implements UI {
         this.exportService = exportService;
         this.eventService = eventService;
         this.resourceService = resourceService;
+        this.guiEventService = guiEventService;
         this.securityUtils = securityUtils;
     }
 
@@ -286,6 +301,7 @@ public class UIController extends AbstractUIController implements UI {
     public
     @ResponseBody
     List<EventResource> getEvents(
+            Locale locale,
             @RequestParam(required = false) EventEntity entity,
             @RequestParam(required = false, defaultValue = "0") int entityId,
             @RequestParam(required = false, defaultValue = "0") int offset,
@@ -293,7 +309,7 @@ public class UIController extends AbstractUIController implements UI {
     ) {
         return Lists.transform(
                 eventService.getEvents(entity, entityId, offset, count),
-                eventResourceFunction
+                eventResourceFunction.apply(locale)
         );
     }
 
