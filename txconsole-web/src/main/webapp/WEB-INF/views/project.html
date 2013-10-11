@@ -19,7 +19,7 @@
     </@title>
 
     <div class="row-fluid">
-        <div class="span4">
+        <div class="span7">
             <@section title=loc('branch.list')>
                 <div
                     id="branch-list"
@@ -30,6 +30,17 @@
                 <@acl resource=project action='PROJECT#UPDATE'>
                     <button id="branch-create" type="button" class="btn"><@lh key="branch.create" /></button>
                 </@acl>
+            </@section>
+        </div>
+        <div class="span5">
+            <@section title=loc('events')>
+                <div
+                    id="events"
+                    class="dynamic"
+                    dynamic-controller="events"
+                    dynamic-entity="PROJECT"
+                    dynamic-entity-id="${project.data.id?c}"
+                    ></div>
             </@section>
         </div>
     </div>

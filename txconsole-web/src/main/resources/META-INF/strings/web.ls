@@ -627,3 +627,9 @@ contribution.reject
 contribution.reject.prompt
     en -> Do you really want to delete this contribution?
     fr -> Etes-vous sûr de vouloir supprimer cette contribution ?
+
+[events]
+
+events
+    en -> Activity
+    fr -> Activité
