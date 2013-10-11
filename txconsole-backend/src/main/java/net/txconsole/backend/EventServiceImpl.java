@@ -74,4 +74,13 @@ public class EventServiceImpl implements EventService {
         );
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Event> getEvents(EventEntity entity, int entityId, int offset, int count) {
+        return Lists.transform(
+                eventDao.findByEntity(entity, entityId, offset, count),
+                eventFn
+        );
+    }
+
 }

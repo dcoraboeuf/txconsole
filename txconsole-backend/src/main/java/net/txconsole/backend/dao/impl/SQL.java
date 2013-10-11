@@ -35,6 +35,8 @@ public interface SQL {
     String EVENT_INSERT = "INSERT INTO EVENT (EVENT_CODE, EVENT_PARAMETERS, EVENT_TIMESTAMP, ACCOUNT_ID, ACCOUNT_NAME) VALUES (:code, :parameters, :timestamp, :accountId, :accountName)";
     String EVENT_SET_ENTITY = "UPDATE EVENT SET %s = :entityId WHERE ID = :id";
     String EVENT_BY_ENTITY_AND_CODE = "SELECT * FROM EVENT WHERE %s = :entityId AND EVENT_CODE = :eventCode ORDER BY ID DESC";
+    String EVENT_BY_ENTITY = "SELECT * FROM EVENT WHERE %s = :entityId ORDER BY ID DESC";
+    String EVENTS = "SELECT * FROM EVENT ORDER BY ID DESC";
     // Branches
     String BRANCH_BY_ID = "SELECT * FROM BRANCH WHERE ID = :id";
     String BRANCH_CREATE = "INSERT INTO BRANCH (PROJECT, NAME) VALUES (:project, :name)";

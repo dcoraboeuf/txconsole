@@ -8,6 +8,7 @@ import net.txconsole.core.model.*;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.*;
+import net.txconsole.web.resource.EventResource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,15 @@ public class UIController extends AbstractUIController implements UI {
     private final ContributionService contributionService;
     private final TranslationMapService translationMapService;
     private final ExportService exportService;
+    private final EventService eventService;
     private final ResourceService resourceService;
     private final SecurityUtils securityUtils;
+    private final Function<Event, EventResource> eventResourceFunction = new Function<Event, EventResource>() {
+        @Override
+        public EventResource apply(Event e) {
+            return new EventResource(e);
+        }
+    };
     private Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>> projectSummaryResourceFn = new Function<Locale, Function<ProjectSummary, Resource<ProjectSummary>>>() {
         @Override
         public Function<ProjectSummary, Resource<ProjectSummary>> apply(final Locale locale) {
@@ -68,12 +76,13 @@ public class UIController extends AbstractUIController implements UI {
     };
 
     @Autowired
-    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, ContributionService contributionService, TranslationMapService translationMapService, ExportService exportService, ResourceService resourceService, SecurityUtils securityUtils) {
+    public UIController(ErrorHandler errorHandler, Strings strings, StructureService structureService, ContributionService contributionService, TranslationMapService translationMapService, ExportService exportService, EventService eventService, ResourceService resourceService, SecurityUtils securityUtils) {
         super(errorHandler, strings);
         this.structureService = structureService;
         this.contributionService = contributionService;
         this.translationMapService = translationMapService;
         this.exportService = exportService;
+        this.eventService = eventService;
         this.resourceService = resourceService;
         this.securityUtils = securityUtils;
     }
@@ -271,6 +280,21 @@ public class UIController extends AbstractUIController implements UI {
     @ResponseBody
     List<ContributionDetail> getContributionDetails(Locale locale, @PathVariable int id) {
         return contributionService.getContributionDetails(id);
+    }
+
+    @RequestMapping(value = "/events", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<EventResource> getEvents(
+            @RequestParam(required = false) EventEntity entity,
+            @RequestParam(required = false, defaultValue = "0") int entityId,
+            @RequestParam(required = false, defaultValue = "0") int offset,
+            @RequestParam(required = false, defaultValue = "10") int count
+    ) {
+        return Lists.transform(
+                eventService.getEvents(entity, entityId, offset, count),
+                eventResourceFunction
+        );
     }
 
 }

@@ -5,7 +5,7 @@ define(['render'], function (render) {
             if (config.entity) {
                 return 'ui/events?{0}={1}'.format(config.entity, config.entityId)
             } else {
-                return 'ui/events'
+                return 'ui/events?u=1'
             }
         },
         render: render.asTableTemplate(

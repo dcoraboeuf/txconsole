@@ -15,4 +15,5 @@ public interface EventService {
 
     List<Event> getEvents(EventEntity entity, int entityId, EventCode eventCode);
 
+    List<Event> getEvents(EventEntity entity, int entityId, int offset, int count);
 }

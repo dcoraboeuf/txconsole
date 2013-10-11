@@ -24,6 +24,26 @@ import java.util.Map;
 public class EventJdbcDao extends AbstractJdbcDao implements EventDao {
 
     public static final String EVENT_PARAMETER_SEPARATOR = SQLUtils.PARAMETERS_SEPARATOR;
+    private final RowMapper<TEvent> eventRowMapper = new RowMapper<TEvent>() {
+        @Override
+        public TEvent mapRow(ResultSet rs, int rowNum) throws SQLException {
+            TEvent e = new TEvent(
+                    rs.getInt("id"),
+                    SQLUtils.getEnum(EventCode.class, rs, "event_code"),
+                    Arrays.asList(StringUtils.split(rs.getString("event_parameters"), EVENT_PARAMETER_SEPARATOR)),
+                    SQLUtils.getDateTime(rs, "event_timestamp"),
+                    getInteger(rs, "account_id"),
+                    rs.getString("account_name")
+            );
+            for (EventEntity eventEntity : EventEntity.values()) {
+                Integer eventEntityId = getInteger(rs, eventEntity.name());
+                if (eventEntityId != null) {
+                    e = e.withEntity(eventEntity, eventEntityId);
+                }
+            }
+            return e;
+        }
+    };
 
     @Autowired
     public EventJdbcDao(DataSource dataSource, ObjectMapper objectMapper) {
@@ -58,26 +78,25 @@ public class EventJdbcDao extends AbstractJdbcDao implements EventDao {
         return getNamedParameterJdbcTemplate().query(
                 String.format(SQL.EVENT_BY_ENTITY_AND_CODE, entity.name()),
                 params("entityId", entityId).addValue("eventCode", eventCode.name()),
-                new RowMapper<TEvent>() {
-                    @Override
-                    public TEvent mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        TEvent e = new TEvent(
-                                rs.getInt("id"),
-                                SQLUtils.getEnum(EventCode.class, rs, "event_code"),
-                                Arrays.asList(StringUtils.split(rs.getString("event_parameters"), EVENT_PARAMETER_SEPARATOR)),
-                                SQLUtils.getDateTime(rs, "event_timestamp"),
-                                getInteger(rs, "account_id"),
-                                rs.getString("account_name")
-                        );
-                        for (EventEntity eventEntity : EventEntity.values()) {
-                            Integer eventEntityId = getInteger(rs, eventEntity.name());
-                            if (eventEntityId != null) {
-                                e = e.withEntity(eventEntity, eventEntityId);
-                            }
-                        }
-                        return e;
-                    }
-                }
+                eventRowMapper
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TEvent> findByEntity(EventEntity entity, int entityId, int offset, int count) {
+        if (entity != null) {
+            return getNamedParameterJdbcTemplate().query(
+                    String.format(SQL.EVENT_BY_ENTITY, entity.name()),
+                    params("entityId", entityId).addValue("offset", offset).addValue("count", count),
+                    eventRowMapper
+            );
+        } else {
+            return getNamedParameterJdbcTemplate().query(
+                    SQL.EVENTS,
+                    params("offset", offset).addValue("count", count),
+                    eventRowMapper
+            );
+        }
     }
 }

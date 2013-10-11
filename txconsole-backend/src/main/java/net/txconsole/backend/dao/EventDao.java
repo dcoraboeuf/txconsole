@@ -14,4 +14,6 @@ public interface EventDao {
     void add(EventCode code, Collection<String> parameters, Signature signature, Map<EventEntity, Integer> entities);
 
     List<TEvent> findByEntityAndCode(EventEntity entity, int entityId, EventCode eventCode);
+
+    List<TEvent> findByEntity(EventEntity entity, int entityId, int offset, int count);
 }

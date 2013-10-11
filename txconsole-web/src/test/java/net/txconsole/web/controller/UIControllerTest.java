@@ -45,7 +45,8 @@ public class UIControllerTest {
         ContributionService contributionService = mock(ContributionService.class);
         ResourceService resourceService = new UIResourceService(guiEventService, securityUtils);
         ExportService exportService = mock(ExportService.class);
-        controller = new UIController(errorHandler, strings, structureService, contributionService, translationMapService, exportService, resourceService, securityUtils);
+        EventService eventService = mock(EventService.class);
+        controller = new UIController(errorHandler, strings, structureService, contributionService, translationMapService, exportService, eventService, resourceService, securityUtils);
         // Current request
         MockHttpServletRequest request = new MockHttpServletRequest();
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
