@@ -16,6 +16,14 @@
     font-size: 70%;
 }
 
+/* ===== Icons ===== */
+
+/* Excel */
+.icon-excel {
+    background-image: url('../images/excel.png');
+    background-position: 0px 0px;
+}
+
 /* ===== Application ===== */
 
 /* Pointer */

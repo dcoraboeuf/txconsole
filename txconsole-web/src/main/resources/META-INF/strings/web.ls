@@ -435,6 +435,10 @@ branch.delete.prompt
     en -> Are you sure to delete the branch "{0}"?
     fr -> Etes-vous sûr de vouloir supprimer la branche "{0}" ?
 
+branch.export
+    en -> Export as Excel
+    fr -> Exporter en Excel
+
 [request]
 
 request.list

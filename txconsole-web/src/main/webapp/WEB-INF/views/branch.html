@@ -13,6 +13,7 @@
 
     <@title value=branch.data.name close="project/${project.data.id?c}">
         <@title_uplink name=project.data.name href="project/${project.data.id?c}" />
+        <@title_command id="branch-export" title=loc('branch.export') class="icon-excel" link="branch/${branch.data.id?c}/export" />
         <@acl resource=branch action='PROJECT#CONTRIBUTION'>
             <@title_command id="contribution" title=loc('contribution') class="icon-pencil" link="branch/${branch.data.id?c}/contribution/new" />
         </@acl>
