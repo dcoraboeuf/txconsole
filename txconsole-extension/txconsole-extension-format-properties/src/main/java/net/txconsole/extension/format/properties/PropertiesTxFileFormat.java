@@ -106,7 +106,7 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
             throw new PropertyFileNotFoundException(fileName);
         } else {
             // Reads it
-            Map<String, String> map = readProperties(file, "UTF-8");
+            Map<String, String> map = readProperties(file, "UTF-8", escapingService);
             // Ok
             return ImmutableMap.copyOf(map);
         }
@@ -168,7 +168,7 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
                     File file = new File(dir, fileName);
                     // Writes the properties into this file
                     try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
-                        PropertiesUtils.writeProperties(out, values);
+                        PropertiesUtils.writeProperties(out, values, escapingService);
                     } catch (IOException e) {
                         throw new PropertiesTxFileFormatIOException(fileName, e);
                     }

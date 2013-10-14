@@ -3,7 +3,6 @@ package net.txconsole.extension.exchange.properties;
 import com.google.common.collect.Sets;
 import com.netbeetle.jackson.ObjectMapperFactory;
 import net.txconsole.core.Content;
-import net.txconsole.service.support.JDKEscapingService;
 import net.txconsole.test.DirTestIOContextFactory;
 import net.txconsole.test.Helper;
 import org.junit.Test;
@@ -20,8 +19,7 @@ public class PropertiesTxFileExchangeTest {
     public void export() throws IOException {
         PropertiesTxFileExchange exchange = new PropertiesTxFileExchange(
                 ObjectMapperFactory.createObjectMapper(),
-                new DirTestIOContextFactory(),
-                new JDKEscapingService()
+                new DirTestIOContextFactory()
         );
         Content content = exchange.export(
                 new PropertiesTxFileExchangeConfig(),

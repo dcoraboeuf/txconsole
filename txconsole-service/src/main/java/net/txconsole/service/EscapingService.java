@@ -8,7 +8,7 @@ public interface EscapingService {
      * @param value Original value
      * @return Value to write into the properties file
      */
-    String escapeForStorage(String value);
+    String write(String value);
 
     /**
      * Escapes a value before editing it
@@ -16,6 +16,6 @@ public interface EscapingService {
      * @param value Stored value
      * @return Value to show to the editor
      */
-    String escapeForEdition(String value);
+    String read(String value);
 
 }

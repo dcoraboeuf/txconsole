@@ -8,7 +8,9 @@ import net.txconsole.core.NamedContent;
 import net.txconsole.core.model.*;
 import net.txconsole.core.support.IOContextFactory;
 import net.txconsole.extension.format.properties.PropertiesUtils;
+import net.txconsole.service.EscapingService;
 import net.txconsole.service.support.AbstractSimpleConfigurable;
+import net.txconsole.service.support.NOPEscapingService;
 import net.txconsole.service.support.TxFileExchange;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +31,7 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
     public static final String ID = "extension-txfileexchange-properties";
     public static final String ENCODING = "UTF-8";
     private final IOContextFactory ioContextFactory;
+    private final EscapingService escapingService = new NOPEscapingService();
 
     @Autowired
     public PropertiesTxFileExchange(ObjectMapper objectMapper, IOContextFactory ioContextFactory) {
@@ -95,7 +98,7 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
         // Reads the property file as UTF-8
         Map<String, String> properties;
         try {
-            properties = PropertiesUtils.readProperties(new ByteArrayInputStream(content.getBytes()), ENCODING);
+            properties = PropertiesUtils.readProperties(new ByteArrayInputStream(content.getBytes()), ENCODING, escapingService);
         } catch (IOException e) {
             throw new PropertiesTxFileExchangeIOException(fileName, e);
         }// Builder
