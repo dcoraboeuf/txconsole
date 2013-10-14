@@ -3,7 +3,7 @@ package net.txconsole.extension.exchange.properties;
 import com.google.common.collect.Sets;
 import com.netbeetle.jackson.ObjectMapperFactory;
 import net.txconsole.core.Content;
-import net.txconsole.service.support.DefaultEscapingService;
+import net.txconsole.service.support.JDKEscapingService;
 import net.txconsole.test.DirTestIOContextFactory;
 import net.txconsole.test.Helper;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class PropertiesTxFileExchangeTest {
         PropertiesTxFileExchange exchange = new PropertiesTxFileExchange(
                 ObjectMapperFactory.createObjectMapper(),
                 new DirTestIOContextFactory(),
-                new DefaultEscapingService()
+                new JDKEscapingService()
         );
         Content content = exchange.export(
                 new PropertiesTxFileExchangeConfig(),
