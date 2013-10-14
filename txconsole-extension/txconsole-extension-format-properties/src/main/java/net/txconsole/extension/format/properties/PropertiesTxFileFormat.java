@@ -36,18 +36,31 @@ public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<Propertie
 
     private final EscapingService escapingService;
 
-    protected PropertiesTxFileFormat(ObjectMapper objectMapper, EscapingService escapingService) {
+    protected PropertiesTxFileFormat(
+            String id,
+            String nameKey,
+            String descriptionKey,
+            Class<? super PropertiesTxFileFormatConfig> configClass,
+            ObjectMapper objectMapper,
+            EscapingService escapingService) {
         super(
-                "extension-txfileformat-properties",
-                "extension.format.properties",
-                "extension.format.properties.description",
-                PropertiesTxFileFormatConfig.class, objectMapper);
+                id,
+                nameKey,
+                descriptionKey,
+                configClass,
+                objectMapper);
         this.escapingService = escapingService;
     }
 
     @Autowired
     public PropertiesTxFileFormat(ObjectMapper objectMapper) {
-        this(objectMapper, new JDKEscapingService());
+        this(
+                "extension-txfileformat-properties",
+                "extension.format.properties",
+                "extension.format.properties.description",
+                PropertiesTxFileFormatConfig.class,
+                objectMapper,
+                new JDKEscapingService());
     }
 
     @Override

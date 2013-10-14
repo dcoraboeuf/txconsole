@@ -6,6 +6,14 @@ extension.format.properties.description
     en -> Set of files using the JDK Properties format.
     fr -> Ensemble de fichiers au format Properties du JDK.
 
+extension.format.properties.icu4j
+    en -> ICU4J Property files
+    fr -> Fichiers de propriétés ICU4J
+
+extension.format.properties.icu4j.description
+    en -> Set of files using the ICU4J Properties format.
+    fr -> Ensemble de fichiers au format Properties ICU4J.
+
 extension.format.properties.defaultLocale
     en -> Default locale
     fr -> Language par défaut
