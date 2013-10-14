@@ -14,7 +14,9 @@ import net.sf.jstring.model.BundleSection;
 import net.sf.jstring.model.BundleValue;
 import net.txconsole.core.model.TranslationMap;
 import net.txconsole.core.support.IOContext;
+import net.txconsole.service.EscapingService;
 import net.txconsole.service.support.AbstractSimpleConfigurable;
+import net.txconsole.service.support.JDKEscapingService;
 import net.txconsole.service.support.TxFileFormat;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -32,13 +34,20 @@ import static net.txconsole.extension.format.properties.PropertiesUtils.readProp
 @Component
 public class PropertiesTxFileFormat extends AbstractSimpleConfigurable<PropertiesTxFileFormatConfig> implements TxFileFormat<PropertiesTxFileFormatConfig> {
 
-    @Autowired
-    public PropertiesTxFileFormat(ObjectMapper objectMapper) {
+    private final EscapingService escapingService;
+
+    protected PropertiesTxFileFormat(ObjectMapper objectMapper, EscapingService escapingService) {
         super(
                 "extension-txfileformat-properties",
                 "extension.format.properties",
                 "extension.format.properties.description",
                 PropertiesTxFileFormatConfig.class, objectMapper);
+        this.escapingService = escapingService;
+    }
+
+    @Autowired
+    public PropertiesTxFileFormat(ObjectMapper objectMapper) {
+        this(objectMapper, new JDKEscapingService());
     }
 
     @Override

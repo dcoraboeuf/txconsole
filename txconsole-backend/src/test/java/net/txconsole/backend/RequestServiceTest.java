@@ -13,7 +13,6 @@ import net.txconsole.core.model.RequestStatus;
 import net.txconsole.core.model.TranslationDiffType;
 import net.txconsole.core.security.ProjectFunction;
 import net.txconsole.core.security.SecurityUtils;
-import net.txconsole.service.EscapingService;
 import net.txconsole.service.EventService;
 import net.txconsole.service.StructureService;
 import net.txconsole.service.TranslationMapService;
@@ -34,7 +33,6 @@ public class RequestServiceTest {
     private EventService eventService;
     private RequestDao requestDao;
     private SecurityUtils securityUtils;
-    private EscapingService escapingService;
     private RequestServiceImpl service;
 
     @Before
@@ -45,7 +43,6 @@ public class RequestServiceTest {
         eventService = mock(EventService.class);
         requestDao = mock(RequestDao.class);
         securityUtils = mock(SecurityUtils.class);
-        escapingService = mock(EscapingService.class);
         Strings strings = new CoreConfig().strings();
         service = new RequestServiceImpl(
                 structureService,
@@ -54,7 +51,6 @@ public class RequestServiceTest {
                 eventService,
                 requestDao,
                 securityUtils,
-                escapingService,
                 strings
         );
     }

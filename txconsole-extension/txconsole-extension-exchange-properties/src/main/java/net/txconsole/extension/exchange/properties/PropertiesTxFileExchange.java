@@ -7,7 +7,6 @@ import net.txconsole.core.Content;
 import net.txconsole.core.NamedContent;
 import net.txconsole.core.model.*;
 import net.txconsole.core.support.IOContextFactory;
-import net.txconsole.service.EscapingService;
 import net.txconsole.extension.format.properties.PropertiesUtils;
 import net.txconsole.service.support.AbstractSimpleConfigurable;
 import net.txconsole.service.support.TxFileExchange;
@@ -30,10 +29,9 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
     public static final String ID = "extension-txfileexchange-properties";
     public static final String ENCODING = "UTF-8";
     private final IOContextFactory ioContextFactory;
-    private final EscapingService escapingService;
 
     @Autowired
-    public PropertiesTxFileExchange(ObjectMapper objectMapper, IOContextFactory ioContextFactory, EscapingService escapingService) {
+    public PropertiesTxFileExchange(ObjectMapper objectMapper, IOContextFactory ioContextFactory) {
         super(
                 ID,
                 "extension.txfileexchange.properties",
@@ -41,7 +39,6 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
                 PropertiesTxFileExchangeConfig.class,
                 objectMapper);
         this.ioContextFactory = ioContextFactory;
-        this.escapingService = escapingService;
     }
 
     @Override
@@ -174,7 +171,7 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
                                         writer.format("# New value (%s): %s%n", translationDiffEntryValue.getLocale(), escapeForComment(localeValue));
                                     }
                                 }
-                                writer.format("%s = %s%n%n", key, escape(defaultValue));
+                                writer.format("%s = %s%n%n", key, defaultValue);
                             }
                         }
                     }
@@ -241,18 +238,11 @@ public class PropertiesTxFileExchange extends AbstractSimpleConfigurable<Propert
             return "";
         }
 
-        // Management of apostrophes
-        message = escape(message);
-
         // Replaces carriage returns by new lines with a leading comment entry
         message = StringUtils.replace(message, "\r", "\r# ");
         message = StringUtils.replace(message, "\n", " \n# ");
 
         // OK
         return message;
-    }
-
-    protected String escape(String value) {
-        return escapingService.escapeForEdition(value);
     }
 }

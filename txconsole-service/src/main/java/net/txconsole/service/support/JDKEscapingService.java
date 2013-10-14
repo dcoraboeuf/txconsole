@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 /**
  * Escapes toward property files compatible with {@link java.text.MessageFormat} from the JDK.
  */
-@Component
 public class JDKEscapingService implements EscapingService {
 
     private static final Pattern SINGLE_APOS = Pattern.compile("[^']'[^']|^'[^']|[^']'$");

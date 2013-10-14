@@ -42,7 +42,6 @@ public class RequestServiceImpl implements RequestService {
     private final EventService eventService;
     private final RequestDao requestDao;
     private final SecurityUtils securityUtils;
-    private final EscapingService escapingService;
     private final Strings strings;
     /**
      * Requests being generated
@@ -71,14 +70,13 @@ public class RequestServiceImpl implements RequestService {
     };
 
     @Autowired
-    public RequestServiceImpl(StructureService structureService, TranslationMapService translationMapService, TranslationSourceService translationSourceService, EventService eventService, RequestDao requestDao, SecurityUtils securityUtils, EscapingService escapingService, Strings strings) {
+    public RequestServiceImpl(StructureService structureService, TranslationMapService translationMapService, TranslationSourceService translationSourceService, EventService eventService, RequestDao requestDao, SecurityUtils securityUtils, Strings strings) {
         this.structureService = structureService;
         this.translationMapService = translationMapService;
         this.translationSourceService = translationSourceService;
         this.eventService = eventService;
         this.requestDao = requestDao;
         this.securityUtils = securityUtils;
-        this.escapingService = escapingService;
         this.strings = strings;
     }
 
@@ -259,19 +257,10 @@ public class RequestServiceImpl implements RequestService {
         // Gets the branch ID from the entry ID
         int branchId = requestDao.getBranchIdForRequestEntry(entryId);
         Set<Locale> supportedLocales = getSupportedLocalesForBranch(branchId);
-
-        // Escaping function for the edition
-        Function<String, String> escapeFn = new Function<String, String>() {
-            @Override
-            public String apply(String value) {
-                return escapingService.escapeForEdition(value);
-            }
-        };
-
         // Gets the details for edition
         TranslationDiffEntry rawEntry = requestDao.getRequestEntryDetails(entryId);
         TranslationDiffEntry entry = rawEntry.forEdition(supportedLocales);
-        return entry != null ? entry.escape(escapeFn) : rawEntry.escape(escapeFn);
+        return entry != null ? entry : rawEntry;
     }
 
     protected Set<Locale> getSupportedLocalesForBranch(int branchId) {
