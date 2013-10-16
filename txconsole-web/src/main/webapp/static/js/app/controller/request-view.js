@@ -132,6 +132,21 @@ define(['jquery', 'render', 'ajax', 'jquery.typing', 'component/request'], funct
         })
     }
 
+    var localeFilter = {};
+
+    function filterLocales(filter) {
+        localeFilter = $.extend(localeFilter, filter);
+        $('.locale-entry').each(function (index, tr) {
+            var locale = $(tr).attr('data-locale');
+            var hidden = localeFilter[locale];
+            if (hidden) {
+                $(tr).hide();
+            } else {
+                $(tr).show();
+            }
+        })
+    }
+
     return {
         url: function (config) {
             return 'ui/request/{0}/view'.format(config.requestId)
@@ -171,18 +186,18 @@ define(['jquery', 'render', 'ajax', 'jquery.typing', 'component/request'], funct
                 })
             });
             // Filter on deleted entries
-            $('#request-hide-deleted').click(function() {
-                if($(this).hasClass('active')) {
+            $('#request-hide-deleted').click(function () {
+                if ($(this).hasClass('active')) {
                     $('.translation-entry-type-DELETED').show();
                 } else {
                     $('.translation-entry-type-DELETED').hide();
                 }
             });
             // Filter on invalid entries
-            $('#request-hide-valid').click(function() {
-                if($(this).hasClass('active')) {
+            $('#request-hide-valid').click(function () {
+                if ($(this).hasClass('active')) {
                     // if filter on deleted already active, avoid to display them.
-                    if($('#request-hide-deleted').hasClass('active')) {
+                    if ($('#request-hide-deleted').hasClass('active')) {
                         $('#request-view').find('tr:not(.translation-entry-invalid)').not('.translation-entry-type-DELETED').show();
                     } else {
                         $('#request-view').find('tr:not(.translation-entry-invalid)').show();
@@ -190,6 +205,16 @@ define(['jquery', 'render', 'ajax', 'jquery.typing', 'component/request'], funct
                 } else {
                     $('#request-view').find('tr:not(.translation-entry-invalid)').hide();
                 }
+            });
+            // Filter on locales
+            $('.request-hide-locale').each(function (index, btn) {
+                var locale = $(btn).attr('data-locale');
+                $(btn).click(function () {
+                    var hidden = !$(btn).hasClass('active');
+                    var filter = {};
+                    filter[locale] = hidden;
+                    filterLocales(filter);
+                })
             });
         })
     }
