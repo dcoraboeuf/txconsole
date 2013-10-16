@@ -31,6 +31,9 @@
             <td colspan="2">
                 <button id="request-hide-deleted" type="button" class="btn" data-toggle="button"><i class="icon-filter"></i> {{loc 'request.hide.deleted'}}</button>
                 <button id="request-hide-valid" type="button" class="btn" data-toggle="button"><i class="icon-filter"></i> {{loc 'request.hide.valid'}}</button>
+                {{#data.locales}}
+                    <button type="button" class="btn" data-toggle="button"><i class="icon-filter"></i> {{requestHideLanguage .}}</button>
+                {{/data.locales}}
             </td>
         </tr>
     </tbody>

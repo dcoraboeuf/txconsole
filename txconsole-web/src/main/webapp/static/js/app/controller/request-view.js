@@ -1,5 +1,9 @@
 define(['jquery', 'render', 'ajax', 'jquery.typing', 'component/request'], function ($, render, ajax) {
 
+    Handlebars.registerHelper('requestHideLanguage', function (locale) {
+        return 'request.hide.language'.loc(locale)
+    });
+
     function saveEntryForLocale(input, entryId, locale) {
         var newValue = $(input).val();
         var previousValue = $(input).attr('data-previous-value');

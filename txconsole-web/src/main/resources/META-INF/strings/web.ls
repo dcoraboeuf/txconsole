@@ -526,6 +526,10 @@ request.hide.valid
     en -> Hide valid entries
     fr -> Cacher les entrées valides
 
+request.hide.language
+    en -> Hide {0}
+    fr -> Cacher {0}
+
 [keyfilter]
 
 keyfilter.go
