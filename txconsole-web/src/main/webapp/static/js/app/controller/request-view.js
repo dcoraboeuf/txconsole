@@ -69,6 +69,8 @@ define(['jquery', 'render', 'ajax', 'jquery.typing', 'component/request'], funct
                     function () {
                         $(header).hide();
                         $(container).removeClass('hidden');
+                        // Applies existing filters
+                        filterLocales({});
                         // Inputs
                         $(container).find('.translation-edit-input').each(function (index, input) {
                             // Entry ID & locale
