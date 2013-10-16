@@ -42,9 +42,15 @@ define(['jquery', 'common', 'application', 'handlebars'], function ($, common, a
             .html();
     });
 
-    Handlebars.registerHelper('eventTimestampAndElapsed', function (code, icon) {
-        for (var i = 0; i < this.events.length; i++) {
-            var event = this.events[i];
+    Handlebars.registerHelper('eventTimestampAndElapsed', function (code, icon, resource) {
+        var res;
+        if (resource) {
+            res = resource;
+        } else {
+            res = this;
+        }
+        for (var i = 0; i < res.events.length; i++) {
+            var event = res.events[i];
             if (code == event.code) {
                 var box = $('<i></i>');
                 var container = $('<span></span>')
@@ -77,9 +83,15 @@ define(['jquery', 'common', 'application', 'handlebars'], function ($, common, a
         return '';
     });
 
-    Handlebars.registerHelper('eventElapsed', function (code, icon) {
-        for (var i = 0; i < this.events.length; i++) {
-            var event = this.events[i];
+    Handlebars.registerHelper('eventElapsed', function (code, icon, resource) {
+        var res;
+        if (resource) {
+            res = resource;
+        } else {
+            res = this;
+        }
+        for (var i = 0; i < res.events.length; i++) {
+            var event = res.events[i];
             if (code == event.code) {
                 var box = $('<i></i>');
                 var container = $('<span></span>')

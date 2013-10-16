@@ -1,5 +1,43 @@
 <table class="table table-condensed">
     <tbody>
+        <tr>
+            <td colspan="2">{{{requestStatus data.summary.status summary.data.message}}}</td>
+        </tr>
+        <tr>
+            <td>
+                {{#if summary.data.toVersion}}
+                    <i class="icon-arrow-right"></i>
+                    {{loc 'request.toVersion'}}:
+                    {{summary.data.toVersion}}
+                {{/if}}
+            </td>
+            <td>
+                {{{eventTimestampAndElapsed 'REQUEST_CREATED' 'icon-time' summary}}}
+            </td>
+        </tr>
+        {{#if summary.data.mergeVersion}}
+            <tr>
+                <td>
+                    <i class="icon-ok"></i>
+                    {{loc 'request.mergeVersion'}}:
+                    {{summary.data.mergeVersion}}
+                </td>
+                <td>
+                    {{{eventTimestampAndElapsed 'REQUEST_MERGED' 'icon-time' summary}}}
+                </td>
+            </tr>
+        {{/if}}
+        <tr>
+            <td colspan="2">
+                <button id="request-hide-deleted" type="button" class="btn" data-toggle="button"><i class="icon-filter"></i> {{loc 'request.hide.deleted'}}</button>
+                <button id="request-hide-valid" type="button" class="btn" data-toggle="button"><i class="icon-filter"></i> {{loc 'request.hide.valid'}}</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-condensed">
+    <tbody>
         {{#data.diff.entries}}
             <tr class="{{cls}} translation-diff-{{type}} {{#invalid}}translation-entry-invalid{{/invalid}} translation-entry-type-{{type}}">
                 <td>

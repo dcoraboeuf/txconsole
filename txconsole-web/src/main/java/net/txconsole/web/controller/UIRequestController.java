@@ -10,7 +10,7 @@ import net.txconsole.core.security.SecurityUtils;
 import net.txconsole.service.RequestService;
 import net.txconsole.service.StructureService;
 import net.txconsole.web.resource.ProjectDashboardResource;
-import net.txconsole.core.model.Resource;
+import net.txconsole.web.resource.RequestControlledViewResource;
 import net.txconsole.web.support.AbstractUIController;
 import net.txconsole.web.support.ErrorHandler;
 import net.txconsole.web.support.GUIEventService;
@@ -222,7 +222,7 @@ public class UIRequestController extends AbstractUIController implements UIReque
     @RequestMapping(value = "/request/{id}/view", method = RequestMethod.GET)
     public
     @ResponseBody
-    Resource<RequestControlledView> getRequestView(Locale locale, @PathVariable int id) {
+    RequestControlledViewResource getRequestView(Locale locale, @PathVariable int id) {
         // Gets the view
         RequestView view = requestService.getRequestView(id);
         // Gets the controls
@@ -236,12 +236,12 @@ public class UIRequestController extends AbstractUIController implements UIReque
         BranchSummary branch = structureService.getBranch(controlledView.getSummary().getBranchId());
         int projectId = branch.getProjectId();
         // View resource
-        Resource<RequestControlledView> r = new Resource<>(controlledView)
-                // TODO Links
-                // ACL
-                .withActions(securityUtils, projectId, ProjectFunction.values());
-        // OK
-        return r;
+        RequestControlledViewResource resource = new RequestControlledViewResource(
+                controlledView,
+                requestSummaryResourceFn.apply(locale).apply(controlledView.getSummary())
+        );
+        resource.withActions(securityUtils, projectId, ProjectFunction.values());
+        return resource;
     }
 
     /**
