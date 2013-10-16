@@ -7,18 +7,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class RequestControlledView {
 
     private final RequestSummary summary;
+    private final Set<Locale> locales;
     private final TranslationDiff diff;
     private final Map<Integer, TranslationDiffControl> controls;
 
     public RequestControlledView(RequestView view, List<TranslationDiffControl> controls) {
-        this(view.getSummary(), view.getDiff(), Maps.uniqueIndex(
+        this(view.getSummary(), view.getLocales(), view.getDiff(), Maps.uniqueIndex(
                 controls,
                 new Function<TranslationDiffControl, Integer>() {
                     @Override

@@ -248,7 +248,7 @@ public class RequestServiceImpl implements RequestService {
         // Loads the diff for this request
         TranslationDiff diff = requestDao.loadDiff(id).forEdition(supportedLocales).trimValues().sorted();
         // OK
-        return new RequestView(summary, diff);
+        return new RequestView(summary, supportedLocales, diff);
     }
 
     @Override
