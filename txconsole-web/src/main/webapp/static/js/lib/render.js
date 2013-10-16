@@ -42,13 +42,16 @@ define(['jquery', 'common', 'application', 'handlebars'], function ($, common, a
             .html();
     });
 
-    Handlebars.registerHelper('eventTimestampAndElapsed', function (code, icon, resource) {
-        var res;
-        if (resource) {
-            res = resource;
+    function getResource(resource, context) {
+        if (resource && resource.events) {
+            return resource;
         } else {
-            res = this;
+            return context;
         }
+    }
+
+    Handlebars.registerHelper('eventTimestampAndElapsed', function (code, icon, resource) {
+        var res = getResource(resource, this);
         for (var i = 0; i < res.events.length; i++) {
             var event = res.events[i];
             if (code == event.code) {
@@ -84,12 +87,7 @@ define(['jquery', 'common', 'application', 'handlebars'], function ($, common, a
     });
 
     Handlebars.registerHelper('eventElapsed', function (code, icon, resource) {
-        var res;
-        if (resource) {
-            res = resource;
-        } else {
-            res = this;
-        }
+        var res = getResource(resource, this);
         for (var i = 0; i < res.events.length; i++) {
             var event = res.events[i];
             if (code == event.code) {
