@@ -138,7 +138,7 @@ define(['jquery', 'render', 'ajax', 'jquery.typing', 'component/request'], funct
 
     function filterLocales(filter) {
         localeFilter = $.extend(localeFilter, filter);
-        $('.locale-entry').each(function (index, tr) {
+        $('#request-entries').find('.locale-entry').each(function (index, tr) {
             var locale = $(tr).attr('data-locale');
             var hidden = localeFilter[locale];
             if (hidden) {
@@ -190,9 +190,9 @@ define(['jquery', 'render', 'ajax', 'jquery.typing', 'component/request'], funct
             // Filter on deleted entries
             $('#request-hide-deleted').click(function () {
                 if ($(this).hasClass('active')) {
-                    $('.translation-entry-type-DELETED').show();
+                    $('#request-entries').find('.translation-entry-type-DELETED').show();
                 } else {
-                    $('.translation-entry-type-DELETED').hide();
+                    $('#request-entries').find('.translation-entry-type-DELETED').hide();
                 }
             });
             // Filter on invalid entries
@@ -200,12 +200,12 @@ define(['jquery', 'render', 'ajax', 'jquery.typing', 'component/request'], funct
                 if ($(this).hasClass('active')) {
                     // if filter on deleted already active, avoid to display them.
                     if ($('#request-hide-deleted').hasClass('active')) {
-                        $('#request-view').find('tr:not(.translation-entry-invalid)').not('.translation-entry-type-DELETED').show();
+                        $('#request-entries').find('tr:not(.translation-entry-invalid)').not('.translation-entry-type-DELETED').show();
                     } else {
-                        $('#request-view').find('tr:not(.translation-entry-invalid)').show();
+                        $('#request-entries').find('tr:not(.translation-entry-invalid)').show();
                     }
                 } else {
-                    $('#request-view').find('tr:not(.translation-entry-invalid)').hide();
+                    $('#request-entries').find('tr:not(.translation-entry-invalid)').hide();
                 }
             });
             // Filter on locales
